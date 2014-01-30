@@ -272,6 +272,37 @@
                                 }
                                             
                             </script>
+                            <xsl:if test="count(variants/variant) > 0">
+                                <div style="font-size: small;">
+                                    <h3>Filtered and Annotated Variant(s)</h3>
+                                    <table>
+                                        <tr>
+                                            <th>Coordinate</th>
+                                            <th>Consequence</th>
+                                            <th>Genotype</th>
+                                            <th>AVF</th>
+                                            <th>cDNA</th>
+                                            <th>Amino Acid</th>
+                                            <th>dbSNP</th>
+                                            <th>MAF</th>
+                                            <th>COSMIC ID</th>
+                                        </tr>
+                                        <xsl:for-each select="variants/variant">
+                                            <tr>
+                                                <th>chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></th>
+                                                <th><xsl:value-of select="@consequence"/></th>
+                                                <th><xsl:value-of select="@genotype"/></th>
+                                                <th style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></th>
+                                                <th><xsl:value-of select="@hgvsc"/></th>
+                                                <th><xsl:value-of select="@hgvsp"/></th>
+                                                <th><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></th>
+                                                <th style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></th>
+                                                <th><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></th>
+                                            </tr>
+                                        </xsl:for-each>
+                                    </table>
+                                </div>
+                            </xsl:if>
                         </td>
                     </tr>
                 </xsl:for-each>

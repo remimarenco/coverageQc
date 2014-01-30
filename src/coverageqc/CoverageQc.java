@@ -7,6 +7,7 @@ import coverageqc.data.Amplicon;
 import coverageqc.data.Base;
 import coverageqc.data.Bin;
 import coverageqc.data.GeneExon;
+import coverageqc.data.Variant;
 import coverageqc.data.Vcf;
 import java.awt.Desktop;
 import java.io.BufferedReader;
@@ -85,7 +86,30 @@ public class CoverageQc {
 
         Reader ampliconBedFileReader = new FileReader(ampliconBedFile);
         BufferedReader ampliconBedBufferedReader = new BufferedReader(ampliconBedFileReader);
-            
+
+        // is there a variant file to fold into the report?
+        File variantTsvFile = null;
+        Reader variantTsvFileReader = null;
+        BufferedReader variantTsvBufferedReader = null;
+        {
+            File[] files = (new File(vcfFile.getCanonicalFile().getParent())).listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return(
+                        (
+                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase())
+                            && pathname.getName().toLowerCase().endsWith(".tsv")
+                        )
+                    );
+                }
+            });
+            if(files.length == 1) {
+                variantTsvFile = files[0];
+                variantTsvFileReader = new FileReader(variantTsvFile);
+                variantTsvBufferedReader = new BufferedReader(variantTsvFileReader);
+            }
+        }
+        
         Vcf vcf = new Vcf();
         vcf.runDate = new Date();
         vcf.fileName = vcfFile.getCanonicalPath();
@@ -206,7 +230,26 @@ public class CoverageQc {
                 geneExon.qc = "pass";
             }
         }
-        
+
+        // read variant file
+        if(variantTsvFile != null) {
+            String variantTsvDataLine;
+            String variantTsvHeadingLine = variantTsvBufferedReader.readLine();
+            while((variantTsvDataLine = variantTsvBufferedReader.readLine()) != null) {
+                Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine);
+                boolean foundGeneExon = false;
+                for(GeneExon geneExon : vcf.findGeneExonsForChrPos("chr" + String.valueOf(variant.chr), variant.coordinate)) {
+                    foundGeneExon = true;
+                    geneExon.variants.add(variant);
+                }
+                if(!foundGeneExon) {
+                    LOGGER.info("the following variant does not correspond to an exon region: " + variantTsvDataLine);
+                }
+            }
+            LOGGER.info(vcf.getFilteredAnnotatedVariantCount() + " variants read from TSV file");
+            variantTsvFileReader.close();
+        }
+
         // write to XML
         File xmlTempFile = File.createTempFile("tmp", ".xml");
         OutputStream xmlOutputStream = new FileOutputStream(xmlTempFile);

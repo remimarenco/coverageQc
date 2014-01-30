@@ -49,6 +49,9 @@ public class GeneExon implements Comparable<Object> {
     @XmlElement(name = "amplicon")
     public ArrayList<Amplicon> amplicons = new ArrayList<Amplicon>();
     public Amplicon codingRegion; // regions in the amplicon BED file that have a name with a "_coding" suffix
+    @XmlElementWrapper(name = "variants")
+    @XmlElement(name = "variant")
+    public ArrayList<Variant> variants = new ArrayList<Variant>();
 
     /**
      * 
@@ -99,6 +102,7 @@ public class GeneExon implements Comparable<Object> {
             }
         }
         return false;
+        //return(variants.size() > 0);
     }
 
     /**

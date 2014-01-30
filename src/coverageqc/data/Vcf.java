@@ -45,12 +45,12 @@ public class Vcf {
      * @return 
      */
     @XmlAttribute
-    public long getReadDepthCount() {
-        long readDepthCount = 0;
-        for(Base base : bases.values()) {
-            readDepthCount += base.readDepths.size();
+    public long getFilteredAnnotatedVariantCount() {
+        long filteredAnnotatedVariantCount = 0;
+        for(GeneExon geneExon : geneExons) {
+            filteredAnnotatedVariantCount += geneExon.variants.size();
         }
-        return readDepthCount;
+        return filteredAnnotatedVariantCount;
     }
     
     /**
@@ -68,6 +68,19 @@ public class Vcf {
         return amplicons.size();
     }
     
+    /**
+     * 
+     * @return 
+     */
+    @XmlAttribute
+    public long getReadDepthCount() {
+        long readDepthCount = 0;
+        for(Base base : bases.values()) {
+            readDepthCount += base.readDepths.size();
+        }
+        return readDepthCount;
+    }
+
     /**
      * 
      * @param chr
