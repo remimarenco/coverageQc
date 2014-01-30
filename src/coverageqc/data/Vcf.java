@@ -102,8 +102,7 @@ public class Vcf {
     }
 
     /**
-     * @todo Hacking UNC notation if drive is "S:" ("S:" = "//euh/ehc") at
-     * Emory.
+     * @todo Hacking UNC notation if drive is "S:" ("S:" = "//euh/ehc").
      * @return A comma separated string of file URLs suitable consumption by
      * IGV.
      */

@@ -105,15 +105,13 @@ public class CoverageQc {
                             && (pathname.getName().toLowerCase().endsWith(".bam") || (pathname.getName().toLowerCase().endsWith(".vcf")))
                             && (pathname.getName().indexOf("genome") < 0)
                         )
-                        || (
-                            pathname.getName().equals("amplicons.bed")
-                        )
                     );
                 }
             });
             for(File file : files) {
                 vcf.bedBamVcfFileUrls.add(file.toURI().toURL());
             }
+            vcf.bedBamVcfFileUrls.add(ampliconBedFile.toURI().toURL());
         }
 
         // read exon BED file
