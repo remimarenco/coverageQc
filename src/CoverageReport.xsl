@@ -168,9 +168,9 @@
             <table>
                 <tr><td>report run date</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="substring(/vcf/@runDate, 1, 16)"/></td></tr>
                 <tr><td>gVCF file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@fileName"/></td></tr>
+                <tr><td>variant TSV file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@variantTsvFileName"/></td></tr>
                 <tr><td>exon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@exonBedFileName"/></td></tr>
                 <tr><td>amplicon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@ampliconBedFileName"/></td></tr>
-                <tr><td>variant TSV file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@variantTsvFileName"/></td></tr>
             </table>
 
             <ul>

@@ -252,21 +252,22 @@ public class CoverageQc {
         }
 
         // write to XML
-        File xmlTempFile = File.createTempFile("tmp", ".xml");
+        //File xmlTempFile = File.createTempFile("tmp", ".xml");
+        File xmlTempFile = new File(vcfFile.getCanonicalPath() + ".coverage_qc.xml");
         OutputStream xmlOutputStream = new FileOutputStream(xmlTempFile);
         JAXBContext jc = JAXBContext.newInstance("coverageqc.data");
         Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
         m.marshal(vcf, xmlOutputStream);        
         xmlOutputStream.close();
-        LOGGER.info(xmlTempFile.getPath() + " created");
+        LOGGER.info(xmlTempFile.getCanonicalPath() + " created");
 
         // transform XML to HTML via XSLT
-        Source xmlSource = new StreamSource(new FileInputStream(xmlTempFile.getPath()));
+        Source xmlSource = new StreamSource(new FileInputStream(xmlTempFile.getCanonicalPath()));
         Source xslSource = new StreamSource(ClassLoader.getSystemResourceAsStream("CoverageReport.xsl"));
         Transformer trans = TransformerFactory.newInstance().newTransformer(xslSource);
-        trans.transform(xmlSource, new StreamResult(vcfFile.getPath() + ".coverage_qc.html"));
-        LOGGER.info(vcfFile.getPath() + ".coverage_qc.html created");
+        trans.transform(xmlSource, new StreamResult(vcfFile.getCanonicalPath() + ".coverage_qc.html"));
+        LOGGER.info(vcfFile.getCanonicalPath() + ".coverage_qc.html created");
         
         // show HTML file in default browser
         File htmlFile = new File(vcfFile.getPath() + ".coverage_qc.html");
