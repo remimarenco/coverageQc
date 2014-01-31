@@ -29,11 +29,11 @@ public class GeneExon implements Comparable<Object> {
     @XmlAttribute
     public String qc; // "pass", "warn", "fail"
     @XmlAttribute
-    public String ensemblGeneId; // parsed from exon BED custom field #5 (capture group 1): /.*\\|Ensembl-IDs: ([A-Z0-9]*):([A-Z0-9]*):([A-Z0-9]*)\\|.*\\|.*/
+    public String ensemblGeneId; // parsed from exon BED custom field #5 (capture group 1): /.*\\|Ensembl-IDs: ([A-Z0-9\\.]*):([A-Z0-9\\.]*):([A-Z0-9\\.]*)\\|.*\\|.*/
     @XmlAttribute
-    public String ensemblTranscriptId; // parsed from exon BED custom field #5 (capture group 2): /.*\\|Ensembl-IDs: ([A-Z0-9]*):([A-Z0-9]*):([A-Z0-9]*)\\|.*\\|.*/
+    public String ensemblTranscriptId; // parsed from exon BED custom field #5 (capture group 2): /.*\\|Ensembl-IDs: ([A-Z0-9\\.]*):([A-Z0-9\\.]*):([A-Z0-9\\.]*)\\|.*\\|.*/
     @XmlAttribute
-    public String ensemblExonId; // parsed from exon BED custom field #5 (capture group 3): /.*\\|Ensembl-IDs: ([A-Z0-9]*):([A-Z0-9]*):([A-Z0-9]*)\\|.*\\|.*/
+    public String ensemblExonId; // parsed from exon BED custom field #5 (capture group 3): /.*\\| /.*\\|Ensembl-IDs: ([A-Z0-9\\.]*):([A-Z0-9\\.]*):([A-Z0-9\\.]*)\\|.*\\|.*/
     @XmlAttribute
     public String ensemblExonNumber; // parsed from exon BED custom field #5: /.*\\|.*\\|Ensembl-exon-number: (.*)\\|.*/
     @XmlAttribute
@@ -125,7 +125,7 @@ public class GeneExon implements Comparable<Object> {
             }
         }
         {
-            Pattern pattern = Pattern.compile(".*\\|Ensembl-IDs: ([A-Z0-9]*):([A-Z0-9]*):([A-Z0-9]*)\\|.*\\|.*");
+            Pattern pattern = Pattern.compile(".*\\|Ensembl-IDs: ([A-Z0-9\\.]*):([A-Z0-9\\.]*):([A-Z0-9\\.]*)\\|.*\\|.*");
             Matcher matcher = pattern.matcher(fields[5]);
             matcher.find();
             geneExon.ensemblGeneId = matcher.group(1);
