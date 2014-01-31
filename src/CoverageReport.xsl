@@ -233,15 +233,15 @@
                         <td data-export-label="exon">
                             <xsl:value-of select="@name"/><br/>
                             <span style="font-size: x-small">
-                                Ensembl ID:&#160;<a href="http://www.ensembl.org/id/{@ensemblTranscriptId}"><xsl:value-of select="@ensemblExonId"/></a><br/>
-                                vendor ID:&#160;<xsl:value-of select="@vendorGeneExonName"/>
+                                Ensembl ID: <a href="http://www.ensembl.org/id/{@ensemblTranscriptId}"><xsl:value-of select="@ensemblExonId"/></a><br/>
+                                vendor ID: <xsl:value-of select="@vendorGeneExonName"/>
                             </span>
                         </td>
                         <td style="text-align: right;"><xsl:value-of select="format-number(@pctOfExon, '##0')"/></td>
                         <td data-export-label="locus">
                             <a href="http://localhost:60151/load?file={../../@bedBamVcfFileUrlsAsString}&amp;locus={@chr}:{@startPos}-{@endPos}&amp;genome=hg19&amp;merge=false">
                                 <xsl:value-of select="@chr"/>:<xsl:value-of select="@startPos"/>-<xsl:value-of select="@endPos"/>
-                            </a><br/>
+                            </a>
                         </td>
                         <td><xsl:value-of select="@variantCalled"/></td>
                         <xsl:for-each select="bins/bin">
@@ -365,11 +365,11 @@
                                                 <td data-export-label="coordinate">chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></td>
                                                 <td data-export-label="consequence"><xsl:value-of select="@consequence"/></td>
                                                 <td data-export-label="genotype"><xsl:value-of select="@genotype"/></td>
-                                                <td data-export-label="AVF" style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></td>
-                                                <td data-export-label="cDNA"><xsl:value-of select="@hgvsc"/></td>
-                                                <td data-export-label="amino acid"><xsl:value-of select="@hgvsp"/></td>
+                                                <td data-export-label="avf" style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></td>
+                                                <td data-export-label="cDna"><xsl:value-of select="@hgvsc"/></td>
+                                                <td data-export-label="aminoAcid"><xsl:value-of select="@hgvsp"/></td>
                                                 <td><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></td>
-                                                <td data-export-label="MAF" style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></td>
+                                                <td data-export-label="maf" style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></td>
                                                 <td><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></td>
                                             </tr>
                                         </xsl:for-each>
@@ -384,27 +384,39 @@
             <p>Copyright &#169; 2014 Geoffrey H. Smith (geoffrey.hughes.smith@gmail.com)</p>
             
             <xsl:if test="count(*/*/variants/variant) > 0">
-                <div id="exportDialog" style="display: none; overflow: scroll; font-family: Courrier;" title="export selected variant(s)">
+                <div id="exportDialog" style="display: none; font-family: Courrier;" title="export selected variant(s)">
                     <script type="text/javascript">
 
                         function showExportDialog() {
+                            var exportMap = new Object();
                             var exportText = "";
                             $(".exportCheckbox:checked").each(function() {
                                 $(this).parents("tr").prev("tr").find("td[data-export-label]").each(function() {
-                                    var exonExportText = $(this).attr("data-export-label") + ": " + $(this).text() + "&lt;br/>";
-                                    exonExportText = exonExportText.replace("Ensembl ID:", "&lt;br/>exon Ensembl ID:")
-                                    exonExportText = exonExportText.replace("vendor ID:", "&lt;br/>exon vendor ID:")
-                                    exportText = exportText + exonExportText;
+                                    if($(this).attr("data-export-label") == "exon") {
+                                        var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm;
+                                        var match = re.exec($(this).text());
+                                        exportMap["exonName"] = match[1];
+                                        exportMap["exonEnsemblId"] = match[2];
+                                        exportMap["exonVendorId"] = match[3];
+                                    }
+                                    else {
+                                        exportMap[$(this).attr("data-export-label")] = $(this).text();
+                                    }
                                 });
                                 $(this).parents("tr").find("td[data-export-label]").each(function() {
-                                    exportText = exportText + $(this).attr("data-export-label") + ": " + $(this).text() + "&lt;br/>";
+                                    exportMap[$(this).attr("data-export-label")] = $(this).text();
                                 });
-                                exportText = exportText + "&lt;br/>";
+                                exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
+                                exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").\n\n";
+                                exportText += "coord (base 0)\tconsequence\t\tgenotype\talt-variant-freq\tminor-allele-freq\n";
+                                exportText += "--------------\t-----------\t\t--------\t----------------\t-----------------\n";
+                                exportText += exportMap.coordinate + "\t" + exportMap.consequence + "\t" + exportMap.genotype + "\t\t" + exportMap.avf + "\t\t\t" + exportMap.maf + "\n";
+                                exportText += "\n\n";
                             });
-                            $("#exportDialog").html(exportText.length > 0 ? exportText : "no variants selected for export");
+                            $("#exportDialog").html(exportText.length > 0 ? "&lt;textarea style='width: 95%; height: 95%; font-family: Courrier;'>" + exportText + "&lt;/textarea>" : "no variants selected for export");
                             $("#exportDialog").dialog({
-                                width:$(window).width() * 0.8,
-                                height:$(window).height() * 0.8
+                                width:$(window).width() * 0.6,
+                                height:$(window).height() * 0.6
                             });
                         }
 
