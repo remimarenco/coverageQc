@@ -24,6 +24,8 @@ public class Vcf {
     @XmlAttribute
     public String ampliconBedFileName;
     @XmlAttribute
+    public String variantTsvFileName;
+    @XmlAttribute
     public Date runDate;
     @XmlElementWrapper(name = "geneExons")
     @XmlElement(name = "geneExon")

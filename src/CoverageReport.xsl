@@ -19,8 +19,10 @@
         <head>
             <title>Coverage QC Report</title>
             <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+            <script type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+            <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"/>
             <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.13.3/jquery.tablesorter.min.js"></script>
-            <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.13.3/css/theme.blue.css"/>
+            <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.13.3/css/theme.default.css"/>
             <script type="text/javascript" src="http://www.google.com/jsapi"></script>
             <script type="text/javascript">
                 google.load("visualization", "1", {packages:["corechart"]});
@@ -34,7 +36,6 @@
 
                         // engage the tablesorter
                         $("#qcReportTable").tablesorter({
-                            theme: "blue",
                             headers: {
                                 0: { sorter:false },
                                 1: { sorter:false },
@@ -47,7 +48,7 @@
                                 8: { sorter:"text" },
                                 9: { sorter:"text" },
                                 10: { sorter:"text" },
-                                11: { sorter:"text" }
+                                11: { sorter:"text" },
                             }
                         });
                                 
@@ -63,11 +64,13 @@
                                         eval("geneExon" + geneExonPos + "_drawChart()");
                                         geneExonPos++;
                                     });
+                                    $(".geneExonExpandCollapseButton").html("-");
                                     $("#blocker").hide();
                                 }, 10);
                             }
                             else {
                                 $(this).html("+");
+                                $(".geneExonExpandCollapseButton").html("+");
                                 $(".geneExon_child").hide();
                             }
                             return false;
@@ -86,18 +89,49 @@
                 
                         });
                 
+                        $("#exportLink").bind("click", function() {
+                            showExportDialog();
+                            return false;
+                        });
+                
                     });
                 });
             </script>
             <style>
-                body { font-family: Arial; }
-                #qcReportTable td { vertical-align: middle; }
-                #qcReportTable tr td, table tr th {
+                
+                body { 
+                    font-family: Arial; 
+                }
+
+                ul {
+                    padding-left: 20px;
+                }
+
+                .dataTable {
+                    width: auto;
+                    font: inherit;
+                    border-collapse: collapse;
+                    border-spacing: 0px;
+                    margin-left: 0px;
+                }
+
+                .dataTable th {
+                    font: inherit;
+                    border: 1px solid black !important;
+                    padding: 4px;
+                    vertical-align: middle; 
+                }
+
+                .dataTable td {
+                    border: 1px solid black;
+                    padding: 4px;
+                    vertical-align: middle; 
+                }
+
+                .dataTable tr th, table tr td {
                     page-break-inside: avoid;
                 }
-                /*table { border-spacing: 0px; border-collapse: collapse; border: 2px solid black; }
-                table td, table th { border: 1px solid black; padding: 3px; }*/
-                ul { padding-left: 15px; }
+                
                 #blocker {
                     display: none;
                     position: fixed;
@@ -108,15 +142,19 @@
                     opacity: .7;
                     background-color: black;
                     z-index: 1000;
+                    text-align: center;
+                    vertical-align: middle;
                 }
+                
                 #blocker div {
                     position: absolute;
-                    top: 10px;
-                    left: 10px;
+                    top: 50%;
+                    left: 50%;
                     color: white;
                     font-size: x-large;
                     font-weight: bold;
                 }
+                
             </style>
         </head>
         
@@ -127,10 +165,13 @@
             </div>
             
             <h1>Coverage QC Report</h1>
-            <h3>gVCF file: <xsl:value-of select="/vcf/@fileName"/></h3>
-            <h3>exon BED file: <xsl:value-of select="/vcf/@exonBedFileName"/></h3>
-            <h3>amplicon BED file: <xsl:value-of select="/vcf/@ampliconBedFileName"/></h3>
-            <h3>report run date: <xsl:value-of select="substring(/vcf/@runDate, 1, 16)"/></h3>
+            <table>
+                <tr><td>report run date</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="substring(/vcf/@runDate, 1, 16)"/></td></tr>
+                <tr><td>gVCF file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@fileName"/></td></tr>
+                <tr><td>exon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@exonBedFileName"/></td></tr>
+                <tr><td>amplicon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@ampliconBedFileName"/></td></tr>
+                <tr><td>variant TSV file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@variantTsvFileName"/></td></tr>
+            </table>
 
             <ul>
                 <li>Base positions start at zero (0).</li>
@@ -143,9 +184,12 @@
                 </li>
                 <li>Coding regions and amplicons are specified by vendor.</li>
                 <li>If the gVCF file contains multiple entries for the same position (e.g., indels), the maximum read depth value is reported here.</li>
+                <xsl:if test="count(*/*/variants/variant) > 0">
+                    <li>After selecting variants for export, <a id="exportLink" href="#">click here</a> to see them as a text document suitable for cut-and-paste operations.</li>
+                </xsl:if>
             </ul>
             
-            <table id="qcReportTable">
+            <table id="qcReportTable" class="dataTable">
                 <thead>
                     <tr>
                         <th></th>
@@ -186,7 +230,7 @@
                             <a href="#" id="geneExon{position()}" class="geneExonExpandCollapseButton" style="color: blue; text-decoration: none; font-size: large; font-weight: bold;">+</a>
                         </td>
                         <td style="background-color: {$color};"><xsl:value-of select="@qc"/></td>
-                        <td>
+                        <td data-export-label="exon">
                             <xsl:value-of select="@name"/><br/>
                             <span style="font-size: x-small">
                                 Ensembl ID:&#160;<a href="http://www.ensembl.org/id/{@ensemblTranscriptId}"><xsl:value-of select="@ensemblExonId"/></a><br/>
@@ -194,7 +238,7 @@
                             </span>
                         </td>
                         <td style="text-align: right;"><xsl:value-of select="format-number(@pctOfExon, '##0')"/></td>
-                        <td>
+                        <td data-export-label="locus">
                             <a href="http://localhost:60151/load?file={../../@bedBamVcfFileUrlsAsString}&amp;locus={@chr}:{@startPos}-{@endPos}&amp;genome=hg19&amp;merge=false">
                                 <xsl:value-of select="@chr"/>:<xsl:value-of select="@startPos"/>-<xsl:value-of select="@endPos"/>
                             </a><br/>
@@ -298,33 +342,35 @@
                                 </script>
                             </div>
                             <xsl:if test="count(variants/variant) > 0">
-                                <div style="font-size: small;">
+                                <div style="font-size: small; padding: 10px;">
                                     <h3>Filtered and Annotated Variant(s)</h3>
-                                    <table>
+                                    <table class="dataTable">
                                         <tr>
-                                            <th>Gene</th>
-                                            <th>Coordinate</th>
-                                            <th>Consequence</th>
-                                            <th>Genotype</th>
+                                            <th>export?</th>
+                                            <th>gene</th>
+                                            <th>coordinate</th>
+                                            <th>consequence</th>
+                                            <th>genotype</th>
                                             <th>AVF</th>
                                             <th>cDNA</th>
-                                            <th>Amino Acid</th>
+                                            <th>amino acid</th>
                                             <th>dbSNP</th>
                                             <th>MAF</th>
                                             <th>COSMIC ID</th>
                                         </tr>
                                         <xsl:for-each select="variants/variant">
                                             <tr>
-                                                <th><xsl:value-of select="@gene"/></th>
-                                                <th>chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></th>
-                                                <th><xsl:value-of select="@consequence"/></th>
-                                                <th><xsl:value-of select="@genotype"/></th>
-                                                <th style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></th>
-                                                <th><xsl:value-of select="@hgvsc"/></th>
-                                                <th><xsl:value-of select="@hgvsp"/></th>
-                                                <th><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></th>
-                                                <th style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></th>
-                                                <th><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></th>
+                                                <td style="text-align: center;"><input type="checkbox" class="exportCheckbox"/></td>
+                                                <td data-export-label="gene"><xsl:value-of select="@gene"/></td>
+                                                <td data-export-label="coordinate">chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></td>
+                                                <td data-export-label="consequence"><xsl:value-of select="@consequence"/></td>
+                                                <td data-export-label="genotype"><xsl:value-of select="@genotype"/></td>
+                                                <td data-export-label="AVF" style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></td>
+                                                <td data-export-label="cDNA"><xsl:value-of select="@hgvsc"/></td>
+                                                <td data-export-label="amino acid"><xsl:value-of select="@hgvsp"/></td>
+                                                <td><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></td>
+                                                <td data-export-label="MAF" style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></td>
+                                                <td><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></td>
                                             </tr>
                                         </xsl:for-each>
                                     </table>
@@ -334,10 +380,39 @@
                     </tr>
                 </xsl:for-each>
             </table>
+
+            <p>Copyright &#169; 2014 Geoffrey H. Smith (geoffrey.hughes.smith@gmail.com)</p>
             
+            <xsl:if test="count(*/*/variants/variant) > 0">
+                <div id="exportDialog" style="display: none; overflow: scroll; font-family: Courrier;" title="export selected variant(s)">
+                    <script type="text/javascript">
+
+                        function showExportDialog() {
+                            var exportText = "";
+                            $(".exportCheckbox:checked").each(function() {
+                                $(this).parents("tr").prev("tr").find("td[data-export-label]").each(function() {
+                                    var exonExportText = $(this).attr("data-export-label") + ": " + $(this).text() + "&lt;br/>";
+                                    exonExportText = exonExportText.replace("Ensembl ID:", "&lt;br/>exon Ensembl ID:")
+                                    exonExportText = exonExportText.replace("vendor ID:", "&lt;br/>exon vendor ID:")
+                                    exportText = exportText + exonExportText;
+                                });
+                                $(this).parents("tr").find("td[data-export-label]").each(function() {
+                                    exportText = exportText + $(this).attr("data-export-label") + ": " + $(this).text() + "&lt;br/>";
+                                });
+                                exportText = exportText + "&lt;br/>";
+                            });
+                            $("#exportDialog").html(exportText.length > 0 ? exportText : "no variants selected for export");
+                            $("#exportDialog").dialog({
+                                width:$(window).width() * 0.8,
+                                height:$(window).height() * 0.8
+                            });
+                        }
+
+                    </script>
+                </div>
+            </xsl:if>
+
         </body>
-        
-        <p>Copyright &#169; 2014 Geoffrey H. Smith (geoffrey.hughes.smith@gmail.com)</p>
         
     </html>
 

@@ -115,6 +115,7 @@ public class CoverageQc {
         vcf.fileName = vcfFile.getCanonicalPath();
         vcf.exonBedFileName = exonBedFile.getCanonicalPath();
         vcf.ampliconBedFileName = ampliconBedFile.getCanonicalPath();
+        vcf.variantTsvFileName = (variantTsvFile != null ? variantTsvFile.getCanonicalPath() : null);
         
         // attempt to deduce the amplicon BED, patient BAM, and patient VCF
         // file names for this gVCF file, the assumption is that they are in

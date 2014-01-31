@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<vcf readDepthCount="14828" bedBamVcfFileUrlsAsString="file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed" baseCount="14827" ampliconCount="256" runDate="2014-01-30T08:15:17.788-05:00" ampliconBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\amplicons.bed" exonBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\exons_ensembl.bed" fileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf">
+<vcf readDepthCount="14828" filteredAnnotatedVariantCount="6" bedBamVcfFileUrlsAsString="file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed" baseCount="14827" ampliconCount="256" runDate="2014-01-31T03:35:14.968-05:00" variantTsvFileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.variant.tsv" ampliconBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\amplicons.bed" exonBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\exons_ensembl.bed" fileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf">
     <geneExons>
         <geneExon variantCalled="false" pctOfExon="100.0" vendorGeneExonName="AKT1ex2" ensemblExonNumber="3" ensemblExonId="ENSE00003642995" ensemblTranscriptId="ENST00000555528" ensemblGeneId="ENSG00000142208" qc="fail" name="AKT1ex3" endPos="105246558" startPos="105246420" chr="chr14">
             <bins>
@@ -13,6 +13,7 @@
                 <amplicon name="AKT1ex2_tile_1" endPos="105246591" startPos="105246402" chr="chr14"/>
             </amplicons>
             <codingRegion name="AKT1ex2_coding" endPos="105246553" startPos="105246425" chr="chr14"/>
+            <variants/>
             <nameForCompare>AKT1ex</nameForCompare>
             <exonNumberForCompare>3</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -170,6 +171,7 @@
                 <amplicon name="ALKex23_tile_2" endPos="29443802" startPos="29443619" chr="chr2"/>
             </amplicons>
             <codingRegion name="ALKex23_coding" endPos="29443701" startPos="29443572" chr="chr2"/>
+            <variants/>
             <nameForCompare>ALKex</nameForCompare>
             <exonNumberForCompare>23</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -254,6 +256,7 @@
                 <amplicon name="APCex15_1_tile_2" endPos="112174013" startPos="112173843" chr="chr5"/>
             </amplicons>
             <codingRegion name="APCex15_coding" endPos="112179823" startPos="112173250" chr="chr5"/>
+            <variants/>
             <nameForCompare>APCex</nameForCompare>
             <exonNumberForCompare>16</exonNumberForCompare>
             <suffixForCompare>_hotspot1</suffixForCompare>
@@ -519,6 +522,7 @@
                 <amplicon name="APCex15_2_tile_2" endPos="112174808" startPos="112174621" chr="chr5"/>
             </amplicons>
             <codingRegion name="APCex15_coding" endPos="112179823" startPos="112173250" chr="chr5"/>
+            <variants/>
             <nameForCompare>APCex</nameForCompare>
             <exonNumberForCompare>16</exonNumberForCompare>
             <suffixForCompare>_hotspot2</suffixForCompare>
@@ -793,6 +797,7 @@
                 <amplicon name="APCex15_3_tile_5" endPos="112175393" startPos="112175227" chr="chr5"/>
             </amplicons>
             <codingRegion name="APCex15_coding" endPos="112179823" startPos="112173250" chr="chr5"/>
+            <variants/>
             <nameForCompare>APCex</nameForCompare>
             <exonNumberForCompare>16</exonNumberForCompare>
             <suffixForCompare>_hotspot3</suffixForCompare>
@@ -1212,6 +1217,9 @@
                 <amplicon name="APCex15_3_tile_12" endPos="112176160" startPos="112175973" chr="chr5"/>
             </amplicons>
             <codingRegion name="APCex15_coding" endPos="112179823" startPos="112173250" chr="chr5"/>
+            <variants>
+                <variant alleleFreqGlobalMinor="33.84" dbSnpIdSuffix="41115" dbSnpIdPrefix="rs" hgvsp="c.4479G&gt;A(p.=)" hgvsc="c.4479G&gt;A" cosmicId="" consequence="synonymous_variant" altReadDepth="2216" readDepth="2224" altVariantFreq="99.64" genotype="hom" type="snv" coordinate="112175769" chr="5" variant="G&gt;A/A" gene="APC"/>
+            </variants>
             <nameForCompare>APCex</nameForCompare>
             <exonNumberForCompare>16</exonNumberForCompare>
             <suffixForCompare>_hotspot4</suffixForCompare>
@@ -1893,6 +1901,7 @@
                 <amplicon name="BRAFex11_tile_2" endPos="140481547" startPos="140481357" chr="chr7"/>
             </amplicons>
             <codingRegion name="BRAFex11_coding" endPos="140481493" startPos="140481376" chr="chr7"/>
+            <variants/>
             <nameForCompare>BRAFex</nameForCompare>
             <exonNumberForCompare>11</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -2039,6 +2048,7 @@
                 <amplicon name="BRAFex15_tile_1" endPos="140453222" startPos="140453044" chr="chr7"/>
             </amplicons>
             <codingRegion name="BRAFex15_coding" endPos="140453193" startPos="140453075" chr="chr7"/>
+            <variants/>
             <nameForCompare>BRAFex</nameForCompare>
             <exonNumberForCompare>15</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -2187,6 +2197,7 @@
                 <amplicon name="CDH1ex8_tile_2" endPos="68846204" startPos="68846033" chr="chr16"/>
             </amplicons>
             <codingRegion name="CDH1ex8_coding" endPos="68846166" startPos="68846038" chr="chr16"/>
+            <variants/>
             <nameForCompare>CDH1ex</nameForCompare>
             <exonNumberForCompare>8</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -2345,6 +2356,7 @@
                 <amplicon name="CDH1ex9_tile_3" endPos="68847489" startPos="68847301" chr="chr16"/>
             </amplicons>
             <codingRegion name="CDH1ex9_coding" endPos="68847398" startPos="68847216" chr="chr16"/>
+            <variants/>
             <nameForCompare>CDH1ex</nameForCompare>
             <exonNumberForCompare>9</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -2557,6 +2569,7 @@
                 <amplicon name="CDH1ex12_tile_3" endPos="68856156" startPos="68855981" chr="chr16"/>
             </amplicons>
             <codingRegion name="CDH1ex12_coding" endPos="68856128" startPos="68855904" chr="chr16"/>
+            <variants/>
             <nameForCompare>CDH1ex</nameForCompare>
             <exonNumberForCompare>12</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -2811,6 +2824,7 @@
                 <amplicon name="CTNNB1ex2_tile_2" endPos="41266186" startPos="41266002" chr="chr3"/>
             </amplicons>
             <codingRegion name="CTNNB1ex2_coding" endPos="41266244" startPos="41266017" chr="chr3"/>
+            <variants/>
             <nameForCompare>CTNNB1ex</nameForCompare>
             <exonNumberForCompare>3</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -2980,6 +2994,7 @@
                 <amplicon name="EGFRex18_tile_2" endPos="55241828" startPos="55241646" chr="chr7"/>
             </amplicons>
             <codingRegion name="EGFRex18_coding" endPos="55241736" startPos="55241614" chr="chr7"/>
+            <variants/>
             <nameForCompare>EGFRex</nameForCompare>
             <exonNumberForCompare>18</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -3131,6 +3146,7 @@
                 <amplicon name="EGFRex19_tile_1" endPos="55242576" startPos="55242385" chr="chr7"/>
             </amplicons>
             <codingRegion name="EGFRex19_coding" endPos="55242513" startPos="55242415" chr="chr7"/>
+            <variants/>
             <nameForCompare>EGFRex</nameForCompare>
             <exonNumberForCompare>19</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -3259,6 +3275,7 @@
                 <amplicon name="EGFRex20_tile_2" endPos="55249233" startPos="55249052" chr="chr7"/>
             </amplicons>
             <codingRegion name="EGFRex20_coding" endPos="55249171" startPos="55248986" chr="chr7"/>
+            <variants/>
             <nameForCompare>EGFRex</nameForCompare>
             <exonNumberForCompare>20</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -3474,6 +3491,7 @@
                 <amplicon name="EGFRex21_tile_2" endPos="55259650" startPos="55259464" chr="chr7"/>
             </amplicons>
             <codingRegion name="EGFRex21_coding" endPos="55259567" startPos="55259412" chr="chr7"/>
+            <variants/>
             <nameForCompare>EGFRex</nameForCompare>
             <exonNumberForCompare>21</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -3659,6 +3677,7 @@
                 <amplicon name="ERBB2ex20_tile_3" endPos="37881239" startPos="37881066" chr="chr17"/>
             </amplicons>
             <codingRegion name="ERBB2ex20_coding" endPos="37881164" startPos="37880979" chr="chr17"/>
+            <variants/>
             <nameForCompare>ERBB2ex</nameForCompare>
             <exonNumberForCompare>20</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -3874,6 +3893,7 @@
                 <amplicon name="FBXW7ex7_tile_2" endPos="153250972" startPos="153250807" chr="chr4"/>
             </amplicons>
             <codingRegion name="FBXW7ex7_coding" endPos="153250937" startPos="153250824" chr="chr4"/>
+            <variants/>
             <nameForCompare>FBXW7ex</nameForCompare>
             <exonNumberForCompare>8</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -4018,6 +4038,7 @@
                 <amplicon name="FBXW7ex8_tile_3" endPos="153249635" startPos="153249457" chr="chr4"/>
             </amplicons>
             <codingRegion name="FBXW7ex8_coding" endPos="153249541" startPos="153249360" chr="chr4"/>
+            <variants/>
             <nameForCompare>FBXW7ex</nameForCompare>
             <exonNumberForCompare>9</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -4230,6 +4251,7 @@
                 <amplicon name="FBXW7ex9_tile_3" endPos="153247477" startPos="153247283" chr="chr4"/>
             </amplicons>
             <codingRegion name="FBXW7ex9_coding" endPos="153247383" startPos="153247158" chr="chr4"/>
+            <variants/>
             <nameForCompare>FBXW7ex</nameForCompare>
             <exonNumberForCompare>10</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -4485,6 +4507,7 @@
                 <amplicon name="FBXW7ex10_tile_3" endPos="153245598" startPos="153245405" chr="chr4"/>
             </amplicons>
             <codingRegion name="FBXW7ex10_coding" endPos="153245546" startPos="153245336" chr="chr4"/>
+            <variants/>
             <nameForCompare>FBXW7ex</nameForCompare>
             <exonNumberForCompare>11</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -4726,6 +4749,7 @@
                 <amplicon name="FBXW7ex11_tile_3" endPos="153244333" startPos="153244162" chr="chr4"/>
             </amplicons>
             <codingRegion name="FBXW7ex11_coding" endPos="153244301" startPos="153244033" chr="chr4"/>
+            <variants/>
             <nameForCompare>FBXW7ex</nameForCompare>
             <exonNumberForCompare>12</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -5021,6 +5045,7 @@
                 <amplicon name="FGFR2ex6_tile_2" endPos="123279718" startPos="123279540" chr="chr10"/>
             </amplicons>
             <codingRegion name="FGFR2ex6_coding" endPos="123279683" startPos="123279493" chr="chr10"/>
+            <variants/>
             <nameForCompare>FGFR2ex</nameForCompare>
             <exonNumberForCompare>7</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -5240,6 +5265,7 @@
                 <amplicon name="FOXL2ex1_tile_1" endPos="138665248" startPos="138665082" chr="chr3"/>
             </amplicons>
             <codingRegion name="FOXL2ex1_coding" endPos="138665982" startPos="138663066" chr="chr3"/>
+            <variants/>
             <nameForCompare>FOXL2ex</nameForCompare>
             <exonNumberForCompare>1</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -5372,6 +5398,7 @@
                 <amplicon name="GNAQex4_tile_2" endPos="80412610" startPos="80412427" chr="chr9"/>
             </amplicons>
             <codingRegion name="GNAQex4_coding" endPos="80412564" startPos="80412436" chr="chr9"/>
+            <variants/>
             <nameForCompare>GNAQex</nameForCompare>
             <exonNumberForCompare>4</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -5530,6 +5557,7 @@
                 <amplicon name="GNAQex5_tile_3" endPos="80409631" startPos="80409448" chr="chr9"/>
             </amplicons>
             <codingRegion name="GNAQex5_coding" endPos="80409508" startPos="80409379" chr="chr9"/>
+            <variants/>
             <nameForCompare>GNAQex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -5689,6 +5717,7 @@
                 <amplicon name="GNAQex6_tile_3" endPos="80343718" startPos="80343531" chr="chr9"/>
             </amplicons>
             <codingRegion name="GNAQex6_coding" endPos="80343583" startPos="80343430" chr="chr9"/>
+            <variants/>
             <nameForCompare>GNAQex</nameForCompare>
             <exonNumberForCompare>6</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -5871,6 +5900,7 @@
                 <amplicon name="GNASex6_tile_1" endPos="57480574" startPos="57480393" chr="chr20"/>
             </amplicons>
             <codingRegion name="GNASex6_coding" endPos="57480535" startPos="57480438" chr="chr20"/>
+            <variants/>
             <nameForCompare>GNASex</nameForCompare>
             <exonNumberForCompare>6</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -5997,6 +6027,7 @@
                 <amplicon name="GNASex8_tile_1" endPos="57484560" startPos="57484374" chr="chr20"/>
             </amplicons>
             <codingRegion name="GNASex8_coding" endPos="57484478" startPos="57484405" chr="chr20"/>
+            <variants/>
             <nameForCompare>GNASex</nameForCompare>
             <exonNumberForCompare>8</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -6101,6 +6132,7 @@
                 <amplicon name="KITex9_tile_3" endPos="55592293" startPos="55592120" chr="chr4"/>
             </amplicons>
             <codingRegion name="KITex9_coding" endPos="55592216" startPos="55592023" chr="chr4"/>
+            <variants/>
             <nameForCompare>KITex</nameForCompare>
             <exonNumberForCompare>9</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -6324,6 +6356,7 @@
                 <amplicon name="KITex11_tile_2" endPos="55593758" startPos="55593574" chr="chr4"/>
             </amplicons>
             <codingRegion name="KITex11_coding" endPos="55593708" startPos="55593582" chr="chr4"/>
+            <variants/>
             <nameForCompare>KITex</nameForCompare>
             <exonNumberForCompare>11</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -6479,6 +6512,7 @@
                 <amplicon name="KITex13_tile_1" endPos="55594325" startPos="55594147" chr="chr4"/>
             </amplicons>
             <codingRegion name="KITex13_coding" endPos="55594287" startPos="55594177" chr="chr4"/>
+            <variants/>
             <nameForCompare>KITex</nameForCompare>
             <exonNumberForCompare>13</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -6619,6 +6653,7 @@
                 <amplicon name="KITex17_tile_2" endPos="55599494" startPos="55599310" chr="chr4"/>
             </amplicons>
             <codingRegion name="KITex17_coding" endPos="55599358" startPos="55599236" chr="chr4"/>
+            <variants/>
             <nameForCompare>KITex</nameForCompare>
             <exonNumberForCompare>17</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -6770,6 +6805,9 @@
                 <amplicon name="KITex18_tile_1" endPos="55602811" startPos="55602633" chr="chr4"/>
             </amplicons>
             <codingRegion name="KITex18_coding" endPos="55602775" startPos="55602664" chr="chr4"/>
+            <variants>
+                <variant alleleFreqGlobalMinor="14.33" dbSnpIdSuffix="3733542" dbSnpIdPrefix="rs" hgvsp="c.2586G&gt;C(p.=)" hgvsc="c.2586G&gt;C" cosmicId="COSM1325" consequence="synonymous_variant" altReadDepth="1210" readDepth="2522" altVariantFreq="47.98" genotype="het" type="snv" coordinate="55602764" chr="4" variant="G&gt;G/C" gene="KIT"/>
+            </variants>
             <nameForCompare>KITex</nameForCompare>
             <exonNumberForCompare>18</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -6911,6 +6949,7 @@
                 <amplicon name="KRASex1_tile_2" endPos="25398414" startPos="25398225" chr="chr12"/>
             </amplicons>
             <codingRegion name="KRASex1_coding" endPos="25398318" startPos="25398208" chr="chr12"/>
+            <variants/>
             <nameForCompare>KRASex</nameForCompare>
             <exonNumberForCompare>2</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -7062,6 +7101,9 @@
                 <amplicon name="KRASex2_tile_2" endPos="25380384" startPos="25380199" chr="chr12"/>
             </amplicons>
             <codingRegion name="KRASex2_coding" endPos="25380346" startPos="25380168" chr="chr12"/>
+            <variants>
+                <variant alleleFreqGlobalMinor="0.0" dbSnpIdSuffix="17851045" dbSnpIdPrefix="rs" hgvsp="p.Gln61His" hgvsc="c.183A&gt;C" cosmicId="COSM1135364" consequence="missense_variant" altReadDepth="973" readDepth="13896" altVariantFreq="7.0" genotype="het" type="snv" coordinate="25380274" chr="12" variant="T&gt;T/G" gene="KRAS"/>
+            </variants>
             <nameForCompare>KRASex</nameForCompare>
             <exonNumberForCompare>3</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -7270,6 +7312,7 @@
                 <amplicon name="KRASex3_tile_2" endPos="25378753" startPos="25378561" chr="chr12"/>
             </amplicons>
             <codingRegion name="KRASex3_coding" endPos="25378707" startPos="25378548" chr="chr12"/>
+            <variants/>
             <nameForCompare>KRASex</nameForCompare>
             <exonNumberForCompare>4</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -7459,6 +7502,9 @@
                 <amplicon name="KRASex4_tile_2" endPos="25362914" startPos="25362732" chr="chr12"/>
             </amplicons>
             <codingRegion name="KRASex4_coding" endPos="25362845" startPos="25362729" chr="chr12"/>
+            <variants>
+                <variant alleleFreqGlobalMinor="16.58" dbSnpIdSuffix="1137282" dbSnpIdPrefix="rs" hgvsp="" hgvsc="c.*73T&gt;C" cosmicId="" consequence="3_prime_UTR_variant" altReadDepth="5693" readDepth="5705" altVariantFreq="99.79" genotype="hom" type="snv" coordinate="25362776" chr="12" variant="A&gt;G/G" gene="KRAS"/>
+            </variants>
             <nameForCompare>KRASex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -7604,6 +7650,7 @@
                 <amplicon name="MAP2K1ex2_tile_1" endPos="66727588" startPos="66727410" chr="chr15"/>
             </amplicons>
             <codingRegion name="MAP2K1ex2_coding" endPos="66727575" startPos="66727365" chr="chr15"/>
+            <variants/>
             <nameForCompare>MAP2K1ex</nameForCompare>
             <exonNumberForCompare>2</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -7753,6 +7800,7 @@
                 <amplicon name="METex1_tile_7" endPos="116340324" startPos="116340153" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex1_coding" endPos="116340338" startPos="116339125" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>2</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -8529,6 +8577,7 @@
                 <amplicon name="METex4_tile_3" endPos="116381228" startPos="116381039" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex4_coding" endPos="116381079" startPos="116380906" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -8732,6 +8781,7 @@
                 <amplicon name="METex13_tile_3" endPos="116412173" startPos="116411980" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex13_coding" endPos="116412043" startPos="116411903" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>14</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -8901,6 +8951,7 @@
                 <amplicon name="METex15_tile_1" endPos="116417586" startPos="116417414" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex15_coding" endPos="116417523" startPos="116417443" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>16</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -9011,6 +9062,7 @@
                 <amplicon name="METex16_tile_3" endPos="116419093" startPos="116418903" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex16_coding" endPos="116419011" startPos="116418830" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>17</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -9222,6 +9274,7 @@
                 <amplicon name="METex17_tile_2" endPos="116422224" startPos="116422043" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex17_coding" endPos="116422151" startPos="116422042" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>18</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -9361,6 +9414,7 @@
                 <amplicon name="METex18_tile_2" endPos="116423555" startPos="116423361" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex18_coding" endPos="116423523" startPos="116423358" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>19</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -9557,6 +9611,7 @@
                 <amplicon name="METex20_tile_3" endPos="116436223" startPos="116436048" chr="chr7"/>
             </amplicons>
             <codingRegion name="METex20_coding" endPos="116436178" startPos="116435941" chr="chr7"/>
+            <variants/>
             <nameForCompare>METex</nameForCompare>
             <exonNumberForCompare>21</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -9825,6 +9880,7 @@
                 <amplicon name="MSH6ex5_tile_3" endPos="48030909" startPos="48030724" chr="chr2"/>
             </amplicons>
             <codingRegion name="MSH6ex5_coding" endPos="48030824" startPos="48030559" chr="chr2"/>
+            <variants/>
             <nameForCompare>MSH6ex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -10119,6 +10175,7 @@
                 <amplicon name="NRASex1_tile_1" endPos="115258831" startPos="115258651" chr="chr1"/>
             </amplicons>
             <codingRegion name="NRASex1_coding" endPos="115258781" startPos="115258671" chr="chr1"/>
+            <variants/>
             <nameForCompare>NRASex</nameForCompare>
             <exonNumberForCompare>2</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -10249,6 +10306,7 @@
                 <amplicon name="NRASex2_tile_4" endPos="115256722" startPos="115256539" chr="chr1"/>
             </amplicons>
             <codingRegion name="NRASex2_coding" endPos="115256599" startPos="115256421" chr="chr1"/>
+            <variants/>
             <nameForCompare>NRASex</nameForCompare>
             <exonNumberForCompare>3</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -10457,6 +10515,7 @@
                 <amplicon name="NRASex3_tile_2" endPos="115252400" startPos="115252207" chr="chr1"/>
             </amplicons>
             <codingRegion name="NRASex3_coding" endPos="115252349" startPos="115252190" chr="chr1"/>
+            <variants/>
             <nameForCompare>NRASex</nameForCompare>
             <exonNumberForCompare>4</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -10646,6 +10705,7 @@
                 <amplicon name="NRASex4_tile_2" endPos="115251328" startPos="115251141" chr="chr1"/>
             </amplicons>
             <codingRegion name="NRASex4_coding" endPos="115251275" startPos="115251156" chr="chr1"/>
+            <variants/>
             <nameForCompare>NRASex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -10799,6 +10859,9 @@
                 <amplicon name="PDGFRAex11_tile_2" endPos="55141177" startPos="55140995" chr="chr4"/>
             </amplicons>
             <codingRegion name="PDGFRAex11_coding" endPos="55141140" startPos="55141008" chr="chr4"/>
+            <variants>
+                <variant alleleFreqGlobalMinor="3.66" dbSnpIdSuffix="1873778" dbSnpIdPrefix="rs" hgvsp="c.1701A&gt;G(p.=)" hgvsc="c.1701A&gt;G" cosmicId="COSM1430082" consequence="synonymous_variant" altReadDepth="1891" readDepth="1897" altVariantFreq="99.68" genotype="hom" type="snv" coordinate="55141054" chr="4" variant="A&gt;G/G" gene="PDGFRA"/>
+            </variants>
             <nameForCompare>PDGFRAex</nameForCompare>
             <exonNumberForCompare>12</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -10960,6 +11023,7 @@
                 <amplicon name="PDGFRAex13_tile_1" endPos="55144218" startPos="55144028" chr="chr4"/>
             </amplicons>
             <codingRegion name="PDGFRAex13_coding" endPos="55144173" startPos="55144063" chr="chr4"/>
+            <variants/>
             <nameForCompare>PDGFRAex</nameForCompare>
             <exonNumberForCompare>14</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -11100,6 +11164,7 @@
                 <amplicon name="PDGFRAex17_tile_2" endPos="55152195" startPos="55152009" chr="chr4"/>
             </amplicons>
             <codingRegion name="PDGFRAex17_coding" endPos="55152130" startPos="55152008" chr="chr4"/>
+            <variants/>
             <nameForCompare>PDGFRAex</nameForCompare>
             <exonNumberForCompare>18</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -11254,6 +11319,7 @@
                 <amplicon name="PIK3CAex1_tile_4" endPos="178917022" startPos="178916831" chr="chr3"/>
             </amplicons>
             <codingRegion name="PIK3CAex1_coding" endPos="178916965" startPos="178916614" chr="chr3"/>
+            <variants/>
             <nameForCompare>PIK3CAex</nameForCompare>
             <exonNumberForCompare>2</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -11636,6 +11702,7 @@
                 <amplicon name="PIK3CAex2_tile_3" endPos="178917762" startPos="178917589" chr="chr3"/>
             </amplicons>
             <codingRegion name="PIK3CAex2_coding" endPos="178917687" startPos="178917478" chr="chr3"/>
+            <variants/>
             <nameForCompare>PIK3CAex</nameForCompare>
             <exonNumberForCompare>3</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -11875,6 +11942,7 @@
                 <amplicon name="PIK3CAex7_tile_2" endPos="178928183" startPos="178927989" chr="chr3"/>
             </amplicons>
             <codingRegion name="PIK3CAex7_coding" endPos="178928126" startPos="178927974" chr="chr3"/>
+            <variants/>
             <nameForCompare>PIK3CAex</nameForCompare>
             <exonNumberForCompare>8</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -12056,6 +12124,7 @@
                 <amplicon name="PIK3CAex9_tile_2" endPos="178936201" startPos="178936011" chr="chr3"/>
             </amplicons>
             <codingRegion name="PIK3CAex9_coding" endPos="178936122" startPos="178935998" chr="chr3"/>
+            <variants/>
             <nameForCompare>PIK3CAex</nameForCompare>
             <exonNumberForCompare>10</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -12166,6 +12235,7 @@
                 <amplicon name="PIK3CAex20_tile_4" endPos="178952243" startPos="178952057" chr="chr3"/>
             </amplicons>
             <codingRegion name="PIK3CAex20_coding" endPos="178952152" startPos="178951882" chr="chr3"/>
+            <variants/>
             <nameForCompare>PIK3CAex</nameForCompare>
             <exonNumberForCompare>21</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -12465,6 +12535,7 @@
                 <amplicon name="PTENex1_tile_1" endPos="89624360" startPos="89624194" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex1_coding" endPos="89624305" startPos="89624227" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>1</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -12573,6 +12644,7 @@
                 <amplicon name="PTENex2_tile_2" endPos="89653967" startPos="89653787" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex2_coding" endPos="89653866" startPos="89653782" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>2</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -12686,6 +12758,7 @@
                 <amplicon name="PTENex3_tile_1" endPos="89685405" startPos="89685239" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex3_coding" endPos="89685314" startPos="89685270" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>3</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -12759,6 +12832,7 @@
                 <amplicon name="PTENex4_tile_1" endPos="89690946" startPos="89690754" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex4_coding" endPos="89690846" startPos="89690803" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>4</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -12833,6 +12907,7 @@
                 <amplicon name="PTENex5_tile_3" endPos="89693047" startPos="89692855" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex5_coding" endPos="89693008" startPos="89692770" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -13101,6 +13176,7 @@
                 <amplicon name="PTENex6_tile_2" endPos="89712057" startPos="89711884" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex6_coding" endPos="89712016" startPos="89711875" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>6</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -13273,6 +13349,7 @@
                 <amplicon name="PTENex7_tile_3" endPos="89717891" startPos="89717697" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex7_coding" endPos="89717776" startPos="89717610" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>7</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -13468,6 +13545,7 @@
                 <amplicon name="PTENex9_tile_2" endPos="89725178" startPos="89725011" chr="chr10"/>
             </amplicons>
             <codingRegion name="PTENex9_coding" endPos="89725229" startPos="89725044" chr="chr10"/>
+            <variants/>
             <nameForCompare>PTENex</nameForCompare>
             <exonNumberForCompare>9</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -13600,6 +13678,7 @@
                 <amplicon name="SMAD4ex8_tile_3" endPos="48592061" startPos="48591872" chr="chr18"/>
             </amplicons>
             <codingRegion name="SMAD4ex8_coding" endPos="48591976" startPos="48591793" chr="chr18"/>
+            <variants/>
             <nameForCompare>SMAD4ex</nameForCompare>
             <exonNumberForCompare>9</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -13813,6 +13892,7 @@
                 <amplicon name="SMAD4ex11_tile_3" endPos="48604885" startPos="48604699" chr="chr18"/>
             </amplicons>
             <codingRegion name="SMAD4ex11_coding" endPos="48604837" startPos="48604626" chr="chr18"/>
+            <variants/>
             <nameForCompare>SMAD4ex</nameForCompare>
             <exonNumberForCompare>12</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -14054,6 +14134,7 @@
                 <amplicon name="SRCex10_tile_2" endPos="36031898" startPos="36031705" chr="chr20"/>
             </amplicons>
             <codingRegion name="SRCex10_coding" endPos="36031782" startPos="36031574" chr="chr20"/>
+            <variants/>
             <nameForCompare>SRCex</nameForCompare>
             <exonNumberForCompare>13</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -14278,6 +14359,7 @@
                 <amplicon name="STK11ex1_tile_3" endPos="1207176" startPos="1207010" chr="chr19"/>
             </amplicons>
             <codingRegion name="STK11ex1_coding" endPos="1207202" startPos="1206913" chr="chr19"/>
+            <variants/>
             <nameForCompare>STK11ex</nameForCompare>
             <exonNumberForCompare>1</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -14538,6 +14620,7 @@
                 <amplicon name="STK11ex4_tile_1" endPos="1220423" startPos="1220249" chr="chr19"/>
             </amplicons>
             <codingRegion name="STK11ex4_coding" endPos="1220504" startPos="1220372" chr="chr19"/>
+            <variants/>
             <nameForCompare>STK11ex</nameForCompare>
             <exonNumberForCompare>4</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -14590,6 +14673,7 @@
                 <amplicon name="STK11ex6_tile_2" endPos="1221368" startPos="1221195" chr="chr19"/>
             </amplicons>
             <codingRegion name="STK11ex6_coding" endPos="1221339" startPos="1221212" chr="chr19"/>
+            <variants/>
             <nameForCompare>STK11ex</nameForCompare>
             <exonNumberForCompare>6</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -14747,6 +14831,7 @@
                 <amplicon name="STK11ex8_tile_2" endPos="1223222" startPos="1223041" chr="chr19"/>
             </amplicons>
             <codingRegion name="STK11ex8_coding" endPos="1223171" startPos="1222984" chr="chr19"/>
+            <variants/>
             <nameForCompare>STK11ex</nameForCompare>
             <exonNumberForCompare>8</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -14965,6 +15050,7 @@
                 <amplicon name="TP53ex2ex3ex4_tile_9" endPos="7580062" startPos="7579879" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex2_coding" endPos="7579912" startPos="7579839" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>2</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -15067,6 +15153,7 @@
                 <amplicon name="TP53ex2ex3ex4_tile_7" endPos="7579839" startPos="7579669" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex3_coding" endPos="7579721" startPos="7579700" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>3</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -15119,6 +15206,9 @@
                 <amplicon name="TP53ex2ex3ex4_tile_5" endPos="7579612" startPos="7579443" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex4_coding" endPos="7579590" startPos="7579312" chr="chr17"/>
+            <variants>
+                <variant alleleFreqGlobalMinor="39.79" dbSnpIdSuffix="1042522" dbSnpIdPrefix="rs" hgvsp="p.Pro72Arg" hgvsc="c.215C&gt;G" cosmicId="COSM45985" consequence="missense_variant" altReadDepth="1014" readDepth="1020" altVariantFreq="99.41" genotype="hom" type="snv" coordinate="7579471" chr="17" variant="G&gt;C/C" gene="TP53"/>
+            </variants>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>4</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -15428,6 +15518,7 @@
                 <amplicon name="TP53ex5TP53ex6_tile_5" endPos="7578651" startPos="7578474" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex5_coding" endPos="7578554" startPos="7578371" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -15641,6 +15732,7 @@
                 <amplicon name="TP53ex5TP53ex6_tile_3" endPos="7578434" startPos="7578242" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex6_coding" endPos="7578289" startPos="7578177" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>6</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -15782,6 +15874,7 @@
                 <amplicon name="TP53ex7_tile_1" endPos="7577649" startPos="7577473" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex7_coding" endPos="7577608" startPos="7577499" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>7</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -15921,6 +16014,7 @@
                 <amplicon name="TP53ex8TP53ex9_tile_4" endPos="7577219" startPos="7577050" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex8_coding" endPos="7577155" startPos="7577019" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>8</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -16087,6 +16181,7 @@
                 <amplicon name="TP53ex8TP53ex9_tile_3" endPos="7577100" startPos="7576918" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex9_coding" endPos="7576926" startPos="7576853" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>9</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -16189,6 +16284,7 @@
                 <amplicon name="TP53ex10_tile_1" endPos="7574062" startPos="7573869" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex10_coding" endPos="7574033" startPos="7573927" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>10</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
@@ -16324,6 +16420,7 @@
                 <amplicon name="TP53ex11_tile_1" endPos="7573055" startPos="7572883" chr="chr17"/>
             </amplicons>
             <codingRegion name="TP53ex11_coding" endPos="7573008" startPos="7572927" chr="chr17"/>
+            <variants/>
             <nameForCompare>TP53ex</nameForCompare>
             <exonNumberForCompare>11</exonNumberForCompare>
             <suffixForCompare></suffixForCompare>
