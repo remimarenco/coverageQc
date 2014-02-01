@@ -389,10 +389,16 @@
             <p>Copyright &#169; 2014 Geoffrey H. Smith (geoffrey.hughes.smith@gmail.com)</p>
             
             <xsl:if test="count(*/*/variants/variant) > 0">
-                <div id="exportDialog" style="display: none; font-family: Courrier;" title="export selected variant(s)">
+                <div id="exportDialog" style="display: none; font-family: monospace;" title="export selected variant(s)">
                     <script type="text/javascript">
 
                         function showExportDialog() {
+                            function pad(s1, s2, len) {
+                                for(var x = s1.length; x &lt;  len; x++) { 
+                                    s1 += s2;
+                                }
+                                return s1;
+                            }
                             var exportMap = new Object();
                             var exportText = "";
                             $(".exportCheckbox:checked").each(function() {
@@ -412,16 +418,16 @@
                                     exportMap[$(this).attr("data-export-label")] = $(this).text();
                                 });
                                 exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
-                                exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").\n\n";
-                                exportText += "coord (base 0)\tconsequence\t\tgenotype\talt-variant-freq\tminor-allele-freq\n";
-                                exportText += "--------------\t-----------\t\t--------\t----------------\t-----------------\n";
-                                exportText += exportMap.coordinate + "\t" + exportMap.consequence + "\t" + exportMap.genotype + "\t\t" + exportMap.avf + "\t\t\t" + exportMap.maf + "\n";
-                                exportText += "\n\n";
+                                exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").&lt;/br>&lt;/br>";
+                                exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 0)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
+                                exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
+                                exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
+                                exportText += "&lt;/br>&lt;/br>";
                             });
-                            $("#exportDialog").html(exportText.length > 0 ? "&lt;textarea style='width: 95%; height: 95%; font-family: Courrier;'>" + exportText + "&lt;/textarea>" : "no variants selected for export");
+                            $("#exportDialog").html(exportText.length > 0 ? exportText : "no variants selected for export");
                             $("#exportDialog").dialog({
                                 width:$(window).width() * 0.6,
-                                height:$(window).height() * 0.6
+                                height:$(window).height() * 0.8
                             });
                         }
 
