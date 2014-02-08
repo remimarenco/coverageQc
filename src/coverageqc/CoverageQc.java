@@ -1,8 +1,5 @@
 package coverageqc;
 
-import at.jta.Key;
-import at.jta.RegistryErrorException;
-import at.jta.Regor;
 import coverageqc.data.Amplicon;
 import coverageqc.data.Base;
 import coverageqc.data.Bin;
@@ -20,6 +17,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -44,36 +43,26 @@ public class CoverageQc {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException, JAXBException, TransformerConfigurationException, TransformerException, RegistryErrorException {
+    public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException, JAXBException, TransformerConfigurationException, TransformerException {
 
         if(args.length == 0) {
             System.out.println("");
-            System.out.println("USAGE: java -jar coverageQc.jar VCF-file-name exon-BED-file-name amplicon-BED-file-name");
+            System.out.println("USAGE: java -jar coverageQc.jar VCF-file-name exon-BED-file amplicon-BED-file");
             System.out.println("");
-            System.out.println("If BED file names are not specified, the last ones specified will be used.");
-            System.out.println("The BED file name is persisted in the Windows registry at:\n\nComputer\\HKEY_CURRENT_USER\\Software\\CoverageQc REG_SZ exonBedFileName\nComputer\\HKEY_CURRENT_USER\\Software\\CoverageQc REG_SZ ampliconBedFileName\n");
+            System.out.println("If BED file names are not specified, the system will attempt to use the\n\"exons_ensembl.bed\" and \"amplicons.bed\" files located in the same directory\nas this JAR (or exe) file.");
             return;
         }
         
         final File vcfFile = new File(args[0]);
 
-        // Windows registry stuff (this represents a Windows dependency)
         File exonBedFile;
         File ampliconBedFile;
         if(args.length == 1) {
-            Regor obj = new Regor();
-            Key key = obj.openKey(Regor.HKEY_CURRENT_USER, "Software\\CoverageQc");
-            exonBedFile = new File(obj.readValueAsString(key, "exonBedFileName"));
-            ampliconBedFile = new File(obj.readValueAsString(key, "ampliconBedFileName"));
+            File jarFile = new File(CoverageQc.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            exonBedFile = new File(URLDecoder.decode(jarFile.getParent(), "UTF-8") + "/" + "exons_ensembl.bed");
+            ampliconBedFile = new File(URLDecoder.decode(jarFile.getParent(), "UTF-8") + "/" + "amplicons.bed");
         }
         else {
-            Regor obj = new Regor();
-            Key key = obj.openKey(Regor.HKEY_CURRENT_USER, "Software\\CoverageQc");
-            if(key == null) {
-                key = obj.createKey(Regor.HKEY_CURRENT_USER, "Software\\CoverageQc");
-            }
-            obj.saveValue(key, "exonBedFileName", args[1]);
-            obj.saveValue(key, "ampliconBedFileName", args[2]);
             exonBedFile = new File(args[1]);
             ampliconBedFile = new File(args[2]);
         }
