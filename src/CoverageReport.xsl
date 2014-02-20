@@ -175,6 +175,7 @@
             
             <h1>Coverage QC Report</h1>
             <table>
+                <tr><td>version</td><td>:</td><td style="font-weight: bold;"> <xsl:value-of select="/vcf/@version"/> (build <xsl:value-of select="/vcf/@build"/>)</td></tr>
                 <tr><td>report run date</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="substring(/vcf/@runDate, 1, 16)"/></td></tr>
                 <tr><td>gVCF file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@fileName"/></td></tr>
                 <tr><td>variant TSV file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@variantTsvFileName"/></td></tr>

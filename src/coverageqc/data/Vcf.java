@@ -18,6 +18,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Vcf {
 
     @XmlAttribute
+    final static String BUILD = "20140219";
+    @XmlAttribute
+    final static String VERSION = "1.0";
+    
+    @XmlAttribute
     public String fileName;
     @XmlAttribute
     public String exonBedFileName;

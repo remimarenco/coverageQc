@@ -158,7 +158,10 @@
 <h1>Coverage QC Report</h1>
 <table>
 <tr>
-<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-02-07T20:10</td>
+<td>version</td><td>:</td><td style="font-weight: bold;">1.0 (build 20140219)</td>
+</tr>
+<tr>
+<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-02-20T12:56</td>
 </tr>
 <tr>
 <td>gVCF file</td><td>:</td><td style="font-weight: bold;">D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf</td>
@@ -195,12 +198,12 @@
 <th style="text-align: center;"><a href="#" id="geneExonExpandCollapseAllButton" style="color: blue; text-decoration: none; font-size: large; font-weight: bold;">+</a></th><th>QC</th><th>name</th><th>% exon<br>reported</th><th>locus</th><th>variant</th><th>0-99<br>reads</th><th>100-499<br>reads</th><th>500-999<br>reads</th><th>&ge;1000<br>reads</th>
 </tr>
 </thead>
-<tr style="font-weight: normal;">
+<tr style="font-weight: bold;">
 <td style="text-align: center; width: 20px;"><a href="#" id="geneExon1" class="geneExonExpandCollapseButton" style="color: blue; text-decoration: none; font-size: large; font-weight: bold;">+</a></td><td style="background-color: red;">fail</td><td data-export-label="exon">AKT1ex3<br>
 <span style="font-size: x-small">
                                 Ensembl ID: <a href="http://www.ensembl.org/id/ENST00000555528.1">ENSE00003642995.1</a>
 <br>
-                                vendor ID: AKT1ex2</span></td><td style="text-align: right;">100</td><td data-export-label="locus"><a href="http://localhost:60151/load?file=file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed&amp;locus=chr14:105246420-105246558&amp;genome=hg19&amp;merge=false">chr14:105246420-105246558</a></td><td>false</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="0">0</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="100">129</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="0">0</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="0">0</td>
+                                vendor ID: AKT1ex2</span></td><td style="text-align: right;">100</td><td data-export-label="locus"><a href="http://localhost:60151/load?file=file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed&amp;locus=chr14:105246420-105246558&amp;genome=hg19&amp;merge=false">chr14:105246420-105246558</a></td><td>true</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="0">0</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="100">129</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="0">0</td><td class="readHistogram" style="text-align: right; width: 40px;" data-pct="0">0</td>
 </tr>
 <tr style="display: none;" class="tablesorter-childRow geneExon_child geneExon1_child">
 <td colspan="10" style="background: white;">
@@ -431,6 +434,17 @@
                                     }
 
                                 </script>
+</div>
+<div style="font-size: small; padding: 10px;">
+<h3>Filtered and Annotated Variant(s)</h3>
+<table class="dataTable">
+<tr>
+<th>export?</th><th>gene</th><th>coordinate</th><th>consequence</th><th>genotype</th><th>AVF</th><th>cDNA</th><th>amino acid</th><th>dbSNP</th><th>MAF</th><th>COSMIC ID</th>
+</tr>
+<tr>
+<td style="text-align: center;"><input type="checkbox" class="exportCheckbox"></td><td data-export-label="gene">AKT1</td><td data-export-label="coordinate">chr14:105246527</td><td data-export-label="consequence">XXXXXXXXXXXXXXXXXXX</td><td data-export-label="genotype">XXX</td><td data-export-label="avf" style="text-align: right;">0.0</td><td data-export-label="cDna">XXXXXXXXXXXXXXXXXXXX</td><td data-export-label="aminoAcid"></td><td><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?XXXXXXXXX=">XXXXXXXXX</a></td><td data-export-label="maf" style="text-align: right;">0.0</td><td><a href="http://cancer.sanger.ac.uk/cosmic/search?q="></a></td>
+</tr>
+</table>
 </div>
 </td>
 </tr>
