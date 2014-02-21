@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<vcf readDepthCount="14828" filteredAnnotatedVariantCount="7" bedBamVcfFileUrlsAsString="file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed" baseCount="14827" ampliconCount="256" runDate="2014-02-20T12:56:07.806-05:00" variantTsvFileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.variant.tsv" ampliconBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\amplicons.bed" exonBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\exons_ensembl.bed" fileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf" version="1.0" build="20140219">
+<vcf readDepthCount="14828" filteredAnnotatedVariantCount="7" bedBamVcfFileUrlsAsString="file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed" baseCount="14827" ampliconCount="256" runDate="2014-02-20T16:36:08.815-05:00" variantTsvFileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.variant.tsv" ampliconBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\amplicons.bed" exonBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\exons_ensembl.bed" fileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf" version="1.0" build="20140219">
     <geneExons>
         <geneExon variantCalled="true" pctOfExon="100.0" vendorGeneExonName="AKT1ex2" ensemblExonNumber="3" ensemblExonId="ENSE00003642995.1" ensemblTranscriptId="ENST00000555528.1" ensemblGeneId="ENSG00000142208.11" qc="fail" name="AKT1ex3" endPos="105246558" startPos="105246420" chr="chr14">
             <bins>
@@ -1526,7 +1526,7 @@
                 <base totalReadDepth="2215" pos="112175766" chr="chr5"/>
                 <base totalReadDepth="2209" pos="112175767" chr="chr5"/>
                 <base totalReadDepth="2225" pos="112175768" chr="chr5"/>
-                <base totalReadDepth="2224" variantText="pos 112175769: X&gt;X (5&gt;2216 reads)" variant="X&gt;X" pos="112175769" chr="chr5"/>
+                <base totalReadDepth="2224" variantText="112175769: X&gt;X (reads: 5&gt;2216, filter: PASS, qual: 100)" variant="X&gt;X" pos="112175769" chr="chr5"/>
                 <base totalReadDepth="2217" pos="112175770" chr="chr5"/>
                 <base totalReadDepth="2214" pos="112175771" chr="chr5"/>
                 <base totalReadDepth="2199" pos="112175772" chr="chr5"/>
@@ -3736,7 +3736,7 @@
                 <base totalReadDepth="605" pos="37881023" chr="chr17"/>
                 <base totalReadDepth="601" pos="37881024" chr="chr17"/>
                 <base totalReadDepth="602" pos="37881025" chr="chr17"/>
-                <base totalReadDepth="607" variantText="pos 37881026: X&gt;X (583&gt;24 reads)" variant="X&gt;X" pos="37881026" chr="chr17"/>
+                <base totalReadDepth="607" variantText="37881026: X&gt;X (reads: 583&gt;24, filter: LowDP;PB, qual: 100)" variant="X&gt;X" pos="37881026" chr="chr17"/>
                 <base totalReadDepth="600" pos="37881027" chr="chr17"/>
                 <base totalReadDepth="606" pos="37881028" chr="chr17"/>
                 <base totalReadDepth="603" pos="37881029" chr="chr17"/>
@@ -5885,7 +5885,7 @@
                 <base totalReadDepth="1481" pos="80343583" chr="chr9"/>
                 <base totalReadDepth="1488" pos="80343584" chr="chr9"/>
                 <base totalReadDepth="1472" pos="80343585" chr="chr9"/>
-                <base totalReadDepth="1369" variantText="pos 80343586: X&gt;X (1281&gt;88 reads), X&gt;X (1157&gt;212 reads), X&gt;X (1110&gt;259 reads), X&gt;X (1277&gt;92 reads)" variant="X&gt;X, X&gt;X, X&gt;X, X&gt;X" pos="80343586" chr="chr9"/>
+                <base totalReadDepth="1369" variantText="80343586: X&gt;X (reads: 1281&gt;88, filter: LowDP;PB, qual: 100), X&gt;X (reads: 1157&gt;212, filter: LowDP;PB, qual: 100), X&gt;X (reads: 1110&gt;259, filter: LowDP;PB, qual: 100), X&gt;X (reads: 1277&gt;92, filter: LowDP;PB, qual: 100)" variant="X&gt;X, X&gt;X, X&gt;X, X&gt;X" pos="80343586" chr="chr9"/>
                 <base totalReadDepth="1011" pos="80343587" chr="chr9"/>
                 <base totalReadDepth="1245" pos="80343588" chr="chr9"/>
             </bases>
@@ -6919,7 +6919,7 @@
                 <base totalReadDepth="2546" pos="55602761" chr="chr4"/>
                 <base totalReadDepth="2562" pos="55602762" chr="chr4"/>
                 <base totalReadDepth="2555" pos="55602763" chr="chr4"/>
-                <base totalReadDepth="2522" variantText="pos 55602764: X&gt;X (1307&gt;1210 reads)" variant="X&gt;X" pos="55602764" chr="chr4"/>
+                <base totalReadDepth="2522" variantText="55602764: X&gt;X (reads: 1307&gt;1210, filter: PASS, qual: 100)" variant="X&gt;X" pos="55602764" chr="chr4"/>
                 <base totalReadDepth="2577" pos="55602765" chr="chr4"/>
                 <base totalReadDepth="2554" pos="55602766" chr="chr4"/>
                 <base totalReadDepth="2567" pos="55602767" chr="chr4"/>
@@ -7221,7 +7221,7 @@
                 <base totalReadDepth="14030" pos="25380271" chr="chr12"/>
                 <base totalReadDepth="13897" pos="25380272" chr="chr12"/>
                 <base totalReadDepth="14020" pos="25380273" chr="chr12"/>
-                <base totalReadDepth="13896" variantText="pos 25380274: X&gt;X (12905&gt;973 reads)" variant="X&gt;X" pos="25380274" chr="chr12"/>
+                <base totalReadDepth="13896" variantText="25380274: X&gt;X (reads: 12905&gt;973, filter: PASS, qual: 100)" variant="X&gt;X" pos="25380274" chr="chr12"/>
                 <base totalReadDepth="13928" pos="25380275" chr="chr12"/>
                 <base totalReadDepth="13924" pos="25380276" chr="chr12"/>
                 <base totalReadDepth="13966" pos="25380277" chr="chr12"/>
@@ -7563,7 +7563,7 @@
                 <base totalReadDepth="5725" pos="25362773" chr="chr12"/>
                 <base totalReadDepth="5692" pos="25362774" chr="chr12"/>
                 <base totalReadDepth="5664" pos="25362775" chr="chr12"/>
-                <base totalReadDepth="5705" variantText="pos 25362776: X&gt;X (10&gt;5693 reads)" variant="X&gt;X" pos="25362776" chr="chr12"/>
+                <base totalReadDepth="5705" variantText="25362776: X&gt;X (reads: 10&gt;5693, filter: PASS, qual: 100)" variant="X&gt;X" pos="25362776" chr="chr12"/>
                 <base totalReadDepth="5693" pos="25362777" chr="chr12"/>
                 <base totalReadDepth="5702" pos="25362778" chr="chr12"/>
                 <base totalReadDepth="5695" pos="25362779" chr="chr12"/>
@@ -9971,7 +9971,7 @@
                 <base totalReadDepth="1721" pos="48030635" chr="chr2"/>
                 <base totalReadDepth="1723" pos="48030636" chr="chr2"/>
                 <base totalReadDepth="1737" pos="48030637" chr="chr2"/>
-                <base totalReadDepth="1722" variantText="pos 48030638: X&gt;X (1132&gt;43 reads), X&gt;X (1654&gt;68 reads)" variant="X&gt;X, X&gt;X" pos="48030638" chr="chr2"/>
+                <base totalReadDepth="1722" variantText="48030638: X&gt;X (reads: 1132&gt;43, filter: PB, qual: 100), X&gt;X (reads: 1654&gt;68, filter: PASS, qual: 48)" variant="X&gt;X, X&gt;X" pos="48030638" chr="chr2"/>
                 <base totalReadDepth="1675" pos="48030639" chr="chr2"/>
                 <base totalReadDepth="1715" pos="48030640" chr="chr2"/>
                 <base totalReadDepth="1733" pos="48030641" chr="chr2"/>
@@ -10919,7 +10919,7 @@
                 <base totalReadDepth="1879" pos="55141051" chr="chr4"/>
                 <base totalReadDepth="1891" pos="55141052" chr="chr4"/>
                 <base totalReadDepth="1893" pos="55141053" chr="chr4"/>
-                <base totalReadDepth="1897" variantText="pos 55141054: X&gt;X (4&gt;1891 reads)" variant="X&gt;X" pos="55141054" chr="chr4"/>
+                <base totalReadDepth="1897" variantText="55141054: X&gt;X (reads: 4&gt;1891, filter: PASS, qual: 100)" variant="X&gt;X" pos="55141054" chr="chr4"/>
                 <base totalReadDepth="1898" pos="55141055" chr="chr4"/>
                 <base totalReadDepth="1908" pos="55141056" chr="chr4"/>
                 <base totalReadDepth="3798" pos="55141057" chr="chr4"/>
@@ -11207,7 +11207,7 @@
                 <base totalReadDepth="646" pos="55152036" chr="chr4"/>
                 <base totalReadDepth="649" pos="55152037" chr="chr4"/>
                 <base totalReadDepth="643" pos="55152038" chr="chr4"/>
-                <base totalReadDepth="651" variantText="pos 55152039: X&gt;X (338&gt;312 reads)" variant="X&gt;X" pos="55152039" chr="chr4"/>
+                <base totalReadDepth="651" variantText="55152039: X&gt;X (reads: 338&gt;312, filter: LowDP;PB, qual: 100)" variant="X&gt;X" pos="55152039" chr="chr4"/>
                 <base totalReadDepth="651" pos="55152040" chr="chr4"/>
                 <base totalReadDepth="652" pos="55152041" chr="chr4"/>
                 <base totalReadDepth="652" pos="55152042" chr="chr4"/>
@@ -14565,7 +14565,7 @@
                 <base totalReadDepth="843" pos="1207104" chr="chr19"/>
                 <base totalReadDepth="825" pos="1207105" chr="chr19"/>
                 <base totalReadDepth="842" pos="1207106" chr="chr19"/>
-                <base totalReadDepth="838" variantText="pos 1207107: X&gt;X (804&gt;34 reads)" variant="X&gt;X" pos="1207107" chr="chr19"/>
+                <base totalReadDepth="838" variantText="1207107: X&gt;X (reads: 804&gt;34, filter: PB, qual: 100)" variant="X&gt;X" pos="1207107" chr="chr19"/>
                 <base totalReadDepth="793" pos="1207108" chr="chr19"/>
                 <base totalReadDepth="839" pos="1207109" chr="chr19"/>
                 <base totalReadDepth="836" pos="1207110" chr="chr19"/>
@@ -15379,7 +15379,7 @@
                 <base totalReadDepth="1020" pos="7579468" chr="chr17"/>
                 <base totalReadDepth="1013" pos="7579469" chr="chr17"/>
                 <base totalReadDepth="1019" pos="7579470" chr="chr17"/>
-                <base totalReadDepth="1020" variantText="pos 7579471: X&gt;X (1&gt;1014 reads)" variant="X&gt;X" pos="7579471" chr="chr17"/>
+                <base totalReadDepth="1020" variantText="7579471: X&gt;X (reads: 1&gt;1014, filter: PASS, qual: 100)" variant="X&gt;X" pos="7579471" chr="chr17"/>
                 <base totalReadDepth="1024" pos="7579472" chr="chr17"/>
                 <base totalReadDepth="1011" pos="7579473" chr="chr17"/>
                 <base totalReadDepth="1012" pos="7579474" chr="chr17"/>
@@ -21470,7 +21470,7 @@
         </entry>
         <entry>
             <key>chr12|25362776</key>
-            <value totalReadDepth="5705" variantText="pos 25362776: X&gt;X (10&gt;5693 reads)" variant="X&gt;X" pos="25362776" chr="chr12"/>
+            <value totalReadDepth="5705" variantText="25362776: X&gt;X (reads: 10&gt;5693, filter: PASS, qual: 100)" variant="X&gt;X" pos="25362776" chr="chr12"/>
         </entry>
         <entry>
             <key>chr12|25362777</key>
@@ -22894,7 +22894,7 @@
         </entry>
         <entry>
             <key>chr12|25380274</key>
-            <value totalReadDepth="13896" variantText="pos 25380274: X&gt;X (12905&gt;973 reads)" variant="X&gt;X" pos="25380274" chr="chr12"/>
+            <value totalReadDepth="13896" variantText="25380274: X&gt;X (reads: 12905&gt;973, filter: PASS, qual: 100)" variant="X&gt;X" pos="25380274" chr="chr12"/>
         </entry>
         <entry>
             <key>chr12|25380275</key>
@@ -27266,7 +27266,7 @@
         </entry>
         <entry>
             <key>chr17|37881026</key>
-            <value totalReadDepth="607" variantText="pos 37881026: X&gt;X (583&gt;24 reads)" variant="X&gt;X" pos="37881026" chr="chr17"/>
+            <value totalReadDepth="607" variantText="37881026: X&gt;X (reads: 583&gt;24, filter: LowDP;PB, qual: 100)" variant="X&gt;X" pos="37881026" chr="chr17"/>
         </entry>
         <entry>
             <key>chr17|37881027</key>
@@ -32006,7 +32006,7 @@
         </entry>
         <entry>
             <key>chr17|7579471</key>
-            <value totalReadDepth="1020" variantText="pos 7579471: X&gt;X (1&gt;1014 reads)" variant="X&gt;X" pos="7579471" chr="chr17"/>
+            <value totalReadDepth="1020" variantText="7579471: X&gt;X (reads: 1&gt;1014, filter: PASS, qual: 100)" variant="X&gt;X" pos="7579471" chr="chr17"/>
         </entry>
         <entry>
             <key>chr17|7579472</key>
@@ -35430,7 +35430,7 @@
         </entry>
         <entry>
             <key>chr19|1207107</key>
-            <value totalReadDepth="838" variantText="pos 1207107: X&gt;X (804&gt;34 reads)" variant="X&gt;X" pos="1207107" chr="chr19"/>
+            <value totalReadDepth="838" variantText="1207107: X&gt;X (reads: 804&gt;34, filter: PB, qual: 100)" variant="X&gt;X" pos="1207107" chr="chr19"/>
         </entry>
         <entry>
             <key>chr19|1207108</key>
@@ -41674,7 +41674,7 @@
         </entry>
         <entry>
             <key>chr2|48030638</key>
-            <value totalReadDepth="1722" variantText="pos 48030638: X&gt;X (1132&gt;43 reads), X&gt;X (1654&gt;68 reads)" variant="X&gt;X, X&gt;X" pos="48030638" chr="chr2"/>
+            <value totalReadDepth="1722" variantText="48030638: X&gt;X (reads: 1132&gt;43, filter: PB, qual: 100), X&gt;X (reads: 1654&gt;68, filter: PASS, qual: 48)" variant="X&gt;X, X&gt;X" pos="48030638" chr="chr2"/>
         </entry>
         <entry>
             <key>chr2|48030639</key>
@@ -52466,7 +52466,7 @@
         </entry>
         <entry>
             <key>chr4|55141054</key>
-            <value totalReadDepth="1897" variantText="pos 55141054: X&gt;X (4&gt;1891 reads)" variant="X&gt;X" pos="55141054" chr="chr4"/>
+            <value totalReadDepth="1897" variantText="55141054: X&gt;X (reads: 4&gt;1891, filter: PASS, qual: 100)" variant="X&gt;X" pos="55141054" chr="chr4"/>
         </entry>
         <entry>
             <key>chr4|55141055</key>
@@ -53462,7 +53462,7 @@
         </entry>
         <entry>
             <key>chr4|55152039</key>
-            <value totalReadDepth="651" variantText="pos 55152039: X&gt;X (338&gt;312 reads)" variant="X&gt;X" pos="55152039" chr="chr4"/>
+            <value totalReadDepth="651" variantText="55152039: X&gt;X (reads: 338&gt;312, filter: LowDP;PB, qual: 100)" variant="X&gt;X" pos="55152039" chr="chr4"/>
         </entry>
         <entry>
             <key>chr4|55152040</key>
@@ -56650,7 +56650,7 @@
         </entry>
         <entry>
             <key>chr4|55602764</key>
-            <value totalReadDepth="2522" variantText="pos 55602764: X&gt;X (1307&gt;1210 reads)" variant="X&gt;X" pos="55602764" chr="chr4"/>
+            <value totalReadDepth="2522" variantText="55602764: X&gt;X (reads: 1307&gt;1210, filter: PASS, qual: 100)" variant="X&gt;X" pos="55602764" chr="chr4"/>
         </entry>
         <entry>
             <key>chr4|55602765</key>
@@ -61498,7 +61498,7 @@
         </entry>
         <entry>
             <key>chr5|112175769</key>
-            <value totalReadDepth="2224" variantText="pos 112175769: X&gt;X (5&gt;2216 reads)" variant="X&gt;X" pos="112175769" chr="chr5"/>
+            <value totalReadDepth="2224" variantText="112175769: X&gt;X (reads: 5&gt;2216, filter: PASS, qual: 100)" variant="X&gt;X" pos="112175769" chr="chr5"/>
         </entry>
         <entry>
             <key>chr5|112175770</key>
@@ -74706,7 +74706,7 @@
         </entry>
         <entry>
             <key>chr9|80343586</key>
-            <value totalReadDepth="1369" variantText="pos 80343586: X&gt;X (1281&gt;88 reads), X&gt;X (1157&gt;212 reads), X&gt;X (1110&gt;259 reads), X&gt;X (1277&gt;92 reads)" variant="X&gt;X, X&gt;X, X&gt;X, X&gt;X" pos="80343586" chr="chr9"/>
+            <value totalReadDepth="1369" variantText="80343586: X&gt;X (reads: 1281&gt;88, filter: LowDP;PB, qual: 100), X&gt;X (reads: 1157&gt;212, filter: LowDP;PB, qual: 100), X&gt;X (reads: 1110&gt;259, filter: LowDP;PB, qual: 100), X&gt;X (reads: 1277&gt;92, filter: LowDP;PB, qual: 100)" variant="X&gt;X, X&gt;X, X&gt;X, X&gt;X" pos="80343586" chr="chr9"/>
         </entry>
         <entry>
             <key>chr9|80343587</key>

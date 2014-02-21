@@ -21,6 +21,10 @@ public class Base implements Comparable<Object> {
     public String variant; // e.g., "A>G"
     @XmlAttribute
     public String variantText; // e.g., "A>G (804>34 reads)"
+    @XmlAttribute
+    public String quality;
+    @XmlAttribute
+    public String filter;
     
     @java.lang.Override
     public int compareTo(Object o) {
@@ -75,7 +79,19 @@ public class Base implements Comparable<Object> {
         base.readDepths.add(new Long(readDepth));
         if(variant != null) {
             base.variant = (base.variant == null ? "" : base.variant + ", ") + variant;
-            base.variantText = (base.variantText == null ? "pos " + pos + ": " : base.variantText + ", ") + variant + " (" + fields[9].split(":")[2].replace(',', '>') + " reads)";
+            int quality =  Math.round(Float.parseFloat(fields[5]));
+            String filter = fields[6];
+            int refReads = Integer.parseInt(fields[9].split(":")[2].split(",")[0]);
+            int altReads = Integer.parseInt(fields[9].split(":")[2].split(",")[1]);
+            base.variantText =
+                (base.variantText == null ? pos + ": " : base.variantText + ", ")
+                + ""
+                + variant
+                + " ("
+                + "reads: " + refReads + ">" + altReads
+                + ", filter: " + filter
+                + ", qual: " + quality
+                + ")";
         }
         return base;
     }

@@ -86,7 +86,7 @@ public class CoverageQc {
                 public boolean accept(File pathname) {
                     return(
                         (
-                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase())
+                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + ".")
                             && pathname.getName().toLowerCase().endsWith(".tsv")
                         )
                     );
@@ -115,7 +115,13 @@ public class CoverageQc {
                 public boolean accept(File pathname) {
                     return(
                         (
-                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase())
+                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + ".")
+                            && (pathname.getName().toLowerCase().endsWith(".bam") || (pathname.getName().toLowerCase().endsWith(".vcf")))
+                            && (pathname.getName().indexOf("genome") < 0)
+                        )
+                        ||
+                        (
+                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + "_")
                             && (pathname.getName().toLowerCase().endsWith(".bam") || (pathname.getName().toLowerCase().endsWith(".vcf")))
                             && (pathname.getName().indexOf("genome") < 0)
                         )
