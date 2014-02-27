@@ -194,9 +194,7 @@
                 </li>
                 <li>Coding regions and amplicons are specified by vendor.</li>
                 <li>If the gVCF file contains multiple entries for the same position (e.g., indels), the maximum read depth value is reported here.</li>
-                <xsl:if test="count(*/*/variants/variant) > 0">
-                    <li>After selecting variants for export, <a id="exportLink" href="#">click here</a> to see them as a text document suitable for cut-and-paste operations.</li>
-                </xsl:if>
+                <li>After selecting variants for export, <a id="exportLink" href="#">click here</a> to see them as a text document suitable for cut-and-paste operations.</li>
             </ul>
             
             <table id="qcReportTable" class="dataTable">
@@ -393,70 +391,68 @@
 
             <p>Copyright &#169; 2014 Geoffrey H. Smith (geoffrey.hughes.smith@gmail.com)</p>
             
-            <xsl:if test="count(*/*/variants/variant) > 0">
-                <div id="exportDialog" style="display: none; font-family: monospace;" title="export selected variant(s)">
-                    <script type="text/javascript">
+            <div id="exportDialog" style="display: none; font-family: monospace;" title="export selected variant(s)">
+                <script type="text/javascript">
 
-                        function showExportDialog() {
-                            function pad(s1, s2, len) {
-                                for(var x = s1.length; x &lt;  len; x++) { 
-                                    s1 += s2;
-                                }
-                                return s1;
+                    function showExportDialog() {
+                        function pad(s1, s2, len) {
+                            for(var x = s1.length; x &lt;  len; x++) { 
+                                s1 += s2;
                             }
-                            var exportMap = new Object();
-                            var exportText = "";
-                            $(".exportCheckbox:checked").each(function() {
-                                $(this).parents("tr.geneExon_child").prev("tr").find("td[data-export-label]").each(function() {
-                                    if($(this).attr("data-export-label") == "exon") {
-                                        var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm;
-                                        var match = re.exec($(this).text());
-                                        exportMap["exonName"] = match[1];
-                                        exportMap["exonEnsemblId"] = match[2];
-                                        exportMap["exonVendorId"] = match[3];
-                                    }
-                                    else {
-                                        exportMap[$(this).attr("data-export-label")] = $(this).text();
-                                    }
-                                });
-                                $(this).parents("tr.filteredAnnotatedVariant").find("td[data-export-label]").each(function() {
+                            return s1;
+                        }
+                        var exportMap = new Object();
+                        var exportText = "";
+                        $(".exportCheckbox:checked").each(function() {
+                            $(this).parents("tr.geneExon_child").prev("tr").find("td[data-export-label]").each(function() {
+                                if($(this).attr("data-export-label") == "exon") {
+                                    var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm;
+                                    var match = re.exec($(this).text());
+                                    exportMap["exonName"] = match[1];
+                                    exportMap["exonEnsemblId"] = match[2];
+                                    exportMap["exonVendorId"] = match[3];
+                                }
+                                else {
                                     exportMap[$(this).attr("data-export-label")] = $(this).text();
-                                });
-                                exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
-                                exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
-                                exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 0)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
-                                exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
-                                exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
-                                exportText += "&lt;br/>&lt;br/>";
-                            });
-                            $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText : "No variants selected for export."));
-
-                            var failedExons = "";
-                            $("tr.geneExon_parent").each(function() {
-                                if($(this).find("td[data-export-label='qc']").text() == "fail") {
-                                    failedExons += "&lt;tr>&lt;td>" + pad((/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1], "&#160;", 18) + "&lt;/td>";
-                                    failedExons += "&lt;td>" + pad($(this).find("td[data-export-label='locus']").text(), "&#160;", 30) + "&lt;/td>";
-                                    failedExons += "&lt;td>" + pad((parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))), "&#160;", 21) + "&lt;/td>&lt;/tr>";
                                 }
                             });
-                            if(failedExons.length > 0) {
-                                var failedExonsText = "";
-                                failedExonsText += "&lt;br/>&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation:&lt;br/>&lt;br/>";
-                                failedExonsText += "&lt;table>&lt;tr>&lt;td>" + pad("gene/exon", "&#160;", 18) + "&lt;/td>&lt;td>" + pad("locus", "&#160;", 30) + "&lt;/td>&lt;td>" + pad("% of locus failing QC", "&#160;", 21) + "&lt;/td>&lt;/tr>";
-                                failedExonsText += "&lt;tr>&lt;td>" + pad("-", "-", 18) + "&lt;/td>&lt;td>" + pad("-", "-", 30) + "&lt;/td>&lt;td>" + pad("-", "-", 21) + "&lt;/td>&lt;/tr>";
-                                failedExonsText += failedExons + "&lt;/table>";
-                                $("#exportDialog").append(failedExonsText);
-                            }
-
-                            $("#exportDialog").dialog({
-                                width:$(window).width() * 0.6,
-                                height:$(window).height() * 0.8
+                            $(this).parents("tr.filteredAnnotatedVariant").find("td[data-export-label]").each(function() {
+                                exportMap[$(this).attr("data-export-label")] = $(this).text();
                             });
+                            exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
+                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
+                            exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 0)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
+                            exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
+                            exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
+                            exportText += "&lt;br/>&lt;br/>";
+                        });
+                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText : "No variants selected for export."));
+
+                        var failedExons = "";
+                        $("tr.geneExon_parent").each(function() {
+                            if($(this).find("td[data-export-label='qc']").text() == "fail") {
+                                failedExons += "&lt;tr>&lt;td>" + pad((/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1], "&#160;", 18) + "&lt;/td>";
+                                failedExons += "&lt;td>" + pad($(this).find("td[data-export-label='locus']").text(), "&#160;", 30) + "&lt;/td>";
+                                failedExons += "&lt;td>" + pad((parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))), "&#160;", 21) + "&lt;/td>&lt;/tr>";
+                            }
+                        });
+                        if(failedExons.length > 0) {
+                            var failedExonsText = "";
+                            failedExonsText += "&lt;br/>&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation:&lt;br/>&lt;br/>";
+                            failedExonsText += "&lt;table>&lt;tr>&lt;td>" + pad("gene/exon", "&#160;", 18) + "&lt;/td>&lt;td>" + pad("locus", "&#160;", 30) + "&lt;/td>&lt;td>" + pad("% of locus failing QC", "&#160;", 21) + "&lt;/td>&lt;/tr>";
+                            failedExonsText += "&lt;tr>&lt;td>" + pad("-", "-", 18) + "&lt;/td>&lt;td>" + pad("-", "-", 30) + "&lt;/td>&lt;td>" + pad("-", "-", 21) + "&lt;/td>&lt;/tr>";
+                            failedExonsText += failedExons + "&lt;/table>";
+                            $("#exportDialog").append(failedExonsText);
                         }
 
-                    </script>
-                </div>
-            </xsl:if>
+                        $("#exportDialog").dialog({
+                            width:$(window).width() * 0.6,
+                            height:$(window).height() * 0.8
+                        });
+                    }
+
+                </script>
+            </div>
 
         </body>
         
