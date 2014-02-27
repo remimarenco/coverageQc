@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<vcf readDepthCount="14828" filteredAnnotatedVariantCount="7" bedBamVcfFileUrlsAsString="file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed" baseCount="14827" ampliconCount="256" runDate="2014-02-20T16:36:08.815-05:00" variantTsvFileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.variant.tsv" ampliconBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\amplicons.bed" exonBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\exons_ensembl.bed" fileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf" version="1.0" build="20140219">
+<vcf readDepthCount="14828" filteredAnnotatedVariantCount="8" bedBamVcfFileUrlsAsString="file:///D:/Documents/NetBeansProjects/coverageQc/data/amplicons.bed" baseCount="14827" ampliconCount="256" runDate="2014-02-27T01:53:47.657-05:00" variantTsvFileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.variant.tsv" ampliconBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\amplicons.bed" exonBedFileName="D:\Documents\NetBeansProjects\coverageQc\data\exons_ensembl.bed" fileName="D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf" version="1.0" build="20140219">
     <geneExons>
         <geneExon variantCalled="true" pctOfExon="100.0" vendorGeneExonName="AKT1ex2" ensemblExonNumber="3" ensemblExonId="ENSE00003642995.1" ensemblTranscriptId="ENST00000555528.1" ensemblGeneId="ENSG00000142208.11" qc="fail" name="AKT1ex3" endPos="105246558" startPos="105246420" chr="chr14">
             <bins>
@@ -7506,6 +7506,7 @@
             <codingRegion name="KRASex4_coding" endPos="25362845" startPos="25362729" chr="chr12"/>
             <variants>
                 <variant alleleFreqGlobalMinor="16.58" dbSnpIdSuffix="1137282" dbSnpIdPrefix="rs" hgvsp="" hgvsc="c.*73T&gt;C" cosmicId="" consequence="3_prime_UTR_variant" altReadDepth="5693" readDepth="5705" altVariantFreq="99.79" genotype="hom" type="snv" coordinate="25362776" chr="12" variant="A&gt;G/G" gene="KRAS"/>
+                <variant alleleFreqGlobalMinor="16.58" dbSnpIdSuffix="1137282" dbSnpIdPrefix="rs" hgvsp="" hgvsc="c.*73T&gt;C" cosmicId="" consequence="XXXXXXXXXXXXXXXXXXX" altReadDepth="5693" readDepth="5705" altVariantFreq="99.79" genotype="XXX" type="snv" coordinate="25362776" chr="12" variant="A&gt;G/G" gene="KRAS"/>
             </variants>
             <nameForCompare>KRASex</nameForCompare>
             <exonNumberForCompare>5</exonNumberForCompare>

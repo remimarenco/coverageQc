@@ -235,11 +235,11 @@
                             <xsl:otherwise></xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
-                    <tr style="font-weight: {$weight};">
+                    <tr style="font-weight: {$weight};" class="geneExon_parent">
                         <td style="text-align: center; width: 20px;">
                             <a href="#" id="geneExon{position()}" class="geneExonExpandCollapseButton" style="color: blue; text-decoration: none; font-size: large; font-weight: bold;">+</a>
                         </td>
-                        <td style="background-color: {$color};"><xsl:value-of select="@qc"/></td>
+                        <td style="background-color: {$color};" data-export-label="qc"><xsl:value-of select="@qc"/></td>
                         <td data-export-label="exon">
                             <xsl:value-of select="@name"/><br/>
                             <span style="font-size: x-small">
@@ -369,7 +369,7 @@
                                             <th>COSMIC ID</th>
                                         </tr>
                                         <xsl:for-each select="variants/variant">
-                                            <tr>
+                                            <tr class="filteredAnnotatedVariant">
                                                 <td style="text-align: center;"><input type="checkbox" class="exportCheckbox"/></td>
                                                 <td data-export-label="gene"><xsl:value-of select="@gene"/></td>
                                                 <td data-export-label="coordinate">chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></td>
@@ -407,7 +407,7 @@
                             var exportMap = new Object();
                             var exportText = "";
                             $(".exportCheckbox:checked").each(function() {
-                                $(this).parents("tr").prev("tr").find("td[data-export-label]").each(function() {
+                                $(this).parents("tr.geneExon_child").prev("tr").find("td[data-export-label]").each(function() {
                                     if($(this).attr("data-export-label") == "exon") {
                                         var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm;
                                         var match = re.exec($(this).text());
@@ -419,17 +419,35 @@
                                         exportMap[$(this).attr("data-export-label")] = $(this).text();
                                     }
                                 });
-                                $(this).parents("tr").find("td[data-export-label]").each(function() {
+                                $(this).parents("tr.filteredAnnotatedVariant").find("td[data-export-label]").each(function() {
                                     exportMap[$(this).attr("data-export-label")] = $(this).text();
                                 });
                                 exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
-                                exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").&lt;/br>&lt;/br>";
+                                exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
                                 exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 0)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
                                 exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
                                 exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
-                                exportText += "&lt;/br>&lt;/br>";
+                                exportText += "&lt;br/>&lt;br/>";
                             });
-                            $("#exportDialog").html(exportText.length > 0 ? exportText : "no variants selected for export");
+                            $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText : "No variants selected for export."));
+
+                            var failedExons = "";
+                            $("tr.geneExon_parent").each(function() {
+                                if($(this).find("td[data-export-label='qc']").text() == "fail") {
+                                    failedExons += "&lt;tr>&lt;td>" + pad((/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1], "&#160;", 18) + "&lt;/td>";
+                                    failedExons += "&lt;td>" + pad($(this).find("td[data-export-label='locus']").text(), "&#160;", 30) + "&lt;/td>";
+                                    failedExons += "&lt;td>" + pad((parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))), "&#160;", 21) + "&lt;/td>&lt;/tr>";
+                                }
+                            });
+                            if(failedExons.length > 0) {
+                                var failedExonsText = "";
+                                failedExonsText += "&lt;br/>&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation:&lt;br/>&lt;br/>";
+                                failedExonsText += "&lt;table>&lt;tr>&lt;td>" + pad("gene/exon", "&#160;", 18) + "&lt;/td>&lt;td>" + pad("locus", "&#160;", 30) + "&lt;/td>&lt;td>" + pad("% of locus failing QC", "&#160;", 21) + "&lt;/td>&lt;/tr>";
+                                failedExonsText += "&lt;tr>&lt;td>" + pad("-", "-", 18) + "&lt;/td>&lt;td>" + pad("-", "-", 30) + "&lt;/td>&lt;td>" + pad("-", "-", 21) + "&lt;/td>&lt;/tr>";
+                                failedExonsText += failedExons + "&lt;/table>";
+                                $("#exportDialog").append(failedExonsText);
+                            }
+
                             $("#exportDialog").dialog({
                                 width:$(window).width() * 0.6,
                                 height:$(window).height() * 0.8
