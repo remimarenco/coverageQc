@@ -420,13 +420,13 @@
                                 exportMap[$(this).attr("data-export-label")] = $(this).text();
                             });
                             exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
-                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
+                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
                             exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 0)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
                             exportText += "&lt;br/>&lt;br/>";
                         });
-                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText : "No variants selected for export."));
+                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText : "No variants detected by next-generation sequencing."));
 
                         var failedExons = "";
                         $("tr.geneExon_parent").each(function() {

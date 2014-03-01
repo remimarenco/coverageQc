@@ -161,7 +161,7 @@
 <td>version</td><td>:</td><td style="font-weight: bold;">1.0 (build 20140226)</td>
 </tr>
 <tr>
-<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-02-27T02:17</td>
+<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-03-01T16:27</td>
 </tr>
 <tr>
 <td>gVCF file</td><td>:</td><td style="font-weight: bold;">D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf</td>
@@ -23700,13 +23700,13 @@
                                 exportMap[$(this).attr("data-export-label")] = $(this).text();
                             });
                             exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
-                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / vendor ID: " + exportMap.exonVendorId + " / " + exportMap.locus + ").</br><br/>";
+                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / " + exportMap.locus + ").</br><br/>";
                             exportText += "<table><tr><td>" + pad("coord (base 0)", " ", 20)     + "</td><td>" + pad("consequence", " ", 30)         + "</td><td>" + pad("genotype", " ", 8)         + "</td><td>" + pad("alt-variant-freq", " ", 16) + "</td><td>" + pad("minor-allele-freq", " ", 17) + "</td></tr>";
                             exportText +=           "<tr><td>" + pad("--------------", "-"     , 20)     + "</td><td>" + pad("-----------", "-", 30)              + "</td><td>" + pad("--------", "-", 8)              + "</td><td>" + pad("----------------", "-", 16)      + "</td><td>" + pad("-----------------", "-", 17)      + "</td></tr>";
                             exportText +=           "<tr><td>" + pad(exportMap.coordinate, " ", 20) + "</td><td>" + pad(exportMap.consequence, " ", 30) + "</td><td>" + pad(exportMap.genotype, " ", 8) + "</td><td>" + pad(exportMap.avf, " ", 16)      + "</td><td>" + pad(exportMap.maf, " ", 17)       + "</td></tr></table>";
                             exportText += "<br/><br/>";
                         });
-                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.<br/><br/>" + (exportText.length > 0 ? exportText : "No variants selected for export."));
+                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.<br/><br/>" + (exportText.length > 0 ? exportText : "No variants detected by next-generation sequencing."));
 
                         var failedExons = "";
                         $("tr.geneExon_parent").each(function() {

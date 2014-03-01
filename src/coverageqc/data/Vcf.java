@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Vcf {
 
     @XmlAttribute
-    final static String BUILD = "20140226";
+    final static String BUILD = "20140301";
     @XmlAttribute
     final static String VERSION = "1.0";
     
