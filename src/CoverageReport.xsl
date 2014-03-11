@@ -175,12 +175,30 @@
             
             <h1>Coverage QC Report</h1>
             <table>
-                <tr><td>version</td><td>:</td><td style="font-weight: bold;"> <xsl:value-of select="/vcf/@version"/> (build <xsl:value-of select="/vcf/@build"/>)</td></tr>
-                <tr><td>report run date</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="substring(/vcf/@runDate, 1, 16)"/></td></tr>
-                <tr><td>gVCF file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@fileName"/></td></tr>
-                <tr><td>variant TSV file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@variantTsvFileName"/></td></tr>
-                <tr><td>exon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@exonBedFileName"/></td></tr>
-                <tr><td>amplicon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@ampliconBedFileName"/></td></tr>
+                <tr style="vertical-align: top;"><td>version</td><td>:</td><td style="font-weight: bold;"> <xsl:value-of select="/vcf/@version"/> (build <xsl:value-of select="/vcf/@build"/>)</td></tr>
+                <tr style="vertical-align: top;"><td>report run date</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="substring(/vcf/@runDate, 1, 16)"/></td></tr>
+                <tr style="vertical-align: top;"><td>gVCF file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@fileName"/></td></tr>
+                <tr style="vertical-align: top;"><td>variant TSV file</td><td>:</td>
+                    <td style="font-weight: bold;">
+                        <xsl:choose>
+                            <xsl:when test="@variantTsvFileName != ''">
+                                <xsl:value-of select="/vcf/@variantTsvFileName"/>
+                                <span style="font-weight: normal;">
+                                    <br/>variant TSV file line count (including header): <xsl:value-of select="/vcf/@variantTsvFileLineCount"/>
+                                    <br/>number of annotated variants displayed below: <xsl:value-of select="/vcf/@filteredAnnotatedVariantCount"/>
+                                </span>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <span style="color: red">*** NO VARIANT TSV FILE IDENTIFIED ***</span>
+                                <span style="font-weight: normal;">
+                                    <br/>This report was likely created in error.
+                                </span>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </td>
+                </tr>
+                <tr style="vertical-align: top;"><td>exon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@exonBedFileName"/></td></tr>
+                <tr style="vertical-align: top;"><td>amplicon BED file</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="/vcf/@ampliconBedFileName"/></td></tr>
             </table>
 
             <ul>
@@ -438,7 +456,7 @@
                         });
                         if(failedExons.length > 0) {
                             var failedExonsText = "";
-                            failedExonsText += "&lt;br/>&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation:&lt;br/>&lt;br/>";
+                            failedExonsText += "&lt;br/>&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):&lt;br/>&lt;br/>";
                             failedExonsText += "&lt;table>&lt;tr>&lt;td>" + pad("gene/exon", "&#160;", 18) + "&lt;/td>&lt;td>" + pad("locus", "&#160;", 30) + "&lt;/td>&lt;td>" + pad("% of locus failing QC", "&#160;", 21) + "&lt;/td>&lt;/tr>";
                             failedExonsText += "&lt;tr>&lt;td>" + pad("-", "-", 18) + "&lt;/td>&lt;td>" + pad("-", "-", 30) + "&lt;/td>&lt;td>" + pad("-", "-", 21) + "&lt;/td>&lt;/tr>";
                             failedExonsText += failedExons + "&lt;/table>";

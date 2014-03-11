@@ -15,10 +15,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -58,9 +61,29 @@ public class CoverageQc {
         File exonBedFile;
         File ampliconBedFile;
         if(args.length == 1) {
+            // look for the BED files in the JAR file directory with names of
+            // the form:
+            //      xxx.YYYYMMDD.exons.bed
+            //      xxx.YYYYMMDD.amplicons.bed
+            //
+            // ultimately use the ones that sort alphabetically highest
             File jarFile = new File(CoverageQc.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            exonBedFile = new File(URLDecoder.decode(jarFile.getParent(), "UTF-8") + "/" + "exons_ensembl.bed");
-            ampliconBedFile = new File(URLDecoder.decode(jarFile.getParent(), "UTF-8") + "/" + "amplicons.bed");
+            File[] exonFiles = (new File(URLDecoder.decode(jarFile.getParent(), "UTF-8"))).listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) { return(pathname.getName().endsWith("exons.bed")); }
+            });
+            File[] ampliconFiles = (new File(URLDecoder.decode(jarFile.getParent(), "UTF-8"))).listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) { return(pathname.getName().endsWith("amplicons.bed")); }
+            });
+            if(exonFiles.length == 0 || ampliconFiles.length == 0) {
+                System.out.println("ERROR: Could not find exons.bed and/or amplicons.bed file(s) in " + URLDecoder.decode(jarFile.getParent(), "UTF-8"));
+                return;
+            }
+            Arrays.sort(exonFiles, Collections.reverseOrder());
+            exonBedFile = exonFiles[0];
+            Arrays.sort(ampliconFiles, Collections.reverseOrder());
+            ampliconBedFile = ampliconFiles[0];
         }
         else {
             exonBedFile = new File(args[1]);
@@ -78,6 +101,7 @@ public class CoverageQc {
 
         // is there a variant file to fold into the report?
         File variantTsvFile = null;
+        Integer variantTsvFileLineCount = null;
         Reader variantTsvFileReader = null;
         BufferedReader variantTsvBufferedReader = null;
         {
@@ -95,6 +119,11 @@ public class CoverageQc {
             if(files.length == 1) {
                 variantTsvFile = files[0];
                 variantTsvFileReader = new FileReader(variantTsvFile);
+                LineNumberReader lnr = new LineNumberReader(variantTsvFileReader);
+                while(lnr.skip(Long.MAX_VALUE) > 0) {}
+                variantTsvFileLineCount = lnr.getLineNumber();
+                variantTsvFileReader.close();
+                variantTsvFileReader = new FileReader(variantTsvFile);
                 variantTsvBufferedReader = new BufferedReader(variantTsvFileReader);
             }
         }
@@ -105,6 +134,7 @@ public class CoverageQc {
         vcf.exonBedFileName = exonBedFile.getCanonicalPath();
         vcf.ampliconBedFileName = ampliconBedFile.getCanonicalPath();
         vcf.variantTsvFileName = (variantTsvFile != null ? variantTsvFile.getCanonicalPath() : null);
+        vcf.variantTsvFileLineCount = variantTsvFileLineCount;
         
         // attempt to deduce the amplicon BED, patient BAM, and patient VCF
         // file names for this gVCF file, the assumption is that they are in
@@ -239,10 +269,12 @@ public class CoverageQc {
                     geneExon.variants.add(variant);
                 }
                 if(!foundGeneExon) {
-                    LOGGER.info("the following variant does not correspond to an exon region: " + variantTsvDataLine);
+                    //LOGGER.info("the following variant does not correspond to an exon region: " + variantTsvDataLine);
+                    System.out.println("ERROR: The following variant does not correspond to an exon region:\n" + variantTsvDataLine);
+                    return;
                 }
             }
-            LOGGER.info(vcf.getFilteredAnnotatedVariantCount() + " variants read from TSV file");
+            //LOGGER.info(vcf.getFilteredAnnotatedVariantCount() + " variants read from TSV file");
             variantTsvFileReader.close();
         }
 

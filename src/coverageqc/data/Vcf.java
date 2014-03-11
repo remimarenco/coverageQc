@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -18,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Vcf {
 
     @XmlAttribute
-    final static String BUILD = "20140301";
+    final static String BUILD = "20140311";
     @XmlAttribute
     final static String VERSION = "1.0";
     
@@ -31,11 +32,14 @@ public class Vcf {
     @XmlAttribute
     public String variantTsvFileName;
     @XmlAttribute
+    public Integer variantTsvFileLineCount;
+    @XmlAttribute
     public Date runDate;
     @XmlElementWrapper(name = "geneExons")
     @XmlElement(name = "geneExon")
     public TreeSet<GeneExon> geneExons = new TreeSet<GeneExon>();
     public ArrayList<URL> bedBamVcfFileUrls = new ArrayList<URL>(); // these are used to construct an IGV link
+    @XmlTransient
     public TreeMap<String, Base> bases = new TreeMap<String, Base>(); // key is chr|pos (e.g., "chr9|320001")
 
     /**
