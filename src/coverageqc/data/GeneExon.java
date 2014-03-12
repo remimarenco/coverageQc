@@ -109,6 +109,18 @@ public class GeneExon implements Comparable<Object> {
 
     /**
      * 
+     * @return True if a variant was annotated in this exon.
+     */
+    @XmlAttribute
+    public boolean getVariantAnnotated() {
+        if(variants.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 
      * @param bedLine
      * @return 
      */

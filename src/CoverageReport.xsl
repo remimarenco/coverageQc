@@ -116,7 +116,7 @@
                     margin-left: 0px;
                 }
 
-                table.dataTable tr th {
+                table.dataTable > thead > tr > th {
                     color: black;
                     font: inherit;
                     border: 1px solid black !important;
@@ -124,7 +124,7 @@
                     vertical-align: middle; 
                 }
 
-                table.dataTable tr td {
+                table.dataTable > tbody > tr > td {
                     color: black;
                     font: inherit;
                     border: 1px solid black;
@@ -132,14 +132,20 @@
                     vertical-align: middle; 
                 }
 
-                table.dataTable tr th, table.dataTable tr td {
+                table.dataTable > tbody > tr > td, table.dataTable > thead > tr > th {
                     page-break-inside: avoid;
                 }
 
-                table.dataTable tr td.readHistogram {
+                table.dataTable > tbody > tr > td.readHistogram {
                     background-color: white;
                     background-image: url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAeAB4AAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAEAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCABkAGQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9DKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/2Q==);
                     background-repeat:no-repeat;
+                }
+                
+                table.footNoteTable td {
+                    font-size: x-small;
+                    border: 0px;
+                    padding: 0px;
                 }
                                 
                 #blocker {
@@ -203,7 +209,6 @@
             </table>
 
             <ul>
-                <li>Base positions start at one (base 1).</li>
                 <li>QC rules are applied to bases <i>in the coding region</i> of each locus:
                     <ul>
                         <li>pass: <i>all</i> bases read <xsl:value-of select="/vcf/geneExons/geneExon[1]/bins/bin[4]/@name" disable-output-escaping="yes"/> times</li>
@@ -270,7 +275,10 @@
                                 <xsl:value-of select="@chr"/>:<xsl:value-of select="@startPos"/>-<xsl:value-of select="@endPos"/>
                             </a>
                         </td>
-                        <td><xsl:value-of select="@variantCalled"/></td>
+                        <td>
+                            <xsl:value-of select="@variantCalled"/>
+                            <xsl:if test="@variantAnnotated = 'true'"> (annotated)</xsl:if>                                
+                        </td>
                         <xsl:for-each select="bins/bin">
                             <td class="readHistogram" style="text-align: right; width: 40px;" data-pct="{@pct}"><xsl:value-of select="@count"/></td>
                         </xsl:for-each>
@@ -372,34 +380,47 @@
                                 <div style="font-size: small; padding: 10px;">
                                     <h3>Filtered and Annotated Variant(s)</h3>
                                     <table class="dataTable">
-                                        <tr>
-                                            <th>export?</th>
-                                            <th>gene</th>
-                                            <th>coordinate</th>
-                                            <th>consequence</th>
-                                            <th>genotype</th>
-                                            <th>AVF</th>
-                                            <th>cDNA</th>
-                                            <th>amino acid</th>
-                                            <th>dbSNP</th>
-                                            <th>MAF</th>
-                                            <th>COSMIC ID</th>
-                                        </tr>
-                                        <xsl:for-each select="variants/variant">
-                                            <tr class="filteredAnnotatedVariant">
-                                                <td style="text-align: center;"><input type="checkbox" class="exportCheckbox"/></td>
-                                                <td data-export-label="gene"><xsl:value-of select="@gene"/></td>
-                                                <td data-export-label="coordinate">chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></td>
-                                                <td data-export-label="consequence"><xsl:value-of select="@consequence"/></td>
-                                                <td data-export-label="genotype"><xsl:value-of select="@genotype"/></td>
-                                                <td data-export-label="avf" style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></td>
-                                                <td data-export-label="cDna"><xsl:value-of select="@hgvsc"/></td>
-                                                <td data-export-label="aminoAcid"><xsl:value-of select="@hgvsp"/></td>
-                                                <td><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></td>
-                                                <td data-export-label="maf" style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></td>
-                                                <td><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></td>
+                                        <thead>
+                                            <tr>
+                                                <th>export?</th>
+                                                <th>gene</th>
+                                                <th>coordinate</th>
+                                                <th>filters<sup>*</sup></th>
+                                                <th>consequence</th>
+                                                <th>genotype</th>
+                                                <th>AVF</th>
+                                                <th>cDNA</th>
+                                                <th>amino acid</th>
+                                                <th>dbSNP</th>
+                                                <th>MAF</th>
+                                                <th>COSMIC ID</th>
                                             </tr>
-                                        </xsl:for-each>
+                                        </thead>
+                                        <tbody>
+                                            <xsl:for-each select="variants/variant">
+                                                <tr class="filteredAnnotatedVariant">
+                                                    <td style="text-align: center;"><input type="checkbox" class="exportCheckbox"/></td>
+                                                    <td data-export-label="gene"><xsl:value-of select="@gene"/></td>
+                                                    <td data-export-label="coordinate">chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></td>
+                                                    <td data-export-label="filters"><xsl:value-of select="@filters"/></td>
+                                                    <td data-export-label="consequence"><xsl:value-of select="@consequence"/></td>
+                                                    <td data-export-label="genotype"><xsl:value-of select="@genotype"/></td>
+                                                    <td data-export-label="avf" style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></td>
+                                                    <td data-export-label="cDna"><xsl:value-of select="@hgvsc"/></td>
+                                                    <td data-export-label="aminoAcid"><xsl:value-of select="@hgvsp"/></td>
+                                                    <td><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></td>
+                                                    <td data-export-label="maf" style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></td>
+                                                    <td><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></td>
+                                                </tr>
+                                            </xsl:for-each>
+                                        </tbody>
+                                    </table>
+                                    <br/>
+                                    <table class="footNoteTable">
+                                        <tr><td colspan="2" style="border-bottom: 1px solid black;"><sup>*</sup>filter descriptions</td></tr>
+                                        <tr><td>LowDP</td><td>= low coverage (DP tag), therefore no genotype called</td></tr>
+                                        <tr><td>SB</td><td>= variant strand bias too high</td></tr>
+                                        <tr><td>PB</td><td>= probe pool bias - variant not found, or found with low frequency, in one of two probe pools</td></tr>
                                     </table>
                                 </div>
                             </xsl:if>
@@ -440,12 +461,12 @@
                             });
                             exportText += exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " sequence variant detected by next generation sequencing";
                             exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
-                            exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 1)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
+                            exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
                             exportText += "&lt;br/>";
                         });
-                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 1.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing."));
+                        $("#exportDialog").html("The reference assembly is hg19, GRCh37.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing."));
 
                         var failedExons = "";
                         $("tr.geneExon_parent").each(function() {
