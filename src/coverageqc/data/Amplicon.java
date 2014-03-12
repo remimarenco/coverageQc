@@ -38,8 +38,8 @@ public class Amplicon implements Comparable<Object>{
         String[] fields = bedLine.split("\t");
         Amplicon amplicon = new Amplicon();
         amplicon.chr = fields[0];
-        amplicon.startPos = Long.parseLong(fields[1]);
-        amplicon.endPos = Long.parseLong(fields[2]);
+        amplicon.startPos = Long.parseLong(fields[1]) + 1;
+        amplicon.endPos = Long.parseLong(fields[2]) + 0;
         amplicon.name = fields[3];
         return amplicon;
     }

@@ -25,10 +25,11 @@
             <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.13.3/css/theme.default.css"/>
             <script type="text/javascript" src="http://www.google.com/jsapi"></script>
             <script type="text/javascript">
+                var chartWidth;
                 google.load("visualization", "1", {packages:["corechart"]});
                 google.setOnLoadCallback(function() {
                     $(document).ready(function() {
-                
+
                         // set up read count histograms
                         $(".readHistogram").each(function() {
                             $(this).css("background-position", "0px " + ((1.0 * (100 - parseInt($(this).attr("data-pct")))) / 100) * $(this).outerHeight() + "px");
@@ -56,15 +57,15 @@
                         $("#geneExonExpandCollapseAllButton").bind("click", function() {
                             if($(this).html() == "+") {
                                 $(this).html("-");
+                                $(".geneExonExpandCollapseButton").html("-");
                                 $("#blocker").show();
+                                $(".geneExon_child").show();
                                 setTimeout(function() {
                                     var geneExonPos = 1;
                                     $(".geneExon_child").each(function() {
-                                        $(this).show();
                                         eval("geneExon" + geneExonPos + "_drawChart()");
                                         geneExonPos++;
                                     });
-                                    $(".geneExonExpandCollapseButton").html("-");
                                     $("#blocker").hide();
                                 }, 10);
                             }
@@ -202,7 +203,7 @@
             </table>
 
             <ul>
-                <li>Base positions start at zero (0).</li>
+                <li>Base positions start at one (base 1).</li>
                 <li>QC rules are applied to bases <i>in the coding region</i> of each locus:
                     <ul>
                         <li>pass: <i>all</i> bases read <xsl:value-of select="/vcf/geneExons/geneExon[1]/bins/bin[4]/@name" disable-output-escaping="yes"/> times</li>
@@ -437,14 +438,14 @@
                             $(this).parents("tr.filteredAnnotatedVariant").find("td[data-export-label]").each(function() {
                                 exportMap[$(this).attr("data-export-label")] = $(this).text();
                             });
-                            exportText += "A(n) " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " variant was detected by next generation sequencing";
+                            exportText += exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " sequence variant detected by next generation sequencing";
                             exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
-                            exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 0)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
+                            exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord (base 1)", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
-                            exportText += "&lt;br/>&lt;br/>";
+                            exportText += "&lt;br/>";
                         });
-                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 0.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText : "No variants detected by next-generation sequencing."));
+                        $("#exportDialog").html("The reference assembly is hg19, GRCh37. All coordinates are base 1.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing."));
 
                         var failedExons = "";
                         $("tr.geneExon_parent").each(function() {
@@ -462,6 +463,8 @@
                             failedExonsText += failedExons + "&lt;/table>";
                             $("#exportDialog").append(failedExonsText);
                         }
+
+                        $("#exportDialog").append("&lt;br/>See Notes and Test performed sections below for more information.");
 
                         $("#exportDialog").dialog({
                             width:$(window).width() * 0.6,

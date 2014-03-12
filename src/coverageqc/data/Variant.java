@@ -44,6 +44,8 @@ public class Variant {
     @XmlAttribute
     public String dbSnpIdSuffix;
     @XmlAttribute
+    public String filters;
+    @XmlAttribute
     public Float alleleFreqGlobalMinor;
     
             
@@ -58,8 +60,8 @@ public class Variant {
         variant.gene = dataArray[headings.get("Gene").intValue()];
         variant.variant = dataArray[headings.get("Variant").intValue()];
         variant.chr = Integer.valueOf(dataArray[headings.get("Chr").intValue()] != null && !dataArray[headings.get("Chr").intValue()].isEmpty() ? dataArray[headings.get("Chr").intValue()] : null);
-        // note: subtracting one (1)
-        variant.coordinate = Long.valueOf(dataArray[headings.get("Coordinate").intValue()] != null && !dataArray[headings.get("Coordinate").intValue()].isEmpty() ? dataArray[headings.get("Coordinate").intValue()] : null) - 1;
+        // note: subtracting zero (0)
+        variant.coordinate = Long.valueOf(dataArray[headings.get("Coordinate").intValue()] != null && !dataArray[headings.get("Coordinate").intValue()].isEmpty() ? dataArray[headings.get("Coordinate").intValue()] : null) - 0;
         variant.type = dataArray[headings.get("Type").intValue()];
         variant.genotype = dataArray[headings.get("Genotype").intValue()];
         variant.altVariantFreq = Float.valueOf(dataArray[headings.get("Alt Variant Freq").intValue()] != null && !dataArray[headings.get("Alt Variant Freq").intValue()].isEmpty() ? dataArray[headings.get("Alt Variant Freq").intValue()] : null);
@@ -67,6 +69,7 @@ public class Variant {
         variant.altReadDepth = Long.valueOf(dataArray[headings.get("Alt Read Depth").intValue()] != null && !dataArray[headings.get("Alt Read Depth").intValue()].isEmpty() ? dataArray[headings.get("Alt Read Depth").intValue()] : null);
         variant.consequence = dataArray[headings.get("Consequence").intValue()];
         variant.cosmicId = dataArray[headings.get("COSMIC ID").intValue()];
+        variant.filters = dataArray[headings.get("Filters").intValue()];
         // note: parsing out RefSeq IDs
         if(dataArray[headings.get("HGVSc")] != null) {
             Pattern pattern = Pattern.compile(".*:(.*)");

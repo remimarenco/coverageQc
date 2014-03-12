@@ -116,8 +116,8 @@ public class GeneExon implements Comparable<Object> {
         String[] fields = bedLine.split("\t");
         GeneExon geneExon = new GeneExon();
         geneExon.chr = fields[0];
-        geneExon.startPos = Long.parseLong(fields[1]);
-        geneExon.endPos = Long.parseLong(fields[2]);
+        geneExon.startPos = Long.parseLong(fields[1]) + 1;
+        geneExon.endPos = Long.parseLong(fields[2]) + 0;
         geneExon.name = fields[3];
         {
             Pattern pattern = Pattern.compile("vendor-gene-exon-name: (.*)\\|.*\\|.*\\|.*");

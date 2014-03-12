@@ -57,7 +57,7 @@ public class Base implements Comparable<Object> {
     public static Base populate(String vcfLine, TreeMap<String, Base> bases) {
         String[] fields = vcfLine.split("\t");
         String chr = fields[0];
-        long pos = Long.parseLong(fields[1]) - 1; // VCF is base 1, BED is base 0, I am using base 0
+        long pos = Long.parseLong(fields[1]) - 0; // VCF is base 1, BED is base 0, I am using base 1
         // special handling for read depth:
         // [1] truncate "DP=" prefix
         // [2] maintaining set of read depths in Base class, since the same
