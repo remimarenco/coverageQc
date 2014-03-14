@@ -271,7 +271,7 @@
                         </td>
                         <td style="text-align: right;"><xsl:value-of select="format-number(@pctOfExon, '##0')"/></td>
                         <td data-export-label="locus">
-                            <a href="http://localhost:60151/load?file={../../@bedBamVcfFileUrlsAsString}&amp;locus={@chr}:{@startPos}-{@endPos}&amp;genome=hg19&amp;merge=false">
+                            <a href="http://127.0.0.1:60151/load?file={../../@bedBamVcfFileUrlsAsString}&amp;locus={@chr}:{@startPos}-{@endPos}&amp;genome=hg19&amp;merge=false">
                                 <xsl:value-of select="@chr"/>:<xsl:value-of select="@startPos"/>-<xsl:value-of select="@endPos"/>
                             </a>
                         </td>
