@@ -376,9 +376,38 @@
 
                                 </script>
                             </div>
+                            <xsl:if test="count(bases/base/ensemblVariants/transcripts/alleles) > 0">
+                                <div style="font-size: small; padding: 10px;">
+                                    <h3>Variant Consequences (Ensembl Web Service)</h3>
+                                    <table class="dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Variant</th>
+                                                <th>Transcript ID</th>
+                                                <th>Name</th>
+                                                <th>Transcript</th>
+                                                <th>Protein</th>
+                                                <th>Consequence</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <xsl:for-each select="bases/base/ensemblVariants/transcripts/alleles">
+                                                <tr>
+                                                    <td><xsl:value-of select="../../hgvs/@transcript"/></td>
+                                                    <td><a href="http://www.ensembl.org/id/{../@transcriptId}"><xsl:value-of select="../@transcriptId"/></a></td>
+                                                    <td><xsl:value-of select="../@name"/></td>
+                                                    <td><xsl:value-of select="@hgvsTranscriptParsed"/></td>
+                                                    <td><xsl:value-of select="@hgvsProteinParsed"/></td>
+                                                    <td><xsl:value-of select="@consequenceTerms"/></td>
+                                                </tr>
+                                            </xsl:for-each>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </xsl:if>
                             <xsl:if test="count(variants/variant) > 0">
                                 <div style="font-size: small; padding: 10px;">
-                                    <h3>Filtered and Annotated Variant(s)</h3>
+                                    <h3>Filtered and Annotated Variant(s) (Illumina Variant Studio)</h3>
                                     <table class="dataTable">
                                         <thead>
                                             <tr>
@@ -431,16 +460,10 @@
 
             <p>Copyright &#169; 2014 Geoffrey H. Smith (geoffrey.hughes.smith@gmail.com)</p>
             
-            <div id="exportDialog" style="display: none; font-family: monospace;" title="export selected variant(s)">
+            <div id="exportDialog" style="display: none; font-family: Arial; font-size: 9pt;" title="export selected variant(s)">
                 <script type="text/javascript">
 
                     function showExportDialog() {
-                        function pad(s1, s2, len) {
-                            for(var x = s1.length; x &lt;  len; x++) { 
-                                s1 += s2;
-                            }
-                            return s1;
-                        }
                         var exportMap = new Object();
                         var exportText = "";
                         $(".exportCheckbox:checked").each(function() {
@@ -461,31 +484,33 @@
                             });
                             exportText += exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " sequence variant detected by next generation sequencing";
                             exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
-                            exportText += "&lt;table>&lt;tr>&lt;td>" + pad("coord", "&#160;", 20)     + "&lt;/td>&lt;td>" + pad("consequence", "&#160;", 30)         + "&lt;/td>&lt;td>" + pad("genotype", "&#160;", 8)         + "&lt;/td>&lt;td>" + pad("alt-variant-freq", "&#160;", 16) + "&lt;/td>&lt;td>" + pad("minor-allele-freq", "&#160;", 17) + "&lt;/td>&lt;/tr>";
-                            exportText +=           "&lt;tr>&lt;td>" + pad("--------------", "-"     , 20)     + "&lt;/td>&lt;td>" + pad("-----------", "-", 30)              + "&lt;/td>&lt;td>" + pad("--------", "-", 8)              + "&lt;/td>&lt;td>" + pad("----------------", "-", 16)      + "&lt;/td>&lt;td>" + pad("-----------------", "-", 17)      + "&lt;/td>&lt;/tr>";
-                            exportText +=           "&lt;tr>&lt;td>" + pad(exportMap.coordinate, "&#160;", 20) + "&lt;/td>&lt;td>" + pad(exportMap.consequence, "&#160;", 30) + "&lt;/td>&lt;td>" + pad(exportMap.genotype, "&#160;", 8) + "&lt;/td>&lt;td>" + pad(exportMap.avf, "&#160;", 16)      + "&lt;/td>&lt;td>" + pad(exportMap.maf, "&#160;", 17)       + "&lt;/td>&lt;/tr>&lt;/table>";
+                            exportText += "&lt;table>&lt;tr>&lt;td>" + "coord" + "&lt;/td>&lt;td>" + "consequence" + "&lt;/td>&lt;td>" + "genotype" + "&lt;/td>&lt;td>" + "alt-variant-freq" + "&lt;/td>&lt;td>" + "minor-allele-freq" + "&lt;/td>&lt;/tr>";
+                            exportText +=           "&lt;tr>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;/tr>";
+                            exportText +=           "&lt;tr>&lt;td>" + exportMap.coordinate + "&lt;/td>&lt;td>" + exportMap.consequence + "&lt;/td>&lt;td>" + exportMap.genotype + "&lt;/td>&lt;td>" + exportMap.avf + "&lt;/td>&lt;td>" + exportMap.maf + "&lt;/td>&lt;/tr>&lt;/table>";
                             exportText += "&lt;br/>";
                         });
-                        $("#exportDialog").html("The reference assembly is hg19, GRCh37.&lt;br/>&lt;br/>" + (exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing."));
+                        $("#exportDialog").html(exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing.");
+                        $("#exportDialog").append("&lt;br/>&lt;br/>&lt;br/>");
+                        $("#exportDialog").append("The reference assembly is hg19, GRCh37.&lt;br/>");
 
                         var failedExons = "";
                         $("tr.geneExon_parent").each(function() {
                             if($(this).find("td[data-export-label='qc']").text() == "fail") {
-                                failedExons += "&lt;tr>&lt;td>" + pad((/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1], "&#160;", 18) + "&lt;/td>";
-                                failedExons += "&lt;td>" + pad($(this).find("td[data-export-label='locus']").text(), "&#160;", 30) + "&lt;/td>";
-                                failedExons += "&lt;td>" + pad((parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))), "&#160;", 21) + "&lt;/td>&lt;/tr>";
+                                failedExons += "&lt;tr>&lt;td>" + (/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1] + "&lt;/td>";
+                                failedExons += "&lt;td>" + $(this).find("td[data-export-label='locus']").text() + "&lt;/td>";
+                                failedExons += "&lt;td>" + (parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))) + "&lt;/td>&lt;/tr>";
                             }
                         });
                         if(failedExons.length > 0) {
                             var failedExonsText = "";
-                            failedExonsText += "&lt;br/>&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):&lt;br/>&lt;br/>";
-                            failedExonsText += "&lt;table>&lt;tr>&lt;td>" + pad("gene/exon", "&#160;", 18) + "&lt;/td>&lt;td>" + pad("locus", "&#160;", 30) + "&lt;/td>&lt;td>" + pad("% of locus failing QC", "&#160;", 21) + "&lt;/td>&lt;/tr>";
-                            failedExonsText += "&lt;tr>&lt;td>" + pad("-", "-", 18) + "&lt;/td>&lt;td>" + pad("-", "-", 30) + "&lt;/td>&lt;td>" + pad("-", "-", 21) + "&lt;/td>&lt;/tr>";
+                            failedExonsText += "&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):&lt;br/>&lt;br/>";
+                            failedExonsText += "&lt;table>&lt;tr>&lt;td>" + "gene/exon" + "&lt;/td>&lt;td>" + "locus" + "&lt;/td>&lt;td>" + "% of locus failing QC" + "&lt;/td>&lt;/tr>";
+                            failedExonsText += "&lt;tr>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;/tr>";
                             failedExonsText += failedExons + "&lt;/table>";
                             $("#exportDialog").append(failedExonsText);
                         }
 
-                        $("#exportDialog").append("&lt;br/>See Notes and Test performed sections below for more information.");
+                        $("#exportDialog").append("&lt;br/>See Notes and Test Performed sections below for more information.");
 
                         $("#exportDialog").dialog({
                             width:$(window).width() * 0.6,

@@ -46,7 +46,7 @@ public class CoverageQc {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException, JAXBException, TransformerConfigurationException, TransformerException {
+    public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException, JAXBException, TransformerConfigurationException, TransformerException, InterruptedException {
 
         if(args.length == 0) {
             System.out.println("");
@@ -301,5 +301,5 @@ public class CoverageQc {
         Desktop.getDesktop().browse(htmlFile.toURI());
         
     }
-    
+
 }

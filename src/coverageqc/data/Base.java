@@ -1,9 +1,19 @@
 package coverageqc.data;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeMap;
+import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 /**
  *
@@ -25,6 +35,8 @@ public class Base implements Comparable<Object> {
     public String quality;
     @XmlAttribute
     public String filter;
+    @XmlElement
+    public ArrayList<EnsemblVariant> ensemblVariants = new ArrayList<EnsemblVariant>();
     
     @java.lang.Override
     public int compareTo(Object o) {
@@ -54,7 +66,7 @@ public class Base implements Comparable<Object> {
      * @param bases
      * @return 
      */
-    public static Base populate(String vcfLine, TreeMap<String, Base> bases) {
+    public static Base populate(String vcfLine, TreeMap<String, Base> bases) throws InterruptedException {
         String[] fields = vcfLine.split("\t");
         String chr = fields[0];
         long pos = Long.parseLong(fields[1]) - 0; // VCF is base 1, BED is base 0, I am using base 1
@@ -66,8 +78,11 @@ public class Base implements Comparable<Object> {
         //     position and maxing it - this might be risky
         long readDepth = Long.parseLong(fields[7].substring(3));
         String variant = null;
+        EnsemblVariantData ensemblVariantData = null;
         if(fields[9].substring(0, 3).equals("0/1") || fields[9].substring(0, 3).equals("1/1")) {
             variant = fields[3] + ">" + fields[4];
+            ensemblVariantData = findEnsemblVariant(chr.substring(3) + ":" + pos + "-" + (pos + fields[3].length() - 1), fields[4]);
+            Thread.sleep(200); // Ensembl web service throttling 6 req/sec
         }
         Base base = bases.get(chr + "|" + Long.toString(pos));
         if(base == null) {
@@ -92,8 +107,25 @@ public class Base implements Comparable<Object> {
                 + ", filter: " + filter
                 + ", qual: " + quality
                 + ")";
+            if(ensemblVariantData != null && ensemblVariantData.variants != null) {
+                for(EnsemblVariant ensemblVariant : ensemblVariantData.variants) {
+                    base.ensemblVariants.add(ensemblVariant);
+                }
+            }
         }
         return base;
     }
-    
+
+    public static EnsemblVariantData findEnsemblVariant(String region, String allele) {
+        ClientConfig config = new DefaultClientConfig();
+        config.getClasses().add(JacksonJsonProvider.class);
+        Client client = Client.create(config);
+        WebResource webResource = client.resource(UriBuilder.fromUri("http://beta.rest.ensembl.org/vep/human/" + region + "/" + allele + "/consequences").build());
+        ClientResponse response = webResource
+            .accept(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+            .get(ClientResponse.class);
+        EnsemblVariantData variantData = response.getEntity(new GenericType<EnsemblVariantData>(EnsemblVariantData.class));
+        return variantData;
+    }
+
 }
