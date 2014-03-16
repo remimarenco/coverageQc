@@ -180,7 +180,7 @@
                 <div>wait...</div>
             </div>
             
-            <h1>Coverage QC Report</h1>
+            <h1>Coverage QC Report (with Ensembl Consequences)</h1>
             <table>
                 <tr style="vertical-align: top;"><td>version</td><td>:</td><td style="font-weight: bold;"> <xsl:value-of select="/vcf/@version"/> (build <xsl:value-of select="/vcf/@build"/>)</td></tr>
                 <tr style="vertical-align: top;"><td>report run date</td><td>:</td><td style="font-weight: bold;"><xsl:value-of select="substring(/vcf/@runDate, 1, 16)"/></td></tr>
@@ -378,12 +378,11 @@
                             </div>
                             <xsl:if test="count(bases/base/ensemblVariants/transcripts/alleles) > 0">
                                 <div style="font-size: small; padding: 10px;">
-                                    <h3>Variant Consequences (Ensembl Web Service)</h3>
+                                    <h3>Variant Consequences (from Ensembl Web Service for Transcript ID <a href="http://www.ensembl.org/id/{@ensemblTranscriptIdNoVersion}"><xsl:value-of select="@ensemblTranscriptIdNoVersion"/></a>)</h3>
                                     <table class="dataTable">
                                         <thead>
                                             <tr>
                                                 <th>Variant</th>
-                                                <th>Transcript ID</th>
                                                 <th>Name</th>
                                                 <th>Transcript</th>
                                                 <th>Protein</th>
@@ -392,14 +391,15 @@
                                         </thead>
                                         <tbody>
                                             <xsl:for-each select="bases/base/ensemblVariants/transcripts/alleles">
-                                                <tr>
-                                                    <td><xsl:value-of select="../../hgvs/@transcript"/></td>
-                                                    <td><a href="http://www.ensembl.org/id/{../@transcriptId}"><xsl:value-of select="../@transcriptId"/></a></td>
-                                                    <td><xsl:value-of select="../@name"/></td>
-                                                    <td><xsl:value-of select="@hgvsTranscriptParsed"/></td>
-                                                    <td><xsl:value-of select="@hgvsProteinParsed"/></td>
-                                                    <td><xsl:value-of select="@consequenceTerms"/></td>
-                                                </tr>
+                                                <xsl:if test="../../../../../@ensemblTranscriptIdNoVersion = ../@transcriptId"> 
+                                                    <tr>
+                                                        <td><xsl:value-of select="../../hgvs/@transcript"/></td>
+                                                        <td><xsl:value-of select="../@name"/></td>
+                                                        <td><xsl:value-of select="@hgvsTranscriptParsed"/></td>
+                                                        <td><xsl:value-of select="@hgvsProteinParsed"/></td>
+                                                        <td><xsl:value-of select="@consequenceTerms"/></td>
+                                                    </tr>
+                                                </xsl:if>
                                             </xsl:for-each>
                                         </tbody>
                                     </table>
@@ -407,7 +407,7 @@
                             </xsl:if>
                             <xsl:if test="count(variants/variant) > 0">
                                 <div style="font-size: small; padding: 10px;">
-                                    <h3>Filtered and Annotated Variant(s) (Illumina Variant Studio)</h3>
+                                    <h3>Filtered and Annotated Variant(s) (from Illumina Variant Studio)</h3>
                                     <table class="dataTable">
                                         <thead>
                                             <tr>

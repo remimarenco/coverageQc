@@ -9,10 +9,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnsemblAllele {
-    @XmlTransient
+    @XmlAttribute
     @JsonProperty("hgvs_transcript")
     public String hgvsTranscript;
-    @XmlTransient
+    @XmlAttribute
     @JsonProperty("hgvs_protein")
     public String hgvsProtein;
     @XmlAttribute

@@ -293,11 +293,11 @@ public class CoverageQc {
         Source xmlSource = new StreamSource(new FileInputStream(xmlTempFile.getCanonicalPath()));
         Source xslSource = new StreamSource(ClassLoader.getSystemResourceAsStream("CoverageReport.xsl"));
         Transformer trans = TransformerFactory.newInstance().newTransformer(xslSource);
-        trans.transform(xmlSource, new StreamResult(vcfFile.getCanonicalPath() + ".coverage_qc.html"));
-        LOGGER.info(vcfFile.getCanonicalPath() + ".coverage_qc.html created");
+        trans.transform(xmlSource, new StreamResult(vcfFile.getCanonicalPath() + ".coverage_qc_ensembl.html"));
+        LOGGER.info(vcfFile.getCanonicalPath() + ".coverage_qc_ensembl.html created");
         
         // show HTML file in default browser
-        File htmlFile = new File(vcfFile.getPath() + ".coverage_qc.html");
+        File htmlFile = new File(vcfFile.getPath() + ".coverage_qc_ensembl.html");
         Desktop.getDesktop().browse(htmlFile.toURI());
         
     }

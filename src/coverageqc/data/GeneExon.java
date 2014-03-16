@@ -171,5 +171,10 @@ public class GeneExon implements Comparable<Object> {
         }
         return geneExon;
     }
+
+    @XmlAttribute
+    public String getEnsemblTranscriptIdNoVersion() {
+        return ensemblTranscriptId.split("\\.")[0];
+    }
     
 }
