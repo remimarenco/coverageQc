@@ -168,7 +168,7 @@
 <td>version</td><td>:</td><td style="font-weight: bold;">1.0 (build 20140312)</td>
 </tr>
 <tr style="vertical-align: top;">
-<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-03-13T22:34</td>
+<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-03-16T10:17</td>
 </tr>
 <tr style="vertical-align: top;">
 <td>gVCF file</td><td>:</td><td style="font-weight: bold;">D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf</td>
@@ -23726,16 +23726,11 @@
 </tr>
 </table>
 <p>Copyright &copy; 2014 Geoffrey H. Smith (geoffrey.hughes.smith@gmail.com)</p>
-<div id="exportDialog" style="display: none; font-family: monospace;" title="export selected variant(s)">
+<div id="exportDialog" style="display: none; font-family: Arial; font-size: 9pt;" title="export selected variant(s)">
 <script type="text/javascript">
 
                     function showExportDialog() {
-                        function pad(s1, s2, len) {
-                            for(var x = s1.length; x <  len; x++) { 
-                                s1 += s2;
-                            }
-                            return s1;
-                        }
+                    
                         var exportMap = new Object();
                         var exportText = "";
                         $(".exportCheckbox:checked").each(function() {
@@ -23756,38 +23751,41 @@
                             });
                             exportText += exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " sequence variant detected by next generation sequencing";
                             exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / " + exportMap.locus + ").</br><br/>";
-                            exportText += "<table><tr><td>" + pad("coord", " ", 20)     + "</td><td>" + pad("consequence", " ", 30)         + "</td><td>" + pad("genotype", " ", 8)         + "</td><td>" + pad("alt-variant-freq", " ", 16) + "</td><td>" + pad("minor-allele-freq", " ", 17) + "</td></tr>";
-                            exportText +=           "<tr><td>" + pad("--------------", "-"     , 20)     + "</td><td>" + pad("-----------", "-", 30)              + "</td><td>" + pad("--------", "-", 8)              + "</td><td>" + pad("----------------", "-", 16)      + "</td><td>" + pad("-----------------", "-", 17)      + "</td></tr>";
-                            exportText +=           "<tr><td>" + pad(exportMap.coordinate, " ", 20) + "</td><td>" + pad(exportMap.consequence, " ", 30) + "</td><td>" + pad(exportMap.genotype, " ", 8) + "</td><td>" + pad(exportMap.avf, " ", 16)      + "</td><td>" + pad(exportMap.maf, " ", 17)       + "</td></tr></table>";
+                            exportText += "<table><tr><td>" + "coord" + "</td><td>" + "consequence" + "</td><td>" + "genotype" + "</td><td>" + "alt-variant-freq" + "</td><td>" + "minor-allele-freq" + "</td></tr>";
+                            exportText +=           "<tr><td>" + "" + "</td><td>" + "" + "</td><td>" + "" + "</td><td>" + "" + "</td><td>" + "" + "</td></tr>";
+                            exportText +=           "<tr><td>" + exportMap.coordinate + "</td><td>" + exportMap.consequence + "</td><td>" + exportMap.genotype + "</td><td>" + exportMap.avf + "</td><td>" + exportMap.maf + "</td></tr></table>";
                             exportText += "<br/>";
                         });
-                        $("#exportDialog").html("The reference assembly is hg19, GRCh37.<br/><br/>" + (exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing."));
+                        $("#exportDialog").html(exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing.");
+                        $("#exportDialog").append("<br/><br/><br/>");
+                        $("#exportDialog").append("The reference assembly is hg19, GRCh37.<br/>");
 
                         var failedExons = "";
                         $("tr.geneExon_parent").each(function() {
                             if($(this).find("td[data-export-label='qc']").text() == "fail") {
-                                failedExons += "<tr><td>" + pad((/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1], " ", 18) + "</td>";
-                                failedExons += "<td>" + pad($(this).find("td[data-export-label='locus']").text(), " ", 30) + "</td>";
-                                failedExons += "<td>" + pad((parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))), " ", 21) + "</td></tr>";
+                                failedExons += "<tr><td>" + (/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1] + "</td>";
+                                failedExons += "<td>" + $(this).find("td[data-export-label='locus']").text() + "</td>";
+                                failedExons += "<td>" + (parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))) + "</td></tr>";
                             }
                         });
                         if(failedExons.length > 0) {
                             var failedExonsText = "";
-                            failedExonsText += "<br/><br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):<br/><br/>";
-                            failedExonsText += "<table><tr><td>" + pad("gene/exon", " ", 18) + "</td><td>" + pad("locus", " ", 30) + "</td><td>" + pad("% of locus failing QC", " ", 21) + "</td></tr>";
-                            failedExonsText += "<tr><td>" + pad("-", "-", 18) + "</td><td>" + pad("-", "-", 30) + "</td><td>" + pad("-", "-", 21) + "</td></tr>";
+                            failedExonsText += "<br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):<br/><br/>";
+                            failedExonsText += "<table><tr><td>" + "gene/exon" + "</td><td>" + "locus" + "</td><td>" + "% of locus failing QC" + "</td></tr>";
+                            failedExonsText += "<tr><td>" + "" + "</td><td>" + "" + "</td><td>" + "" + "</td></tr>";
                             failedExonsText += failedExons + "</table>";
                             $("#exportDialog").append(failedExonsText);
                         }
 
-                        $("#exportDialog").append("<br/>See Notes and Test performed sections below for more information.");
+                        $("#exportDialog").append("<br/>See Notes and Test Performed sections below for more information.");
 
                         $("#exportDialog").dialog({
                             width:$(window).width() * 0.6,
                             height:$(window).height() * 0.8
                         });
+                        
                     }
-
+                    
                 </script>
 </div>
 </body>
