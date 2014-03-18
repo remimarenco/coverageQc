@@ -40,6 +40,8 @@ public class GeneExon implements Comparable<Object> {
     public String vendorGeneExonName; // parsed from exon BED custom field #5: /vendor-gene-exon-name: (.*)\\|.*\\|.*\\|.*/
     @XmlAttribute
     public float pctOfExon; // parsed from exon BED custom field #5: /.*\\|.*\\|.*\\|pct-of-exon: (.*)/
+    @XmlAttribute
+    public String refSeqAccNo;
     @XmlTransient
     public TreeMap<Long, Base> bases = new TreeMap<Long, Base>();
     @XmlElementWrapper(name = "bins")
@@ -132,14 +134,14 @@ public class GeneExon implements Comparable<Object> {
         geneExon.endPos = Long.parseLong(fields[2]) + 0;
         geneExon.name = fields[3];
         {
-            Pattern pattern = Pattern.compile("vendor-gene-exon-name: (.*)\\|.*\\|.*\\|.*");
+            Pattern pattern = Pattern.compile("vendor-gene-exon-name: (.*)\\|.*\\|.*\\|.*\\|.*");
             Matcher matcher = pattern.matcher(fields[5]);
             if(matcher.find()) {
                 geneExon.vendorGeneExonName = matcher.group(1);
             }
         }
         {
-            Pattern pattern = Pattern.compile(".*\\|Ensembl-IDs: ([A-Z0-9\\.]*):([A-Z0-9\\.]*):([A-Z0-9\\.]*)\\|.*\\|.*");
+            Pattern pattern = Pattern.compile(".*\\|Ensembl-IDs: ([A-Z0-9\\.]*):([A-Z0-9\\.]*):([A-Z0-9\\.]*)\\|.*\\|.*\\|.*");
             Matcher matcher = pattern.matcher(fields[5]);
             matcher.find();
             geneExon.ensemblGeneId = matcher.group(1);
@@ -147,17 +149,25 @@ public class GeneExon implements Comparable<Object> {
             geneExon.ensemblExonId = matcher.group(3);
         }
         {
-            Pattern pattern = Pattern.compile(".*\\|.*\\|Ensembl-exon-number: (.*)\\|.*");
+            Pattern pattern = Pattern.compile(".*\\|.*\\|Ensembl-exon-number: (.*)\\|.*\\|.*");
             Matcher matcher = pattern.matcher(fields[5]);
             if(matcher.find()) {
                 geneExon.ensemblExonNumber = matcher.group(1);
             }
         }
         {
-            Pattern pattern = Pattern.compile(".*\\|.*\\|.*\\|pct-of-exon: (.*)");
+            Pattern pattern = Pattern.compile(".*\\|.*\\|.*\\|pct-of-exon: (.*)\\|.*");
             Matcher matcher = pattern.matcher(fields[5]);
             if(matcher.find()) {
                 geneExon.pctOfExon = Math.round(Float.parseFloat(matcher.group(1)));
+            }
+        }
+        // late addition of RefSeq accession no.
+        {
+            Pattern pattern = Pattern.compile(".*\\|.*\\|.*\\|.*\\|RefSeq-acc-no: (.*)");
+            Matcher matcher = pattern.matcher(fields[5]);
+            if(matcher.find()) {
+                geneExon.refSeqAccNo = matcher.group(1);
             }
         }
         {

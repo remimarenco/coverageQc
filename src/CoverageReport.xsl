@@ -266,6 +266,7 @@
                             <xsl:value-of select="@name"/><br/>
                             <span style="font-size: x-small">
                                 Ensembl ID: <a href="http://www.ensembl.org/id/{@ensemblTranscriptId}"><xsl:value-of select="@ensemblExonId"/></a><br/>
+                                RefSeq accession no.: <a href="http://www.ncbi.nlm.nih.gov/nuccore/{@refSeqAccNo}"><xsl:value-of select="@refSeqAccNo"/></a><br/>
                                 vendor ID: <xsl:value-of select="@vendorGeneExonName"/>
                             </span>
                         </td>
@@ -441,11 +442,12 @@
                         $(".exportCheckbox:checked").each(function() {
                             $(this).parents("tr.geneExon_child").prev("tr").find("td[data-export-label]").each(function() {
                                 if($(this).attr("data-export-label") == "exon") {
-                                    var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm;
+                                    var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*RefSeq accession no\.: (.*)[\s\n]*vendor ID: (.*)/gm;
                                     var match = re.exec($(this).text());
                                     exportMap["exonName"] = match[1];
                                     exportMap["exonEnsemblId"] = match[2];
-                                    exportMap["exonVendorId"] = match[3];
+                                    exportMap["refSeqAccNo"] = match[3];
+                                    exportMap["exonVendorId"] = match[4];
                                 }
                                 else {
                                     exportMap[$(this).attr("data-export-label")] = $(this).text();
@@ -454,8 +456,8 @@
                             $(this).parents("tr.filteredAnnotatedVariant").find("td[data-export-label]").each(function() {
                                 exportMap[$(this).attr("data-export-label")] = $(this).text();
                             });
-                            exportText += exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid + " sequence variant detected by next generation sequencing";
-                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / " + exportMap.locus + ").&lt;/br>&lt;br/>";
+                            exportText += "&lt;b>POSITIVE for detection of " + exportMap.gene + " sequence variant by next generation sequencing: " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid;
+                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / RefSeq accession no.: " + exportMap.refSeqAccNo + " / " + exportMap.locus + ").&lt;/b>&lt;/br>&lt;br/>";
                             exportText += "&lt;table>&lt;tr>&lt;td>" + "coord" + "&lt;/td>&lt;td>" + "consequence" + "&lt;/td>&lt;td>" + "genotype" + "&lt;/td>&lt;td>" + "alt-variant-freq" + "&lt;/td>&lt;td>" + "minor-allele-freq" + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;/tr>";
                             exportText +=           "&lt;tr>&lt;td>" + exportMap.coordinate + "&lt;/td>&lt;td>" + exportMap.consequence + "&lt;/td>&lt;td>" + exportMap.genotype + "&lt;/td>&lt;td>" + exportMap.avf + "&lt;/td>&lt;td>" + exportMap.maf + "&lt;/td>&lt;/tr>&lt;/table>";
@@ -468,7 +470,7 @@
                         var failedExons = "";
                         $("tr.geneExon_parent").each(function() {
                             if($(this).find("td[data-export-label='qc']").text() == "fail") {
-                                failedExons += "&lt;tr>&lt;td>" + (/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*?vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1] + "&lt;/td>";
+                                failedExons += "&lt;tr>&lt;td>" + (/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*RefSeq accession no\.: (.*)[\s\n]*vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1] + "&lt;/td>";
                                 failedExons += "&lt;td>" + $(this).find("td[data-export-label='locus']").text() + "&lt;/td>";
                                 failedExons += "&lt;td>" + (parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))) + "&lt;/td>&lt;/tr>";
                             }
