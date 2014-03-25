@@ -436,55 +436,71 @@
                 <script type="text/javascript">
 
                     function showExportDialog() {
-                    
-                        var exportMap = new Object();
-                        var exportText = "";
-                        $(".exportCheckbox:checked").each(function() {
-                            $(this).parents("tr.geneExon_child").prev("tr").find("td[data-export-label]").each(function() {
-                                if($(this).attr("data-export-label") == "exon") {
-                                    var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*RefSeq accession no\.: (.*)[\s\n]*vendor ID: (.*)/gm;
-                                    var match = re.exec($(this).text());
-                                    exportMap["exonName"] = match[1];
-                                    exportMap["exonEnsemblId"] = match[2];
-                                    exportMap["refSeqAccNo"] = match[3];
-                                    exportMap["exonVendorId"] = match[4];
-                                }
-                                else {
-                                    exportMap[$(this).attr("data-export-label")] = $(this).text();
-                                }
-                            });
-                            $(this).parents("tr.filteredAnnotatedVariant").find("td[data-export-label]").each(function() {
-                                exportMap[$(this).attr("data-export-label")] = $(this).text();
-                            });
-                            exportText += "&lt;b>POSITIVE for detection of " + exportMap.gene + " sequence variant by next generation sequencing: " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid;
-                            exportText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + " / RefSeq accession no.: " + exportMap.refSeqAccNo + " / " + exportMap.locus + ").&lt;/b>&lt;/br>&lt;br/>";
-                            exportText += "&lt;table>&lt;tr>&lt;td>" + "coord" + "&lt;/td>&lt;td>" + "consequence" + "&lt;/td>&lt;td>" + "genotype" + "&lt;/td>&lt;td>" + "alt-variant-freq" + "&lt;/td>&lt;td>" + "minor-allele-freq" + "&lt;/td>&lt;/tr>";
-                            exportText +=           "&lt;tr>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;/tr>";
-                            exportText +=           "&lt;tr>&lt;td>" + exportMap.coordinate + "&lt;/td>&lt;td>" + exportMap.consequence + "&lt;/td>&lt;td>" + exportMap.genotype + "&lt;/td>&lt;td>" + exportMap.avf + "&lt;/td>&lt;td>" + exportMap.maf + "&lt;/td>&lt;/tr>&lt;/table>";
-                            exportText += "&lt;br/>";
-                        });
-                        $("#exportDialog").html(exportText.length > 0 ? exportText + '- See comment.' : "No variants detected by next-generation sequencing.");
-                        $("#exportDialog").append("&lt;br/>&lt;br/>&lt;br/>");
-                        $("#exportDialog").append("The reference assembly is hg19, GRCh37.&lt;br/>");
 
-                        var failedExons = "";
-                        $("tr.geneExon_parent").each(function() {
-                            if($(this).find("td[data-export-label='qc']").text() == "fail") {
-                                failedExons += "&lt;tr>&lt;td>" + (/(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*RefSeq accession no\.: (.*)[\s\n]*vendor ID: (.*)/gm).exec($(this).find("td[data-export-label='exon']").text())[1] + "&lt;/td>";
-                                failedExons += "&lt;td>" + $(this).find("td[data-export-label='locus']").text() + "&lt;/td>";
-                                failedExons += "&lt;td>" + (parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"))) + "&lt;/td>&lt;/tr>";
-                            }
-                        });
-                        if(failedExons.length > 0) {
-                            var failedExonsText = "";
-                            failedExonsText += "&lt;br/>Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):&lt;br/>&lt;br/>";
-                            failedExonsText += "&lt;table>&lt;tr>&lt;td>" + "gene/exon" + "&lt;/td>&lt;td>" + "locus" + "&lt;/td>&lt;td>" + "% of locus failing QC" + "&lt;/td>&lt;/tr>";
-                            failedExonsText += "&lt;tr>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;td>" + "" + "&lt;/td>&lt;/tr>";
-                            failedExonsText += failedExons + "&lt;/table>";
-                            $("#exportDialog").append(failedExonsText);
+                        var interpText = "";
+                        var resultsText = "";
+                        var failedExonsText = "";
+                    
+                        {
+                            var exportMap = new Object();
+                            $(".exportCheckbox:checked").each(function() {
+                                $(this).parents("tr.geneExon_child").prev("tr").find("td[data-export-label]").each(function() {
+                                    if($(this).attr("data-export-label") == "exon") {
+                                        var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*RefSeq accession no\.: (.*)[\s\n]*vendor ID: (.*)/gm;
+                                        var match = re.exec($(this).text());
+                                        exportMap["exonName"] = match[1];
+                                        exportMap["exonEnsemblId"] = match[2];
+                                        exportMap["refSeqAccNo"] = match[3];
+                                        exportMap["exonVendorId"] = match[4];
+                                    }
+                                    else {
+                                        exportMap[$(this).attr("data-export-label")] = $(this).text();
+                                    }
+                                });
+                                $(this).parents("tr.filteredAnnotatedVariant").find("td[data-export-label]").each(function() {
+                                    exportMap[$(this).attr("data-export-label")] = $(this).text();
+                                });
+                                interpText += "&lt;b>POSITIVE for detection of " + exportMap.gene + " sequence variant by next generation sequencing: " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid;
+                                interpText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + "; " + exportMap.locus + ").&lt;/b>&lt;br/>&lt;br/>";
+                                resultsText += "&lt;b>" + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + ")&lt;/b>&lt;br/>";
+                                resultsText += "gene: " + exportMap.gene + "; coord: " + exportMap.coordinate + "; consequence: " + exportMap.consequence + "; genotype: " + exportMap.genotype + "; alt-variant-freq: " + exportMap.avf + "; cDNA: " + exportMap.cDna + "; amino-acid: " + exportMap.aminoAcid + "&lt;/b>&lt;br/>&lt;br/>";
+ 
+                            });
                         }
 
-                        $("#exportDialog").append("&lt;br/>See Notes and Test Performed sections below for more information.");
+                        {
+                            var exportMap = new Object();
+                            $("tr.geneExon_parent").each(function() {
+                                if($(this).find("td[data-export-label='qc']").text() == "fail") {
+                                    $(this).find("td[data-export-label]").each(function() {
+                                        if($(this).attr("data-export-label") == "exon") {
+                                            var re = /(.*)[\s\n]*Ensembl ID: (.*)[\s\n]*RefSeq accession no\.: (.*)[\s\n]*vendor ID: (.*)/gm;
+                                            var match = re.exec($(this).text());
+                                            exportMap["exonName"] = match[1];
+                                            exportMap["exonEnsemblId"] = match[2];
+                                            exportMap["refSeqAccNo"] = match[3];
+                                            exportMap["exonVendorId"] = match[4];
+                                        }
+                                        else {
+                                            exportMap[$(this).attr("data-export-label")] = $(this).text();
+                                        }
+                                    });
+                                    exportMap["data-pct-failed"] = parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"));
+                                    failedExonsText += "gene/exon: " + exportMap.exonName + "; coord: " + exportMap.locus + "; pct-of-locus-failing-QC: " + exportMap['data-pct-failed'] + "&lt;br/>";
+                                }
+                            });
+                        }
+
+                        $("#exportDialog").html("Interpretation&lt;br/>&lt;br/>");
+                        $("#exportDialog").append(interpText.length > 0 ? interpText + '- See comment.&lt;br/>&lt;br/>' : "No variants detected by next-generation sequencing.&lt;br/>&lt;br/>");
+                        $("#exportDialog").append("&lt;br/>&lt;br/>&lt;br/>");
+                        $("#exportDialog").append("Results&lt;br/>&lt;br/>");
+                        $("#exportDialog").append(resultsText.length > 0 ? resultsText : "No variants detected by next-generation sequencing.&lt;br/>&lt;br/>");
+                        $("#exportDialog").append("The reference assembly is hg19, GRCh37.&lt;br/>&lt;br/>");
+                        $("#exportDialog").append("&lt;br/>&lt;br/>&lt;br/>");
+                        $("#exportDialog").append(failedExonsText.length > 0 ? "Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):&lt;br/>&lt;br/>" + failedExonsText : "");
+                        $("#exportDialog").append("&lt;br/>&lt;br/>&lt;br/>");
+                        $("#exportDialog").append("See Notes and Test Performed sections below for more information.");
 
                         $("#exportDialog").dialog({
                             width:$(window).width() * 0.6,
