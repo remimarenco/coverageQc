@@ -56,6 +56,9 @@ public class CoverageQc {
             return;
         }
         
+        File jarFile = new File(CoverageQc.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        String jarFileDir = URLDecoder.decode(jarFile.getParent(), "UTF-8");
+
         final File vcfFile = new File(args[0]);
 
         File exonBedFile;
@@ -67,8 +70,7 @@ public class CoverageQc {
             //      xxx.YYYYMMDD.amplicons.bed
             //
             // ultimately use the ones that sort alphabetically highest
-            File jarFile = new File(CoverageQc.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            File[] exonFiles = (new File(URLDecoder.decode(jarFile.getParent(), "UTF-8"))).listFiles(new FileFilter() {
+            File[] exonFiles = (new File(jarFileDir)).listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File pathname) { return(pathname.getName().endsWith("exons.bed")); }
             });
@@ -291,7 +293,13 @@ public class CoverageQc {
 
         // transform XML to HTML via XSLT
         Source xmlSource = new StreamSource(new FileInputStream(xmlTempFile.getCanonicalPath()));
-        Source xslSource = new StreamSource(ClassLoader.getSystemResourceAsStream("CoverageReport.xsl"));
+        Source xslSource;
+        if((new File(jarFileDir + "/coverageQc.xsl")).exists()) {
+            xslSource = new StreamSource(new FileInputStream(jarFileDir + "/coverageQc.xsl"));
+        }
+        else {
+            xslSource = new StreamSource(ClassLoader.getSystemResourceAsStream("coverageQc.xsl"));
+        }
         Transformer trans = TransformerFactory.newInstance().newTransformer(xslSource);
         trans.transform(xmlSource, new StreamResult(vcfFile.getCanonicalPath() + ".coverage_qc.html"));
         LOGGER.info(vcfFile.getCanonicalPath() + ".coverage_qc.html created");

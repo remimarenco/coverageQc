@@ -165,10 +165,10 @@
 <h1>Coverage QC Report</h1>
 <table>
 <tr style="vertical-align: top;">
-<td>version</td><td>:</td><td style="font-weight: bold;">1.0 (build 20140317)</td>
+<td>version</td><td>:</td><td style="font-weight: bold;">1.0 (build 20140325)</td>
 </tr>
 <tr style="vertical-align: top;">
-<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-03-25T12:53</td>
+<td>report run date</td><td>:</td><td style="font-weight: bold;">2014-03-25T21:55</td>
 </tr>
 <tr style="vertical-align: top;">
 <td>gVCF file</td><td>:</td><td style="font-weight: bold;">D:\Documents\NetBeansProjects\coverageQc\data\sample.genome.vcf</td>
@@ -23986,9 +23986,9 @@
                                     exportMap[$(this).attr("data-export-label")] = $(this).text();
                                 });
                                 interpText += "<b>POSITIVE for detection of " + exportMap.gene + " sequence variant by next generation sequencing: " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid;
-                                interpText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + "; " + exportMap.locus + ").</b><br/><br/>";
-                                resultsText += "<b>" + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + ")</b><br/>";
-                                resultsText += "gene: " + exportMap.gene + "; coord: " + exportMap.coordinate + "; consequence: " + exportMap.consequence + "; genotype: " + exportMap.genotype + "; alt-variant-freq: " + exportMap.avf + "; cDNA: " + exportMap.cDna + "; amino-acid: " + exportMap.aminoAcid + "</b><br/><br/>";
+                                interpText += " in exon " + exportMap.exonName + ".</b><br/><br/>";
+                                resultsText += "<b>" + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + "; " + exportMap.locus + ")</b><br/>";
+                                resultsText += "gene: " + exportMap.gene + "; coordinate: " + exportMap.coordinate + "; consequence: " + exportMap.consequence + "; genotype: " + exportMap.genotype + "; alt-variant-freq: " + exportMap.avf + "; cDNA: " + exportMap.cDna + "; amino-acid: " + exportMap.aminoAcid + "</b><br/><br/>";
  
                             });
                         }
@@ -24011,7 +24011,7 @@
                                         }
                                     });
                                     exportMap["data-pct-failed"] = parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"));
-                                    failedExonsText += "gene/exon: " + exportMap.exonName + "; coord: " + exportMap.locus + "; pct-of-locus-failing-QC: " + exportMap['data-pct-failed'] + "<br/>";
+                                    failedExonsText += "gene/exon: " + exportMap.exonName + "; " + exportMap.locus + "; pct-of-locus-failing-QC: " + exportMap['data-pct-failed'] + "<br/>";
                                 }
                             });
                         }

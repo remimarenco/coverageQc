@@ -461,9 +461,9 @@
                                     exportMap[$(this).attr("data-export-label")] = $(this).text();
                                 });
                                 interpText += "&lt;b>POSITIVE for detection of " + exportMap.gene + " sequence variant by next generation sequencing: " + exportMap.gene + " " + exportMap.cDna + " / " + exportMap.aminoAcid;
-                                interpText += " in exon " + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + "; " + exportMap.locus + ").&lt;/b>&lt;br/>&lt;br/>";
-                                resultsText += "&lt;b>" + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + ")&lt;/b>&lt;br/>";
-                                resultsText += "gene: " + exportMap.gene + "; coord: " + exportMap.coordinate + "; consequence: " + exportMap.consequence + "; genotype: " + exportMap.genotype + "; alt-variant-freq: " + exportMap.avf + "; cDNA: " + exportMap.cDna + "; amino-acid: " + exportMap.aminoAcid + "&lt;/b>&lt;br/>&lt;br/>";
+                                interpText += " in exon " + exportMap.exonName + ".&lt;/b>&lt;br/>&lt;br/>";
+                                resultsText += "&lt;b>" + exportMap.exonName + " (Ensembl ID: " + exportMap.exonEnsemblId + "; RefSeq accession no: " + exportMap.refSeqAccNo + "; " + exportMap.locus + ")&lt;/b>&lt;br/>";
+                                resultsText += "gene: " + exportMap.gene + "; coordinate: " + exportMap.coordinate + "; consequence: " + exportMap.consequence + "; genotype: " + exportMap.genotype + "; alt-variant-freq: " + exportMap.avf + "; cDNA: " + exportMap.cDna + "; amino-acid: " + exportMap.aminoAcid + "&lt;/b>&lt;br/>&lt;br/>";
  
                             });
                         }
@@ -486,7 +486,7 @@
                                         }
                                     });
                                     exportMap["data-pct-failed"] = parseInt($(this).find("td[data-pct]").eq(0).attr("data-pct")) + parseInt($(this).find("td[data-pct]").eq(1).attr("data-pct"));
-                                    failedExonsText += "gene/exon: " + exportMap.exonName + "; coord: " + exportMap.locus + "; pct-of-locus-failing-QC: " + exportMap['data-pct-failed'] + "&lt;br/>";
+                                    failedExonsText += "gene/exon: " + exportMap.exonName + "; " + exportMap.locus + "; pct-of-locus-failing-QC: " + exportMap['data-pct-failed'] + "&lt;br/>";
                                 }
                             });
                         }
