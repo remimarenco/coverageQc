@@ -18,6 +18,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class GeneExon implements Comparable<Object> {
     
+    //Tom Addition
+    @XmlAttribute
+    public Boolean containsDoNotCall;
+    @XmlAttribute
+    public String typeOfDoNotCall;
+    //Tom Addition
     @XmlAttribute
     public String chr;
     @XmlAttribute

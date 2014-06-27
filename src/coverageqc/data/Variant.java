@@ -47,9 +47,19 @@ public class Variant {
     public String filters;
     @XmlAttribute
     public Float alleleFreqGlobalMinor;
-    
-            
-    public static Variant populate(String tsvHeadingLine, String tsvDataLine) {
+    //TOM ADDITION
+    @XmlAttribute
+    public String geneMutation;
+    @XmlAttribute
+    //adding the complete version of the HGVSc since this will make it easy to check if variant is in DoNotCall list
+    public String hgvscComplete;
+    @XmlAttribute
+    public Boolean onTheDoNotCallList;
+    @XmlAttribute
+    public String typeOfDoNotCall;
+    //end of Tom Addition
+            //Tom Addition I am adding in the input of a String[][]
+    public static Variant populate(String tsvHeadingLine, String tsvDataLine, String[][] doNotCallList) {
         Variant variant = new Variant();
         String[] headingsArray = tsvHeadingLine.split("\t");
         HashMap<String, Integer> headings = new HashMap<String, Integer>();
@@ -70,6 +80,17 @@ public class Variant {
         variant.consequence = dataArray[headings.get("Consequence").intValue()];
         variant.cosmicId = dataArray[headings.get("COSMIC ID").intValue()];
         variant.filters = dataArray[headings.get("Filters").intValue()];
+         //TOM ADDITION
+        variant.hgvscComplete = dataArray[headings.get("HGVSc").intValue()];
+        if (doNotCallList!=null)
+        {
+        variant = CheckIfOnDoNOTCallList(variant,doNotCallList);
+        }else
+        {
+            variant.onTheDoNotCallList=false;
+	    variant.typeOfDoNotCall = "0";
+        }
+        //end of TOM addition
         // note: parsing out RefSeq IDs
         if(dataArray[headings.get("HGVSc")] != null) {
             Pattern pattern = Pattern.compile(".*:(.*)");
@@ -104,7 +125,40 @@ public class Variant {
             }
         }
         variant.alleleFreqGlobalMinor = Float.valueOf(dataArray[headings.get("Allele Freq Global Minor").intValue()] != null && !dataArray[headings.get("Allele Freq Global Minor").intValue()].isEmpty() ? dataArray[headings.get("Allele Freq Global Minor").intValue()] : null);
+         //TOM ADDITION
+            variant.geneMutation = variant.gene; 
+            variant.geneMutation += " ";
+            variant.geneMutation += variant.hgvsc;
+    
+      ////end of TOM ADDITION
+        
+        
+        
         return variant;
     }
+    
+    //Tom Addition///////////////////////////////////////////////////////////////////////////////
+	private static Variant CheckIfOnDoNOTCallList(Variant variant2,
+			String[][] doNotCallList) {
+		// TODO Auto-generated method stub
+		variant2.onTheDoNotCallList=false;
+		variant2.typeOfDoNotCall = "0";
+		for(int i=0; i<doNotCallList.length; i++)
+		{
+			
+			System.out.println(i);
+			if(doNotCallList[i][0]!=null && doNotCallList[i][0].equals(variant2.hgvscComplete))
+			{
+				variant2.onTheDoNotCallList=true;
+				variant2.typeOfDoNotCall=doNotCallList[i][1];
+			}
+			
+		}
+		return variant2;
+		
+	}
+	//Tom ADDITION////////////////////////////////////////////////////////////////////////////////////////////////
+  
+    
     
 }

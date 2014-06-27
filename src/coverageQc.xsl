@@ -251,11 +251,19 @@
                     </xsl:variable>
                     <xsl:variable name="color">
                         <xsl:choose>
+                            <xsl:when test="@containsDoNotCall = 'true'">blue</xsl:when>
                             <xsl:when test="@qc = 'fail'">red</xsl:when>
                             <xsl:when test="@qc = 'warn'">yellow</xsl:when>
                             <xsl:when test="@qc = 'pass'">green</xsl:when>
                             <xsl:otherwise></xsl:otherwise>
                         </xsl:choose>
+                    </xsl:variable>
+                    <xsl:comment>Tom Addition of variable doNotCall</xsl:comment>
+                    <xsl:variable name="doNotCall">
+                    <xsl:choose>
+                     <xsl:when test="@containsDoNotCall = 'true'">blue</xsl:when>
+                      <xsl:otherwise></xsl:otherwise>
+                    </xsl:choose>
                     </xsl:variable>
                     <tr style="font-weight: {$weight};" class="geneExon_parent">
                         <td style="text-align: center; width: 20px;">
@@ -278,7 +286,11 @@
                         </td>
                         <td>
                             <xsl:value-of select="@variantCalled"/>
-                            <xsl:if test="@variantAnnotated = 'true'"> (annotated)</xsl:if>                                
+                            <xsl:if test="@variantAnnotated = 'true'"> (annotated)</xsl:if>
+                            <xsl:if test="@containsDoNotCall = 'true'"> Warning On Do Not Call List.</xsl:if>  
+                            <xsl:if test="@typeOfDoNotCall = '1'"> ALWAYS INSIGNIFICANT </xsl:if>  
+                            <xsl:if test="@typeOfDoNotCall = '2'"> INSIGNIFICANT IF LOW </xsl:if>
+                            <xsl:if test="@typeOfDoNotCall = '3'"> MAY OR MAY NOT BE SIGNIFICANT </xsl:if>                                  
                         </td>
                         <xsl:for-each select="bins/bin">
                             <td class="readHistogram" style="text-align: right; width: 40px;" data-pct="{@pct}"><xsl:value-of select="@count"/></td>
@@ -395,6 +407,10 @@
                                                 <th>dbSNP</th>
                                                 <th>MAF</th>
                                                 <th>COSMIC ID</th>
+                                                <xsl:comment>//TOM ADDITION
+                                                //adding this because sometimes the tsv file from variant studio is wrong and it is really in cosmic, creating a work around
+                                               </xsl:comment>
+                                               <th>COSMIC GENE SEARCH DOUBLECHECK</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -412,6 +428,10 @@
                                                     <td><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></td>
                                                     <td data-export-label="maf" style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></td>
                                                     <td><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></td>
+                                                    <xsl:comment> //TOM ADDITION
+                                                    //I created a new string stating the gene mutation to be searched in Cosmic ie KIT c.2586G>C 
+                                                    </xsl:comment>
+                                                    <td><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@geneMutation}"><xsl:value-of select="@geneMutation"/></a></td>
                                                 </tr>
                                             </xsl:for-each>
                                         </tbody>
