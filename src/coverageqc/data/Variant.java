@@ -6,6 +6,9 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+//Tom addition
+import java.util.ArrayList;
+//
 /**
  *
  * @author geoffrey.hughes.smith@gmail.com
@@ -54,12 +57,16 @@ public class Variant {
     //adding the complete version of the HGVSc since this will make it easy to check if variant is in DoNotCall list
     public String hgvscComplete;
     @XmlAttribute
+     public String hgvspComplete;
+    @XmlAttribute
+     public String ensp;
+    @XmlAttribute
     public Boolean onTheDoNotCallList;
     @XmlAttribute
     public String typeOfDoNotCall;
     //end of Tom Addition
             //Tom Addition I am adding in the input of a String[][]
-    public static Variant populate(String tsvHeadingLine, String tsvDataLine, String[][] doNotCallList) {
+    public static Variant populate(String tsvHeadingLine, String tsvDataLine, ArrayList<DoNotCall> donotcalls) {
         Variant variant = new Variant();
         String[] headingsArray = tsvHeadingLine.split("\t");
         HashMap<String, Integer> headings = new HashMap<String, Integer>();
@@ -81,14 +88,25 @@ public class Variant {
         variant.cosmicId = dataArray[headings.get("COSMIC ID").intValue()];
         variant.filters = dataArray[headings.get("Filters").intValue()];
          //TOM ADDITION
-        variant.hgvscComplete = dataArray[headings.get("HGVSc").intValue()];
-        if (doNotCallList!=null)
+         if(dataArray[headings.get("HGVSc")]!= null)
         {
-        variant = CheckIfOnDoNOTCallList(variant,doNotCallList);
+        variant.hgvscComplete = dataArray[headings.get("HGVSc").intValue()];
+        }
+         if(dataArray[headings.get("HGVSp")]!= null)
+        {
+        variant.hgvspComplete = dataArray[headings.get("HGVSp").intValue()];
+        }
+        if(dataArray[headings.get("ENSP")]!= null)
+        {
+        variant.ensp = dataArray[headings.get("ENSP").intValue()];
+        }
+        if (donotcalls!=null)
+        {
+        variant = CheckIfOnDoNOTCallList(variant,donotcalls);
         }else
         {
             variant.onTheDoNotCallList=false;
-	    variant.typeOfDoNotCall = "0";
+	    variant.typeOfDoNotCall = "Not on list/Valid";
         }
         //end of TOM addition
         // note: parsing out RefSeq IDs
@@ -139,18 +157,38 @@ public class Variant {
     
     //Tom Addition///////////////////////////////////////////////////////////////////////////////
 	private static Variant CheckIfOnDoNOTCallList(Variant variant2,
-			String[][] doNotCallList) {
+			ArrayList<DoNotCall> donotcalls) {
 		// TODO Auto-generated method stub
 		variant2.onTheDoNotCallList=false;
-		variant2.typeOfDoNotCall = "0";
-		for(int i=0; i<doNotCallList.length; i++)
+		variant2.typeOfDoNotCall = "Not on do not call list/Potentially Valid";
+                
+		for(int i=0; i<donotcalls.size(); i++)
 		{
 			
 			System.out.println(i);
-			if(doNotCallList[i][0]!=null && doNotCallList[i][0].equals(variant2.hgvscComplete))
+                        DoNotCall currentdonotcall = donotcalls.get(i);
+                        String donotcallcomparison;
+                        String variantcomparison;
+                        if(currentdonotcall.hgvsc!=null && variant2.hgvscComplete!=null )
+                        {
+                            donotcallcomparison=currentdonotcall.ensp;
+                            variantcomparison=variant2.ensp;
+                            donotcallcomparison=currentdonotcall.hgvsc;
+                            variantcomparison=variant2.hgvscComplete; 
+                        }else if(currentdonotcall.ensp!=null && variant2.ensp!=null)
+                        {
+                            donotcallcomparison=currentdonotcall.ensp;
+                            variantcomparison=variant2.ensp; 
+                        }else
+                        {
+                        System.out.println("ERROR: the current donotcall can't be compared");
+                        continue;
+                        }
+                        
+			if(donotcallcomparison.equals(variantcomparison))
 			{
 				variant2.onTheDoNotCallList=true;
-				variant2.typeOfDoNotCall=doNotCallList[i][1];
+				variant2.typeOfDoNotCall=currentdonotcall.callType;
 			}
 			
 		}

@@ -2,9 +2,11 @@ package coverageqc;
 import coverageqc.data.Amplicon;
 import coverageqc.data.Base;
 import coverageqc.data.Bin;
+import coverageqc.data.DoNotCall;
 import coverageqc.data.GeneExon;
 import coverageqc.data.Variant;
 import coverageqc.data.Vcf;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,6 +22,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -36,8 +39,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-//Tom Addition to edit excel files
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -48,6 +49,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 //end Tom addition
@@ -61,7 +64,8 @@ public class CoverageQc {
     private final static Logger LOGGER = Logger.getLogger(CoverageQc.class.getName()); 
     
     // Tom Addition
-	public static String[][] doNotCallList;
+	//public String[][] doNotCallList = null;
+         public static ArrayList<DoNotCall> donotcalls = new ArrayList<DoNotCall>();
 
 	// End Tom Addition
         
@@ -78,7 +82,7 @@ public class CoverageQc {
             System.out.println("USAGE: java -jar coverageQc.jar VCF-file-name exon-BED-file amplicon-BED-file doNotCall-xlsx-file(optional)");
             System.out.println("");
             //Tom Addition extended comment
-             System.out.println("If BED and file names are not specified, the system will attempt to use the\n\"exons_ensembl.bed\" and \"amplicons.bed\" files located in the same directory\nas this JAR (or exe) file.  If excel file name is not specified will look in parent of exe directory then under \\Clinical Specimens.  If not found will look under exe file directory");
+             System.out.println("If BED and file names are not specified, the system will attempt to use the\n\"exons_ensembl.bed\" and \"amplicons.bed\" files located in the same directory\nas this JAR (or exe) file.  If excel file name is not specified will look under exe file directory");
             return;
         }
         
@@ -117,31 +121,13 @@ public class CoverageQc {
             ampliconBedFile = ampliconFiles[0];
             
              //Tom Addition
-                        //very specific assumption, that the do Not Call List is in Clinical Specimens folder in the parent directory of the exe file, it will test this assumption and if the file exists it will use that file
-                         String[] jarFileDirParts = jarFileDir.split("\\\\");
-                        int jarFileLength = jarFileDirParts.length;
-                        jarFileDirParts[jarFileLength-1]="CLINICAL SPECIMENS";
-                        StringBuilder possibleExcelFileDirBuild = new StringBuilder();
-                        
-                        for (int i=0, il=jarFileDirParts.length; i< il; i++)
-                        {
-                            possibleExcelFileDirBuild.append(jarFileDirParts[i]);
-                            possibleExcelFileDirBuild.append("\\");
-                        }
-                         possibleExcelFileDirBuild.append("Do not call list.xlsx");   
-                        String possibleExcelFileDir = possibleExcelFileDirBuild.toString();
-                        
-                         File possibleDoNotCallFile = new File(possibleExcelFileDir);
-                        if (possibleDoNotCallFile.exists())
-                        {
-                             doNotCallFile = new File(possibleExcelFileDir);
-                        } else
-                        {
+                        //assuming it is always in the jarfiledirectory
+                       
                         File[] doNotCallFiles = (new File(jarFileDir))
 					.listFiles(new FileFilter() {
 						@Override
 						public boolean accept(File pathname) {
-							return (pathname.getName().endsWith("list"));
+							return (pathname.getName().endsWith("xlsx"));
 						}
 					});
                           
@@ -155,7 +141,7 @@ public class CoverageQc {
                         }
                        
                             
-                        }///end Tom Addition
+                        ///end Tom Addition
             
             
         }
@@ -170,9 +156,61 @@ public class CoverageQc {
              ////
         }
         
+        ///Tom Addition creating xslx file
+       // XSSFWorkbook newWorkbookcopy = new XSSFWorkbook();
+        
+        
+        ///
+         
+        
            // TOM ADDITION
 		// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-		DoNotCallConverter(doNotCallFile);
+	//Will populate doNotCall, reading XSLX file	
+        //DoNotCallConverter(doNotCallFile);
+        if (doNotCallFile!=null)
+        {
+            
+        InputStream inp = new FileInputStream(doNotCallFile);
+        // Get the workbook instance for XLS file
+	XSSFWorkbook workbook = new XSSFWorkbook(inp);
+        
+         Iterator<XSSFSheet> sheetIterator = workbook.iterator();
+         int typeOfCall = 1;
+	int rowIndex;
+        while (sheetIterator.hasNext())
+                {
+                    XSSFSheet sheet = sheetIterator.next();
+                    Iterator<Row> rowIterator = sheet.iterator();
+                    Row headerRow = null;
+                    while (rowIterator.hasNext()) {
+			
+			Row row = rowIterator.next();
+                        
+			rowIndex = row.getRowNum();
+                        System.out.println("The row index is " +rowIndex);
+			if (rowIndex == 0) {	
+                            headerRow=row;
+				continue;
+			}else if(row.getCell(0)==null)
+                        {
+                            // if it is null then nothing is there
+                            continue;
+                        }
+                        else if (row.getCell(0).getCellType() == 3) {
+				// if the cell type is 3 that means it is a blank field
+				continue;
+			} 
+			DoNotCall donotcall = DoNotCall.populate(headerRow, row, typeOfCall);
+                        donotcalls.add(donotcall);
+		}//end while rowiterator           
+                    typeOfCall++;                  
+                }//end while sheetiterator     
+        }//end if doNotCallFile is null
+        
+        
+       
+		
+                
             // END TOM ADDITION//////////////////////////////////////////////////////////////////////////
                 
         
@@ -345,22 +383,75 @@ public class CoverageQc {
         }
 
         // read variant file
+          XSSFWorkbook workbookcopy = new XSSFWorkbook();
         if(variantTsvFile != null) {
             String variantTsvDataLine;
             String variantTsvHeadingLine = variantTsvBufferedReader.readLine();
+            //Tom addition 
+        //making excel copy of tsv
+        //XSSFWorkbook workbookcopy = new XSSFWorkbook();
+        XSSFSheet sheet = workbookcopy.createSheet("TSV copy");
+        Row row = sheet.createRow(0);
+        int rownum =1;
+        String[] headingsArray = variantTsvHeadingLine.split("\t");
+        for(int x = 0; x < headingsArray.length; x++) {
+           Cell cell = row.createCell(x);
+           cell.setCellValue(headingsArray[x]);
+        }
+        XSSFCellStyle cellStyle = (XSSFCellStyle)workbookcopy.createCellStyle();
+        cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+       // XSSFColor myColor;
+        //end Tom addition
+            
             while((variantTsvDataLine = variantTsvBufferedReader.readLine()) != null) {
                 // Tom addition adding in variable doNotCallList
-                Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine, doNotCallList);
+                Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine, donotcalls);
                 //end Tom addition
+                
+                
                 boolean foundGeneExon = false;
                 for(GeneExon geneExon : vcf.findGeneExonsForChrPos("chr" + String.valueOf(variant.chr), variant.coordinate)) {
                     foundGeneExon = true;
                     geneExon.variants.add(variant);
                     // Tom Addition
                     if (variant.onTheDoNotCallList) {
-			geneExon.containsDoNotCall = true;
-			geneExon.typeOfDoNotCall = variant.typeOfDoNotCall;
+			//myColor = new XSSFColor(Color.YELLOW);
+                        cellStyle = workbookcopy.createCellStyle();
+                        cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+                        cellStyle.setFillForegroundColor(new XSSFColor(Color.YELLOW));
+                        geneExon.containsDoNotCall = true;
+                        geneExon.donotcallVariants.add(variant);
+			//geneExon.typeOfDoNotCall = variant.typeOfDoNotCall;
+                        }else if(variant.consequence.equals("synonymous_variant"))
+                    {
+                        cellStyle = workbookcopy.createCellStyle();
+                        cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+                        cellStyle.setFillForegroundColor(new XSSFColor(Color.ORANGE));
+                    }else
+                        {
+                         cellStyle = workbookcopy.createCellStyle();
+                          cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+                          cellStyle.setFillForegroundColor(new XSSFColor(Color.WHITE));  
+                         // cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+                         
                         }
+                    //  geneExon.checkIfContainsOnlyDoNotCall();
+                //adding TSV dataline to output excel file
+                        row = sheet.createRow(rownum++);
+                        String[] dataArray = variantTsvDataLine.split("\t");
+                        for(int x = 0; x < dataArray.length; x++) {
+                               Cell cell = row.createCell(x);
+                              // XSSFCellStyle style = workbookcopy.createCellStyle();
+                              // XSSFColor myColor = new XSSFColor(Color.RED);
+                              // style.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+                              // style.setFillForegroundColor(myColor);
+                               
+                            cell.setCellStyle(cellStyle);
+                           cell.setCellValue(dataArray[x]);
+                             }
+                //end Tom addition
+                    
+                    
 		     // end Tom Addition
                 }
                 if(!foundGeneExon) {
@@ -383,6 +474,15 @@ public class CoverageQc {
         m.marshal(vcf, xmlOutputStream);        
         xmlOutputStream.close();
         LOGGER.info(xmlTempFile.getCanonicalPath() + " created");
+        
+        //Tom addition
+        //write to xlsx
+         File xslxTempFile = new File(variantTsvFile.getCanonicalPath() + ".coverage_qc.xlsx");
+        OutputStream xslxOutputStream = new FileOutputStream(xslxTempFile);
+         workbookcopy.write(xslxOutputStream);
+    xslxOutputStream.close();
+     LOGGER.info(xslxTempFile.getCanonicalPath() + " created");
+        //end Tom addition
 
         // transform XML to HTML via XSLT
         Source xmlSource = new StreamSource(new FileInputStream(xmlTempFile.getCanonicalPath()));
@@ -402,150 +502,6 @@ public class CoverageQc {
         Desktop.getDesktop().browse(htmlFile.toURI());
         
     }
-    
-    // Tom Addition//////////////////////////////////////////////
-	private static void DoNotCallConverter(File providedDoNotCallFile)
-			throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
-		// return null;
-		// var a2 = new Array(3);
-            if (providedDoNotCallFile==null)
-            {
-                //since do not call is optional it will return if there is no Do Not Call File
-                doNotCallList = null;
-                return;
-            }
-            try
-            {
-		InputStream inp = new FileInputStream(providedDoNotCallFile);
-
-		// Get the workbook instance for XLS file
-		XSSFWorkbook workbook = new XSSFWorkbook(inp);
-
-		// Get first sheet from the workbook
-		XSSFSheet sheet = workbook.getSheetAt(0);
-
-		Iterator<Row> rowIterator = sheet.iterator();
-		// rowIterator.
-		// sheet.getRow(1).getLastCellNum()
-		int maxRows = sheet.getPhysicalNumberOfRows();
-	
-		doNotCallList = new String[maxRows][2];
-		// int if 1 then always a do not call, if 2 then a do not call if
-		// percentage is low, if 3 then undetermined significance
-		int typeOfCall = 1;
-		int rowIndex = 0;
-		int columnNumber;
-		int cellIndex;
-		String[] headerArray;
-		HashMap<String, Integer> headings = new HashMap<String, Integer>();
-
-		while (rowIterator.hasNext()) {
-			
-			Row row = rowIterator.next();
-			rowIndex = row.getRowNum();
-			// columnNumber = row.getLastCellNum();
-			// For each row, iterate through each columns
-			Iterator<Cell> cellIterator = row.cellIterator();
-			// Assumption, in DoNotCallList, when the first or second column is
-			// empty then it is just a comment is when it is just a comment
-			if (rowIndex == 0) {
-				// this means we are at the header row and want to skip this row
-				// should try and get the heading line
-				// String[] headingsArray = tsvHeadingLine.split("\t");
-				columnNumber = row.getLastCellNum();
-				headerArray = new String[columnNumber];
-				// XSSFRow headerRow = sheet.getRow(0);
-				// headerRow.toString();
-
-				// System.out.println(row.toString());
-				// outputing to see if I can split and make into a string array
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					cellIndex = cell.getColumnIndex();
-					switch (cell.getCellType()) {
-					case Cell.CELL_TYPE_BOOLEAN:
-						headerArray[cellIndex] = Boolean.toString(cell
-								.getBooleanCellValue());
-						break;
-					case Cell.CELL_TYPE_NUMERIC:
-						headerArray[cellIndex] = Double.toString(cell
-								.getNumericCellValue());
-						break;
-					case Cell.CELL_TYPE_STRING:
-						headerArray[cellIndex] = cell.getStringCellValue();
-						break;
-					default:
-						headerArray[cellIndex] = "";
-					}
-
-				}
-
-				for (int x = 0; x < headerArray.length; x++) {
-					headings.put(
-							headerArray[x].substring(0,
-									headerArray[x].indexOf("_")), x);
-				}
-
-				// typeOfCall++;
-				continue;
-
-			} else if (row.getCell(0).getCellType() == 3) {
-				// if the cell type is 3 that means it is a blank field
-				// a blank space, ignore,there will be blank spaces before a
-				// change in type
-				continue;
-			} else if (row.getLastCellNum() == 1) {
-				typeOfCall++;
-				System.out.println(rowIndex);
-				continue;
-
-			} else if (row.getCell(1).getCellType() == 3) {
-				// this means a comment row and DoNotCalls below this are a
-				// separate type
-				typeOfCall++;
-				continue;
-			}
-			System.out.println(rowIndex);
-			System.out.println(row.getCell(headings.get("HGVSc").intValue()));
-			
-
-			if (row.getCell(headings.get("HGVSc").intValue()) != null
-					&& row.getCell(headings.get("HGVSc").intValue())
-							.getCellType() == 1) {
-				doNotCallList[rowIndex - 1][0] = row.getCell(
-						headings.get("HGVSc").intValue()).getStringCellValue();
-				// doNotCallListStringLinearName.add(row.getCell(headings.get("HGVSc").intValue()).getStringCellValue());
-			} else if (row.getCell(headings.get("ENSP").intValue())
-					.getCellType() == 1) {
-				doNotCallList[rowIndex - 1][0] = row.getCell(
-						headings.get("ENSP").intValue()).getStringCellValue();
-				
-
-			} else {
-				throw new IllegalArgumentException(
-						"Both HSVSc and ENSP is blank, can't characterize this doNotCall");
-			}
-
-			
-			doNotCallList[rowIndex - 1][1] = Integer.toString(typeOfCall);
-
-		}
-
-		inp.close();
-                
-            }catch(Exception e)
-            {
-                //Doing this in case someone messes with Do Not Call .xslx file in an unexpected way, if that happens an html file will still be made, just variants won't be searched whether or not they are on the list
-                 System.out.println("There is something work with the do Not Call list.xslx.  Variants will not be searched whether or not they are on this list");
-                 doNotCallList = null;
-            }
-                    
-
-		
-
-	}
-	// End Tom Addition////////////////////////////////////////////////////////////
-    
-    
+   
+   
 }

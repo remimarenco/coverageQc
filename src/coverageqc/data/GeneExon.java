@@ -21,8 +21,10 @@ public class GeneExon implements Comparable<Object> {
     //Tom Addition
     @XmlAttribute
     public Boolean containsDoNotCall;
-    @XmlAttribute
-    public String typeOfDoNotCall;
+   // @XmlAttribute
+   // public Boolean onlycontainsDoNotCall;
+   // @XmlAttribute
+    //public String typeOfDoNotCall;
     //Tom Addition
     @XmlAttribute
     public String chr;
@@ -60,6 +62,10 @@ public class GeneExon implements Comparable<Object> {
     @XmlElementWrapper(name = "variants")
     @XmlElement(name = "variant")
     public ArrayList<Variant> variants = new ArrayList<Variant>();
+    //Tom Addition
+    @XmlElementWrapper(name = "donotcallvariants")
+    @XmlElement(name = "donotcallvariant")
+    public ArrayList<Variant> donotcallVariants = new ArrayList<Variant>();
 
     /**
      * 
@@ -126,6 +132,27 @@ public class GeneExon implements Comparable<Object> {
         }
         return false;
     }
+    
+    
+    //Tom Addition
+    /**
+     * 
+     * @return True if variantlist is the same size as donotcalllist, hence it only contains do not calls; also must be annotated to be true
+     */
+     @XmlAttribute
+    public boolean getOnlyContainsDoNotCall() {
+        if(variants.size() == donotcallVariants.size()&&variants.size()>0) {
+          //  onlycontainsDoNotCall = true;
+            return true;
+        }else
+        {
+        //onlycontainsDoNotCall = false;
+        return false;
+        }
+        //return false;
+    }
+    
+    
 
     /**
      * 
