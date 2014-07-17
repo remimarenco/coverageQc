@@ -127,7 +127,7 @@ public class CoverageQc {
 					.listFiles(new FileFilter() {
 						@Override
 						public boolean accept(File pathname) {
-							return (pathname.getName().endsWith("xlsx"));
+							return (pathname.getName().endsWith("list.xlsx"));
 						}
 					});
                           
@@ -187,7 +187,7 @@ public class CoverageQc {
 			Row row = rowIterator.next();
                         
 			rowIndex = row.getRowNum();
-                        System.out.println("The row index is " +rowIndex);
+                       // System.out.println("The row index is " +rowIndex);
 			if (rowIndex == 0) {	
                             headerRow=row;
 				continue;
@@ -203,7 +203,8 @@ public class CoverageQc {
 			DoNotCall donotcall = DoNotCall.populate(headerRow, row, typeOfCall);
                         donotcalls.add(donotcall);
 		}//end while rowiterator           
-                    typeOfCall++;                  
+                    typeOfCall++; 
+                    //system.out.println()
                 }//end while sheetiterator     
         }//end if doNotCallFile is null
         
@@ -257,6 +258,15 @@ public class CoverageQc {
         vcf.runDate = new Date();
         vcf.fileName = vcfFile.getCanonicalPath();
         vcf.exonBedFileName = exonBedFile.getCanonicalPath();
+        //Tom addition
+        //so the call file will be displayed in the report
+        if (doNotCallFile!=null)
+        {
+            vcf.doNotCallFileName = doNotCallFile.getCanonicalPath();
+        }else
+        {
+         vcf.doNotCallFileName = "NO DO NOT CALL FILE USED!";   
+        }
         vcf.ampliconBedFileName = ampliconBedFile.getCanonicalPath();
         vcf.variantTsvFileName = (variantTsvFile != null ? variantTsvFile.getCanonicalPath() : null);
         vcf.variantTsvFileLineCount = variantTsvFileLineCount;
@@ -419,8 +429,11 @@ public class CoverageQc {
                         cellStyle = workbookcopy.createCellStyle();
                         cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
                         cellStyle.setFillForegroundColor(new XSSFColor(Color.YELLOW));
-                        geneExon.containsDoNotCall = true;
-                        geneExon.donotcallVariants.add(variant);
+                        if(variant.typeOfDoNotCall.equals("Don't call, always"))
+                        {
+                        geneExon.containsDoNotCallAlways = true;
+                        geneExon.donotcallVariantsAlways.add(variant);
+                        }
 			//geneExon.typeOfDoNotCall = variant.typeOfDoNotCall;
                         }else if(variant.consequence.equals("synonymous_variant"))
                     {

@@ -237,6 +237,13 @@
                             <xsl:value-of select="/vcf/@ampliconBedFileName"/>
                         </td>
                     </tr>
+                    <tr style="vertical-align: top;">
+                        <td>Do NOT Call file</td>
+                        <td>:</td>
+                        <td style="font-weight: bold;">
+                            <xsl:value-of select="/vcf/@doNotCallFileName"/>
+                        </td>
+                    </tr>
                 </table>
 
                 <ul>
@@ -284,7 +291,6 @@
                         </xsl:variable>
                         <xsl:variable name="color">
                             <xsl:choose>
-                                <xsl:when test="@onlyContainsDoNotCall = 'true'">blue</xsl:when>
                                 <xsl:when test="@qc = 'fail'">red</xsl:when>
                                 <xsl:when test="@qc = 'warn'">yellow</xsl:when>
                                 <xsl:when test="@qc = 'pass'">green</xsl:when>
@@ -325,7 +331,7 @@
                             <td>
                                 <xsl:value-of select="@variantCalled"/>
                                 <xsl:if test="@variantAnnotated = 'true'"> (annotated)</xsl:if>
-                                <xsl:if test="@onlyContainsDoNotCall = 'true'"> Warning all do not call</xsl:if>                                   
+                                <xsl:if test="@onlyContainsDoNotCallAlways = 'true'"> Warning, all calls shoulld never be called</xsl:if>                                   
                             </td>
                             <xsl:for-each select="bins/bin">
                                 <td class="readHistogram" style="text-align: right; width: 40px;" data-pct="{@pct}">
@@ -388,7 +394,7 @@
                                         var color
                                         if(amplicons[x].name.match(/^.*_coding$/) != null) {
                                         color = 'green';
-                                        }
+                                        }else if(amplicons[x].name.match(/^.*_Lung$/) != null){color = 'red'}
                                         else {
                                         color = 'gray';
                                         }
@@ -501,7 +507,7 @@
                                                                 <xsl:value-of select="@geneMutation"/>
                                                             </a>
                                                         </td>
-                                                        <td><xsl:value-of select="@typeOfDoNotCall"/></td>
+                                                        <td width="5%"><xsl:value-of select="@typeOfDoNotCall"/></td>
                                                     </tr>
                                                 </xsl:for-each>
                                             </tbody>

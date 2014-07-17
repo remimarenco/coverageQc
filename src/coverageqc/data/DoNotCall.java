@@ -32,6 +32,11 @@ public class DoNotCall {
    // public String hgvsp;
     @XmlAttribute
     public String callType;
+     @XmlAttribute
+    public String transcript;
+      @XmlAttribute
+    public Long coordinate;
+       
    // @XmlAttribute
     public static DoNotCall populate(Row xslxHeadingRow, Row xslxDataRow, Integer calltype)
     {
@@ -76,13 +81,22 @@ public class DoNotCall {
         if(xslxDataRow.getCell(headings.get("HGVSc"))!=null)
         {
         donotcall.hgvsc = xslxDataRow.getCell(headings.get("HGVSc").intValue()).getStringCellValue();
+           
         }
         //donotcall.hgvsp = xslxDataRow.getCell(headings.get("HGVSp").intValue()).getStringCellValue();
         if(xslxDataRow.getCell(headings.get("ENSP"))!=null)
         {
         donotcall.ensp = xslxDataRow.getCell(headings.get("ENSP").intValue()).getStringCellValue();
         }
-        
+        if(xslxDataRow.getCell(headings.get("Transcript"))!=null)
+        {
+        donotcall.transcript = xslxDataRow.getCell(headings.get("Transcript").intValue()).getStringCellValue();
+        }else
+        {
+            System.out.println("Transcript_27 column entry is negative!  This is essential to do not call! Do not call list needs to be fixed!  Crashing to prevent abnormal behavior!");
+                    System.exit(1);
+        }
+        donotcall.coordinate = (long)xslxDataRow.getCell(headings.get("Coordinate").intValue()).getNumericCellValue();
         if(calltype==1)
         {
             donotcall.callType="Don't call, always";

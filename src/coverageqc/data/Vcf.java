@@ -19,12 +19,14 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Vcf {
 
     @XmlAttribute
-    final static String BUILD = "20140716";
+    final static String BUILD = "20140717";
     @XmlAttribute
     final static String VERSION = "1.1";
     
     @XmlAttribute
     public String fileName;
+    @XmlAttribute
+    public String doNotCallFileName;
     @XmlAttribute
     public String exonBedFileName;
     @XmlAttribute
