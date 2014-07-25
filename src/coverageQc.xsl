@@ -236,7 +236,7 @@
                         <th>name</th>
                         <th>% exon<br/>reported</th>
                         <th>locus</th>
-                        <th>variant</th>
+                        <th>Illumina variant</th>
                         <xsl:for-each select="/vcf/geneExons/geneExon[1]/bins/bin">
                             <th><xsl:value-of select="@name" disable-output-escaping="yes"/> <br/>reads</th>
                         </xsl:for-each>
@@ -384,6 +384,7 @@
                                         <thead>
                                             <tr>
                                                 <th>export?</th>
+                                                <th>pipeline</th>
                                                 <th>gene</th>
                                                 <th>coordinate</th>
                                                 <th>filters<sup>*</sup></th>
@@ -399,29 +400,41 @@
                                         </thead>
                                         <tbody>
                                             <xsl:for-each select="variants/variant">
+                                                <xsl:variable name="variantBackgroundColor">
+                                                    <xsl:choose>
+                                                        <xsl:when test="@pipeline = 'Illumina'">white</xsl:when>
+                                                        <xsl:otherwise>lightgray</xsl:otherwise>
+                                                    </xsl:choose>
+                                                </xsl:variable>
+                                                <xsl:variable name="borderTop">
+                                                    <xsl:choose>
+                                                        <xsl:when test="@coordinate = preceding-sibling::*[1]/@coordinate">1px dashed gray</xsl:when>
+                                                        <xsl:otherwise>1px solid black</xsl:otherwise>
+                                                    </xsl:choose>
+                                                </xsl:variable>
+                                                <xsl:variable name="borderBottom">
+                                                    <xsl:choose>
+                                                        <xsl:when test="@coordinate = following-sibling::*[1]/@coordinate">1px dashed gray</xsl:when>
+                                                        <xsl:otherwise>1px solid black</xsl:otherwise>
+                                                    </xsl:choose>
+                                                </xsl:variable>
                                                 <tr class="filteredAnnotatedVariant">
-                                                    <td style="text-align: center;"><input type="checkbox" class="exportCheckbox"/></td>
-                                                    <td data-export-label="gene"><xsl:value-of select="@gene"/></td>
-                                                    <td data-export-label="coordinate">chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></td>
-                                                    <td data-export-label="filters"><xsl:value-of select="@filters"/></td>
-                                                    <td data-export-label="consequence"><xsl:value-of select="@consequence"/></td>
-                                                    <td data-export-label="genotype"><xsl:value-of select="@genotype"/></td>
-                                                    <td data-export-label="avf" style="text-align: right;"><xsl:value-of select="@altVariantFreq"/></td>
-                                                    <td data-export-label="cDna"><xsl:value-of select="@hgvsc"/></td>
-                                                    <td data-export-label="aminoAcid"><xsl:value-of select="@hgvsp"/></td>
-                                                    <td><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></td>
-                                                    <td data-export-label="maf" style="text-align: right;"><xsl:value-of select="@alleleFreqGlobalMinor"/></td>
-                                                    <td><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></td>
+                                                    <td style="text-align: center; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><input type="checkbox" class="exportCheckbox"/></td>
+                                                    <td data-export-label="pipeline" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@pipeline"/></td>
+                                                    <td data-export-label="gene" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@gene"/></td>
+                                                    <td data-export-label="coordinate" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};">chr<xsl:value-of select="@chr"/>:<xsl:value-of select="@coordinate"/></td>
+                                                    <td data-export-label="filters" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@filters"/></td>
+                                                    <td data-export-label="consequence" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@consequence"/></td>
+                                                    <td data-export-label="genotype" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@genotype"/></td>
+                                                    <td data-export-label="avf" style="text-align: right; background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@altVariantFreqFormatted"/></td>
+                                                    <td data-export-label="cDna" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@hgvsc"/></td>
+                                                    <td data-export-label="aminoAcid" style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@hgvsp"/></td>
+                                                    <td style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><a href="http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?{@dbSnpIdPrefix}={@dbSnpIdSuffix}"><xsl:value-of select="@dbSnpIdPrefix"/><xsl:value-of select="@dbSnpIdSuffix"/></a></td>
+                                                    <td data-export-label="maf" style="text-align: right; background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><xsl:value-of select="@alleleFreqGlobalMinorFormatted"/></td>
+                                                    <td style="background-color: {$variantBackgroundColor}; background-color: {$variantBackgroundColor}; border-top: {$borderTop}; border-bottom: {$borderBottom};"><a href="http://cancer.sanger.ac.uk/cosmic/search?q={@cosmicId}"><xsl:value-of select="@cosmicId"/></a></td>
                                                 </tr>
                                             </xsl:for-each>
                                         </tbody>
-                                    </table>
-                                    <br/>
-                                    <table class="footNoteTable">
-                                        <tr><td colspan="2" style="border-bottom: 1px solid black;"><sup>*</sup>filter descriptions</td></tr>
-                                        <tr><td>LowDP</td><td>= low coverage (DP tag), therefore no genotype called</td></tr>
-                                        <tr><td>SB</td><td>= variant strand bias too high</td></tr>
-                                        <tr><td>PB</td><td>= probe pool bias - variant not found, or found with low frequency, in one of two probe pools</td></tr>
                                     </table>
                                 </div>
                             </xsl:if>

@@ -3,6 +3,7 @@ package coverageqc.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -53,7 +54,7 @@ public class GeneExon implements Comparable<Object> {
     public Amplicon codingRegion; // regions in the amplicon BED file that have a name with a "_coding" suffix
     @XmlElementWrapper(name = "variants")
     @XmlElement(name = "variant")
-    public ArrayList<Variant> variants = new ArrayList<Variant>();
+    public TreeSet<Variant> variants = new TreeSet<Variant>();
 
     /**
      * 
@@ -115,8 +116,10 @@ public class GeneExon implements Comparable<Object> {
      */
     @XmlAttribute
     public boolean getVariantAnnotated() {
-        if(variants.size() > 0) {
-            return true;
+        for(Variant variant : variants) {
+            if(variant.pipeline.equals("Illumina")) {
+                return true;
+            }
         }
         return false;
     }

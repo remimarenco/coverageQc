@@ -59,7 +59,11 @@ public class Vcf {
     public long getFilteredAnnotatedVariantCount() {
         long filteredAnnotatedVariantCount = 0;
         for(GeneExon geneExon : geneExons) {
-            filteredAnnotatedVariantCount += geneExon.variants.size();
+            for(Variant variant : geneExon.variants) {
+                if(variant.pipeline.equals("Illumina")) {
+                    filteredAnnotatedVariantCount ++;
+                }
+            }
         }
         return filteredAnnotatedVariantCount;
     }

@@ -129,6 +129,52 @@ public class CoverageQc {
                 variantTsvBufferedReader = new BufferedReader(variantTsvFileReader);
             }
         }
+
+        // is there a Newman pipeline GATK variant file to fold into the report?
+        File variantTsvFileNpGatk = null;
+        Reader variantTsvFileReaderNpGatk = null;
+        BufferedReader variantTsvBufferedReaderNpGatk = null;
+        {
+            File[] files = (new File(vcfFile.getCanonicalFile().getParent())).listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return(
+                        (
+                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + ".")
+                            && pathname.getName().toLowerCase().endsWith(".gatk.annovar.txt")
+                        )
+                    );
+                }
+            });
+            if(files.length == 1) {
+                variantTsvFileNpGatk = files[0];
+                variantTsvFileReaderNpGatk = new FileReader(variantTsvFileNpGatk);
+                variantTsvBufferedReaderNpGatk = new BufferedReader(variantTsvFileReaderNpGatk);
+            }
+        }
+        
+        // is there a Newman pipeline Varscan variant file to fold into the report?
+        File variantTsvFileNpVarscan = null;
+        Reader variantTsvFileReaderNpVarscan = null;
+        BufferedReader variantTsvBufferedReaderNpVarscan = null;
+        {
+            File[] files = (new File(vcfFile.getCanonicalFile().getParent())).listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return(
+                        (
+                            pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + ".")
+                            && pathname.getName().toLowerCase().endsWith(".varscan.annovar.txt")
+                        )
+                    );
+                }
+            });
+            if(files.length == 1) {
+                variantTsvFileNpVarscan = files[0];
+                variantTsvFileReaderNpVarscan = new FileReader(variantTsvFileNpVarscan);
+                variantTsvBufferedReaderNpVarscan = new BufferedReader(variantTsvFileReaderNpVarscan);
+            }
+        }
         
         Vcf vcf = new Vcf();
         vcf.runDate = new Date();
@@ -278,6 +324,48 @@ public class CoverageQc {
             }
             //LOGGER.info(vcf.getFilteredAnnotatedVariantCount() + " variants read from TSV file");
             variantTsvFileReader.close();
+        }
+
+        // read Newman pipeline GATK variant file
+        if(variantTsvFileNpGatk != null) {
+            String variantTsvDataLine;
+            String variantTsvHeadingLine = variantTsvBufferedReaderNpGatk.readLine();
+            while((variantTsvDataLine = variantTsvBufferedReaderNpGatk.readLine()) != null) {
+                Variant variant = Variant.populateNewman(variantTsvHeadingLine, variantTsvDataLine, "Newman GATK");
+                boolean foundGeneExon = false;
+                for(GeneExon geneExon : vcf.findGeneExonsForChrPos("chr" + String.valueOf(variant.chr), variant.coordinate)) {
+                    foundGeneExon = true;
+                    if(variant.hgvscMap != null) {
+                        variant.hgvsc = variant.hgvscMap.get(geneExon.refSeqAccNo);
+                    }
+                    if(variant.hgvspMap != null) {
+                        variant.hgvsp = variant.hgvspMap.get(geneExon.refSeqAccNo);
+                    }
+                    geneExon.variants.add(variant);
+                }
+            }
+            variantTsvFileReaderNpGatk.close();
+        }
+
+        // read Newman pipeline varscan variant file
+        if(variantTsvFileNpVarscan != null) {
+            String variantTsvDataLine;
+            String variantTsvHeadingLine = variantTsvBufferedReaderNpVarscan.readLine();
+            while((variantTsvDataLine = variantTsvBufferedReaderNpVarscan.readLine()) != null) {
+                Variant variant = Variant.populateNewman(variantTsvHeadingLine, variantTsvDataLine, "Newman Varscan");
+                boolean foundGeneExon = false;
+                for(GeneExon geneExon : vcf.findGeneExonsForChrPos("chr" + String.valueOf(variant.chr), variant.coordinate)) {
+                    foundGeneExon = true;
+                    if(variant.hgvscMap != null) {
+                        variant.hgvsc = variant.hgvscMap.get(geneExon.refSeqAccNo);
+                    }
+                    if(variant.hgvspMap != null) {
+                        variant.hgvsp = variant.hgvspMap.get(geneExon.refSeqAccNo);
+                    }
+                    geneExon.variants.add(variant);
+                }
+            }
+            variantTsvFileReaderNpVarscan.close();
         }
 
         // write to XML
