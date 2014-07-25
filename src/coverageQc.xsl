@@ -331,7 +331,7 @@
                             <td>
                                 <xsl:value-of select="@variantCalled"/>
                                 <xsl:if test="@variantAnnotated = 'true'"> (annotated)</xsl:if>
-                                <xsl:if test="@onlyContainsDoNotCallAlways = 'true'"> Warning, all calls shoulld never be called</xsl:if>                                   
+                                <xsl:if test="@onlyContainsDoNotCallAlways = 'true'">   <br/>Warning, all calls should <br/> never be called</xsl:if>                                   
                             </td>
                             <xsl:for-each select="bins/bin">
                                 <td class="readHistogram" style="text-align: right; width: 40px;" data-pct="{@pct}">
@@ -453,8 +453,8 @@
                                                     <xsl:comment>//TOM ADDITION
                                                         //adding this because sometimes the tsv file from variant studio is wrong and it is really in cosmic, creating a work around
                                                     </xsl:comment>
-                                                    <th>Cosmic_Dblchk</th>
-                                                    <th>Call_Status</th>
+                                                    <th>COSMIC (alternate)</th>
+                                                    <th>call status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

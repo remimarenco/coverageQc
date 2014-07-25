@@ -43,6 +43,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.PrintOrientation;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -51,6 +52,7 @@ import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 //end Tom addition
@@ -404,9 +406,18 @@ public class CoverageQc {
         Row row = sheet.createRow(0);
         int rownum =1;
         String[] headingsArray = variantTsvHeadingLine.split("\t");
-        for(int x = 0; x < headingsArray.length; x++) {
+        for(int x = 0; x < headingsArray.length+2; x++) {
+           
            Cell cell = row.createCell(x);
-           cell.setCellValue(headingsArray[x]);
+           if(x==0)
+           {
+               cell.setCellValue("Fellow's Interpretation");
+           }
+           if(x==1)
+           {
+               cell.setCellValue("Attending Pathologist Interpretation");
+           }
+           cell.setCellValue(headingsArray[x-2]);
         }
         XSSFCellStyle cellStyle = (XSSFCellStyle)workbookcopy.createCellStyle();
         cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
@@ -435,7 +446,7 @@ public class CoverageQc {
                         geneExon.donotcallVariantsAlways.add(variant);
                         }
 			//geneExon.typeOfDoNotCall = variant.typeOfDoNotCall;
-                        }else if(variant.consequence.equals("synonymous_variant"))
+                        }else if(variant.consequence.equals("synonymous_variant") || variant.altVariantFreq.floatValue()<=5)
                     {
                         cellStyle = workbookcopy.createCellStyle();
                         cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
@@ -452,8 +463,12 @@ public class CoverageQc {
                 //adding TSV dataline to output excel file
                         row = sheet.createRow(rownum++);
                         String[] dataArray = variantTsvDataLine.split("\t");
-                        for(int x = 0; x < dataArray.length; x++) {
+                        for(int x = 0; x < dataArray.length+2; x++) {
                                Cell cell = row.createCell(x);
+                               if (x==0 || x==1)
+                               {
+                                   
+                               }
                               // XSSFCellStyle style = workbookcopy.createCellStyle();
                               // XSSFColor myColor = new XSSFColor(Color.RED);
                               // style.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
@@ -463,7 +478,7 @@ public class CoverageQc {
                            cell.setCellValue(dataArray[x]);
                              }
                 //end Tom addition
-                    
+                  
                     
 		     // end Tom Addition
                 }
@@ -473,7 +488,36 @@ public class CoverageQc {
                     return;
                 }
             }
+            //Tom addition adding in more rows with comments explaining the color code
+            row = sheet.createRow(rownum++);
+            Cell cell = row.createCell(0);
+            cell.setCellValue("Highlighted in Orange are variables that are NOT called because they are synonymous or <5% frequency");
+            row = sheet.createRow(rownum++);
+            cell = row.createCell(0);
+            cell.setCellValue("Highlighted in Yellow are variables that are NOT called because they are on the do not call list");
+            row = sheet.createRow(rownum++);
+             cell = row.createCell(0);
+            cell.setCellValue("Highlighted in Green are variables that are NOT called at the molecular pathologist's discretion");
+            row = sheet.createRow(rownum++);
+            cell = row.createCell(0);
+            cell.setCellValue("Highlighted in Red are variables that ARE called at the molecular pathologist's discretion");
             //LOGGER.info(vcf.getFilteredAnnotatedVariantCount() + " variants read from TSV file");
+              //Adding page setup parameters per Dr. Carter
+            XSSFPrintSetup printSetup = (XSSFPrintSetup) sheet.getPrintSetup();
+             File xslxTempFile = new File(variantTsvFile.getCanonicalPath() + ".coverage_qc.xlsx");
+                        sheet.getHeader().setLeft(xslxTempFile.getName());
+                        sheet.getHeader().setRight("DO NOT DISCARD!!!  Keep with patient folder.");
+                        //in Dr. Carter's VBA was set at points 18 which is .25 inches
+                        sheet.setMargin(Sheet.RightMargin, .25);
+                        sheet.setMargin(Sheet.LeftMargin, .25);
+                        printSetup.setOrientation(PrintOrientation.LANDSCAPE);
+                        //printSetup.setFitWidth(width);
+                        //TODO: check if this works as she used .FitToPagesWide
+                        sheet.setFitToPage(true);
+                        
+                        //end Tom addtion
+            
+            
             variantTsvFileReader.close();
         }
 

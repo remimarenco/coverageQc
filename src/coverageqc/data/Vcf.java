@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Vcf {
 
     @XmlAttribute
-    final static String BUILD = "20140717";
+    final static String BUILD = "20140719";
     @XmlAttribute
     final static String VERSION = "1.1";
     

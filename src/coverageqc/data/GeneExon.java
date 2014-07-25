@@ -165,7 +165,7 @@ public class GeneExon implements Comparable<Object> {
         geneExon.chr = fields[0];
         geneExon.startPos = Long.parseLong(fields[1]) + 1;
         //Tom Addition changed to +1 instead of +0 so will contain very last endPos (errors when variant is on the end position 
-        geneExon.endPos = Long.parseLong(fields[2]) + 1;
+        geneExon.endPos = Long.parseLong(fields[2]) + 0;
         geneExon.name = fields[3];
         {
             Pattern pattern = Pattern.compile("vendor-gene-exon-name: (.*)\\|.*\\|.*\\|.*\\|.*");
