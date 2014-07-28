@@ -111,7 +111,7 @@ public class Variant {
         }else
         {
             variant.onTheDoNotCallList=false;
-	    variant.typeOfDoNotCall = "Not on do not call list/Potentially Valid";
+	    variant.typeOfDoNotCall = "Not on lab list/Potentially Valid";
         }
         //end of TOM addition
         // note: parsing out RefSeq IDs
@@ -165,7 +165,7 @@ public class Variant {
 			ArrayList<DoNotCall> donotcalls) {
 		// TODO Auto-generated method stub
 		variant2.onTheDoNotCallList=false;
-		variant2.typeOfDoNotCall = "Not on do not call list /Potentially Valid";
+		variant2.typeOfDoNotCall = "Not on lab list /Potentially Valid";
                 boolean currentlyCanDefinativelyCompare;
                 comparisonloop: for(int i=0; i<donotcalls.size(); i++)
 		{

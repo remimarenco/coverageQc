@@ -106,7 +106,7 @@ public class DoNotCall {
             
         }else
         {
-            donotcall.callType= "On do not call list, Unknown significance";
+            donotcall.callType= "On lab list, Unknown significance";
         }
        
         return donotcall;

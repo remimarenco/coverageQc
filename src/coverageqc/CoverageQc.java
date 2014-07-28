@@ -3,6 +3,7 @@ import coverageqc.data.Amplicon;
 import coverageqc.data.Base;
 import coverageqc.data.Bin;
 import coverageqc.data.DoNotCall;
+import coverageqc.functions.MyExcelEditor;
 import coverageqc.data.GeneExon;
 import coverageqc.data.Variant;
 import coverageqc.data.Vcf;
@@ -53,6 +54,7 @@ import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 //end Tom addition
@@ -403,84 +405,40 @@ public class CoverageQc {
         //making excel copy of tsv
         //XSSFWorkbook workbookcopy = new XSSFWorkbook();
         XSSFSheet sheet = workbookcopy.createSheet("TSV copy");
-        Row row = sheet.createRow(0);
+       // XSSFCellStyle cellStyle = (XSSFCellStyle)workbookcopy.createCellStyle();
+        //cellStyle.setWrapText(true);
+        XSSFRow row = sheet.createRow(0);
+        MyExcelEditor.excelHeadingCreator(row, variantTsvHeadingLine);
+        
         int rownum =1;
-        String[] headingsArray = variantTsvHeadingLine.split("\t");
-        for(int x = 0; x < headingsArray.length+2; x++) {
-           
-           Cell cell = row.createCell(x);
-           if(x==0)
-           {
-               cell.setCellValue("Fellow's Interpretation");
-           }
-           if(x==1)
-           {
-               cell.setCellValue("Attending Pathologist Interpretation");
-           }
-           cell.setCellValue(headingsArray[x-2]);
-        }
-        XSSFCellStyle cellStyle = (XSSFCellStyle)workbookcopy.createCellStyle();
-        cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-       // XSSFColor myColor;
+        
         //end Tom addition
             
             while((variantTsvDataLine = variantTsvBufferedReader.readLine()) != null) {
                 // Tom addition adding in variable doNotCallList
                 Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine, donotcalls);
-                //end Tom addition
+               
+                row = sheet.createRow(rownum++);
+                MyExcelEditor.excelRowCreator(row, variant, variantTsvHeadingLine, variantTsvDataLine, donotcalls);
                 
+                 //end Tom addition
                 
                 boolean foundGeneExon = false;
                 for(GeneExon geneExon : vcf.findGeneExonsForChrPos("chr" + String.valueOf(variant.chr), variant.coordinate)) {
                     foundGeneExon = true;
                     geneExon.variants.add(variant);
-                    // Tom Addition
-                    if (variant.onTheDoNotCallList) {
-			//myColor = new XSSFColor(Color.YELLOW);
-                        cellStyle = workbookcopy.createCellStyle();
-                        cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-                        cellStyle.setFillForegroundColor(new XSSFColor(Color.YELLOW));
+                    
+                    
+                     if (variant.onTheDoNotCallList) {
+                        
                         if(variant.typeOfDoNotCall.equals("Don't call, always"))
                         {
                         geneExon.containsDoNotCallAlways = true;
                         geneExon.donotcallVariantsAlways.add(variant);
                         }
-			//geneExon.typeOfDoNotCall = variant.typeOfDoNotCall;
-                        }else if(variant.consequence.equals("synonymous_variant") || variant.altVariantFreq.floatValue()<=5)
-                    {
-                        cellStyle = workbookcopy.createCellStyle();
-                        cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-                        cellStyle.setFillForegroundColor(new XSSFColor(Color.ORANGE));
-                    }else
-                        {
-                         cellStyle = workbookcopy.createCellStyle();
-                          cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-                          cellStyle.setFillForegroundColor(new XSSFColor(Color.WHITE));  
-                         // cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-                         
                         }
-                    //  geneExon.checkIfContainsOnlyDoNotCall();
-                //adding TSV dataline to output excel file
-                        row = sheet.createRow(rownum++);
-                        String[] dataArray = variantTsvDataLine.split("\t");
-                        for(int x = 0; x < dataArray.length+2; x++) {
-                               Cell cell = row.createCell(x);
-                               if (x==0 || x==1)
-                               {
-                                   
-                               }
-                              // XSSFCellStyle style = workbookcopy.createCellStyle();
-                              // XSSFColor myColor = new XSSFColor(Color.RED);
-                              // style.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-                              // style.setFillForegroundColor(myColor);
-                               
-                            cell.setCellStyle(cellStyle);
-                           cell.setCellValue(dataArray[x]);
-                             }
-                //end Tom addition
-                  
                     
-		     // end Tom Addition
+        
                 }
                 if(!foundGeneExon) {
                     //LOGGER.info("the following variant does not correspond to an exon region: " + variantTsvDataLine);
@@ -488,34 +446,12 @@ public class CoverageQc {
                     return;
                 }
             }
-            //Tom addition adding in more rows with comments explaining the color code
-            row = sheet.createRow(rownum++);
-            Cell cell = row.createCell(0);
-            cell.setCellValue("Highlighted in Orange are variables that are NOT called because they are synonymous or <5% frequency");
-            row = sheet.createRow(rownum++);
-            cell = row.createCell(0);
-            cell.setCellValue("Highlighted in Yellow are variables that are NOT called because they are on the do not call list");
-            row = sheet.createRow(rownum++);
-             cell = row.createCell(0);
-            cell.setCellValue("Highlighted in Green are variables that are NOT called at the molecular pathologist's discretion");
-            row = sheet.createRow(rownum++);
-            cell = row.createCell(0);
-            cell.setCellValue("Highlighted in Red are variables that ARE called at the molecular pathologist's discretion");
-            //LOGGER.info(vcf.getFilteredAnnotatedVariantCount() + " variants read from TSV file");
-              //Adding page setup parameters per Dr. Carter
-            XSSFPrintSetup printSetup = (XSSFPrintSetup) sheet.getPrintSetup();
-             File xslxTempFile = new File(variantTsvFile.getCanonicalPath() + ".coverage_qc.xlsx");
-                        sheet.getHeader().setLeft(xslxTempFile.getName());
-                        sheet.getHeader().setRight("DO NOT DISCARD!!!  Keep with patient folder.");
-                        //in Dr. Carter's VBA was set at points 18 which is .25 inches
-                        sheet.setMargin(Sheet.RightMargin, .25);
-                        sheet.setMargin(Sheet.LeftMargin, .25);
-                        printSetup.setOrientation(PrintOrientation.LANDSCAPE);
-                        //printSetup.setFitWidth(width);
-                        //TODO: check if this works as she used .FitToPagesWide
-                        sheet.setFitToPage(true);
-                        
-                        //end Tom addtion
+           
+              //Adding page setup parameters per Dr. Carter, and column hiding options
+            MyExcelEditor.excelFormator(sheet, variantTsvFile, variantTsvHeadingLine);
+          
+            // end Tom addition
+            
             
             
             variantTsvFileReader.close();
