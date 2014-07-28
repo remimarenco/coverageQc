@@ -104,8 +104,10 @@ public class GeneExon implements Comparable<Object> {
                 return true;
             }
         }
-        if(variants.size() > 0) {
-            return true;
+        for(Variant variant : variants) {
+            if(variant.pipeline.equals("Illumina")) {
+                return true;
+            }
         }
         return false;
     }

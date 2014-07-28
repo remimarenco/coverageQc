@@ -341,7 +341,9 @@ public class CoverageQc {
                     if(variant.hgvspMap != null) {
                         variant.hgvsp = variant.hgvspMap.get(geneExon.refSeqAccNo);
                     }
-                    geneExon.variants.add(variant);
+                    if(variant.altVariantFreq > 3f) {
+                        geneExon.variants.add(variant);
+                    }
                 }
             }
             variantTsvFileReaderNpGatk.close();
@@ -362,7 +364,9 @@ public class CoverageQc {
                     if(variant.hgvspMap != null) {
                         variant.hgvsp = variant.hgvspMap.get(geneExon.refSeqAccNo);
                     }
-                    geneExon.variants.add(variant);
+                    if(variant.altVariantFreq > 3f) {
+                        geneExon.variants.add(variant);
+                    }
                 }
             }
             variantTsvFileReaderNpVarscan.close();

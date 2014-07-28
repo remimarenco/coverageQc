@@ -148,7 +148,7 @@ public class Variant implements Comparable<Object> {
         // note: subtracting zero (0)
         variant.coordinate = Long.valueOf(dataArray[headings.get("Start Position").intValue()] != null && !dataArray[headings.get("Start Position").intValue()].isEmpty() ? dataArray[headings.get("Start Position").intValue()] : null) - 0;
         //variant.type = dataArray[headings.get("Type").intValue()];
-        //variant.genotype = dataArray[headings.get("Genotype").intValue()];
+        variant.genotype = dataArray[headings.get("Genotype").intValue()];
         variant.altVariantFreq = Float.valueOf(dataArray[headings.get("Variant allele frequency").intValue()] != null && !dataArray[headings.get("Variant allele frequency").intValue()].isEmpty() ? dataArray[headings.get("Variant allele frequency").intValue()] : null);
         if(variant.altVariantFreq != null) {
             variant.altVariantFreq = variant.altVariantFreq.floatValue() * 100;

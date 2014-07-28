@@ -387,7 +387,7 @@
                                                 <th>pipeline</th>
                                                 <th>gene</th>
                                                 <th>coordinate</th>
-                                                <th>filters<sup>*</sup></th>
+                                                <th>filters</th>
                                                 <th>consequence</th>
                                                 <th>genotype</th>
                                                 <th>AVF</th>
