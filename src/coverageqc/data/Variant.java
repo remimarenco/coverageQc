@@ -142,25 +142,36 @@ public class Variant implements Comparable<Object> {
             headings.put(headingsArray[x], x);
         }
         String[] dataArray = tsvDataLine.split("\t");
-        variant.gene = dataArray[headings.get("Gene:RefGene").intValue()];
+        variant.gene = dataArray[headings.get("Gene.refGene").intValue()];
         //variant.variant = dataArray[headings.get("Variant").intValue()];
-        variant.chr = Integer.valueOf(dataArray[headings.get("Chromosome").intValue()] != null && !dataArray[headings.get("Chromosome").intValue()].isEmpty() ? dataArray[headings.get("Chromosome").intValue()].substring(3) : null);
+        variant.chr = Integer.valueOf(dataArray[headings.get("Chr").intValue()] != null && !dataArray[headings.get("Chr").intValue()].isEmpty() ? dataArray[headings.get("Chr").intValue()].substring(3) : null);
         // note: subtracting zero (0)
-        variant.coordinate = Long.valueOf(dataArray[headings.get("Start Position").intValue()] != null && !dataArray[headings.get("Start Position").intValue()].isEmpty() ? dataArray[headings.get("Start Position").intValue()] : null) - 0;
+        variant.coordinate = Long.valueOf(dataArray[headings.get("Start").intValue()] != null && !dataArray[headings.get("Start").intValue()].isEmpty() ? dataArray[headings.get("Start").intValue()] : null) - 0;
         //variant.type = dataArray[headings.get("Type").intValue()];
-        variant.genotype = dataArray[headings.get("Genotype").intValue()];
-        variant.altVariantFreq = Float.valueOf(dataArray[headings.get("Variant allele frequency").intValue()] != null && !dataArray[headings.get("Variant allele frequency").intValue()].isEmpty() ? dataArray[headings.get("Variant allele frequency").intValue()] : null);
-        if(variant.altVariantFreq != null) {
-            variant.altVariantFreq = variant.altVariantFreq.floatValue() * 100;
+        variant.genotype = dataArray[38].split(":")[0];
+        if("Newman GATK".equals(pipeline)) {
+            variant.altVariantFreq = Float.parseFloat(dataArray[38].split(":")[1].split(",")[1]) / Float.parseFloat(dataArray[38].split(":")[2]) * 100f;
+        }
+        else if("Newman Varscan".equals(pipeline)) {
+            variant.altVariantFreq = Float.parseFloat(dataArray[38].split(":")[6].replace("%", ""));
         }
         //variant.readDepth = Long.valueOf(dataArray[headings.get("Read Depth").intValue()] != null && !dataArray[headings.get("Read Depth").intValue()].isEmpty() ? dataArray[headings.get("Read Depth").intValue()] : null);
         //variant.altReadDepth = Long.valueOf(dataArray[headings.get("Alt Read Depth").intValue()] != null && !dataArray[headings.get("Alt Read Depth").intValue()].isEmpty() ? dataArray[headings.get("Alt Read Depth").intValue()] : null);
-        variant.consequence = dataArray[headings.get("Amino Acid Change:RefGene").intValue()];
-        //variant.cosmicId = dataArray[headings.get("COSMIC ID").intValue()];
+        variant.consequence = dataArray[headings.get("ExonicFunc.refGene").intValue()];
+        if(dataArray[headings.get("cosmic67")] != null) {
+            Pattern pattern = Pattern.compile("ID=(.*);.*");
+            Matcher matcher = pattern.matcher(dataArray[headings.get("cosmic67")]);
+            if(matcher.find()) {
+                variant.cosmicId = matcher.group(1);
+            }
+            else {
+                variant.cosmicId = dataArray[headings.get("cosmic67")];
+            }
+        }
         //variant.filters = dataArray[headings.get("Filters").intValue()];
         // note: parsing out RefSeq IDs
         {
-            String columnHeading = " Occurrences in Exome Variant Server 6500 samples (http://evs.gs.washington.edu/EVS/)";
+            String columnHeading = "AAChange.refGene";
             if(dataArray[headings.get(columnHeading)] != null) {
                 variant.hgvscMap = new HashMap<String, String>();
                 Pattern pattern = Pattern.compile(".*:(.*):.*:(.*):.*");
@@ -175,7 +186,7 @@ public class Variant implements Comparable<Object> {
         }
         // note: parsing out RefSeq IDs
         {
-            String columnHeading = " Occurrences in Exome Variant Server 6500 samples (http://evs.gs.washington.edu/EVS/)";
+            String columnHeading = "AAChange.refGene";
             if(dataArray[headings.get(columnHeading)] != null) {
                 variant.hgvspMap = new HashMap<String, String>();
                 Pattern pattern = Pattern.compile(".*:(.*):.*:.*:(.*)");
@@ -188,15 +199,15 @@ public class Variant implements Comparable<Object> {
                 }
             }
         }
-        if(dataArray[headings.get("SIFT")] != null) {
+        if(dataArray[headings.get("snp137")] != null) {
             Pattern pattern = Pattern.compile("([A-Za-z]*)([0-9]*)");
-            Matcher matcher = pattern.matcher(dataArray[headings.get("SIFT")]);
+            Matcher matcher = pattern.matcher(dataArray[headings.get("snp137")]);
             if(matcher.find()) {
                 variant.dbSnpIdPrefix = matcher.group(1);
                 variant.dbSnpIdSuffix = matcher.group(2);
             }
             else {
-                variant.dbSnpIdPrefix = dataArray[headings.get("SIFT")];
+                variant.dbSnpIdPrefix = dataArray[headings.get("snp137")];
             }
         }
         //variant.alleleFreqGlobalMinor = Float.valueOf(dataArray[headings.get("Allele Freq Global Minor").intValue()] != null && !dataArray[headings.get("Allele Freq Global Minor").intValue()].isEmpty() ? dataArray[headings.get("Allele Freq Global Minor").intValue()] : null);

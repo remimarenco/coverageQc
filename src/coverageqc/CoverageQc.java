@@ -135,13 +135,13 @@ public class CoverageQc {
         Reader variantTsvFileReaderNpGatk = null;
         BufferedReader variantTsvBufferedReaderNpGatk = null;
         {
-            File[] files = (new File(vcfFile.getCanonicalFile().getParent())).listFiles(new FileFilter() {
+            File[] files = (new File(vcfFile.getCanonicalFile().getParent() + "/alternate_pipelines")).listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
                     return(
                         (
                             pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + ".")
-                            && pathname.getName().toLowerCase().endsWith(".gatk.annovar.txt")
+                            && pathname.getName().toLowerCase().endsWith(".gatk.hg19_multianno.txt")
                         )
                     );
                 }
@@ -158,13 +158,13 @@ public class CoverageQc {
         Reader variantTsvFileReaderNpVarscan = null;
         BufferedReader variantTsvBufferedReaderNpVarscan = null;
         {
-            File[] files = (new File(vcfFile.getCanonicalFile().getParent())).listFiles(new FileFilter() {
+            File[] files = (new File(vcfFile.getCanonicalFile().getParent() + "/alternate_pipelines")).listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
                     return(
                         (
                             pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + ".")
-                            && pathname.getName().toLowerCase().endsWith(".varscan.annovar.txt")
+                            && pathname.getName().toLowerCase().endsWith(".varscan.hg19_multianno.txt")
                         )
                     );
                 }
@@ -364,7 +364,7 @@ public class CoverageQc {
                     if(variant.hgvspMap != null) {
                         variant.hgvsp = variant.hgvspMap.get(geneExon.refSeqAccNo);
                     }
-                    if(variant.altVariantFreq > 3f) {
+                    if(variant.altVariantFreq != null && variant.altVariantFreq > 3f) {
                         geneExon.variants.add(variant);
                     }
                 }
@@ -374,7 +374,7 @@ public class CoverageQc {
 
         // write to XML
         //File xmlTempFile = File.createTempFile("tmp", ".xml");
-        File xmlTempFile = new File(vcfFile.getCanonicalPath() + ".coverage_qc.xml");
+        File xmlTempFile = new File(vcfFile.getParent() + "/alternate_pipelines/" + vcfFile.getName() + ".coverage_qc.xml");
         OutputStream xmlOutputStream = new FileOutputStream(xmlTempFile);
         JAXBContext jc = JAXBContext.newInstance("coverageqc.data");
         Marshaller m = jc.createMarshaller();
@@ -393,11 +393,11 @@ public class CoverageQc {
             xslSource = new StreamSource(ClassLoader.getSystemResourceAsStream("coverageQc.xsl"));
         }
         Transformer trans = TransformerFactory.newInstance().newTransformer(xslSource);
-        trans.transform(xmlSource, new StreamResult(vcfFile.getCanonicalPath() + ".coverage_qc.html"));
-        LOGGER.info(vcfFile.getCanonicalPath() + ".coverage_qc.html created");
+        trans.transform(xmlSource, new StreamResult(vcfFile.getParent() + "/alternate_pipelines/" + vcfFile.getName() + ".coverage_qc.html"));
+        LOGGER.info(vcfFile.getParent() + "/alternate_pipelines/" + vcfFile.getName() + ".coverage_qc.html created");
         
         // show HTML file in default browser
-        File htmlFile = new File(vcfFile.getPath() + ".coverage_qc.html");
+        File htmlFile = new File(vcfFile.getParent() + "/alternate_pipelines/" + vcfFile.getName() + ".coverage_qc.html");
         Desktop.getDesktop().browse(htmlFile.toURI());
         
     }
