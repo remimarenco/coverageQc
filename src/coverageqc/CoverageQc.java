@@ -3,10 +3,10 @@ import coverageqc.data.Amplicon;
 import coverageqc.data.Base;
 import coverageqc.data.Bin;
 import coverageqc.data.DoNotCall;
-import coverageqc.functions.MyExcelEditor;
 import coverageqc.data.GeneExon;
 import coverageqc.data.Variant;
 import coverageqc.data.Vcf;
+import coverageqc.functions.MyExcelGenerator;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.io.BufferedReader;
@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -160,11 +161,8 @@ public class CoverageQc {
              ////
         }
         
-        ///Tom Addition creating xslx file
-       // XSSFWorkbook newWorkbookcopy = new XSSFWorkbook();
-        
-        
-        ///
+   
+    
          
         
            // TOM ADDITION
@@ -397,18 +395,26 @@ public class CoverageQc {
         }
 
         // read variant file
-          XSSFWorkbook workbookcopy = new XSSFWorkbook();
+        //ArrayList<String> textFilesList = new ArrayList<String>();
+        MyExcelGenerator excelgenerator= new MyExcelGenerator();
+        //textFilesList.add("TSV");
+         // read variant file
+         
         if(variantTsvFile != null) {
             String variantTsvDataLine;
             String variantTsvHeadingLine = variantTsvBufferedReader.readLine();
+            
+            //MyExcelGenerator excelgenerator= new MyExcelGenerator(textFilesList);
+            
             //Tom addition 
         //making excel copy of tsv
         //XSSFWorkbook workbookcopy = new XSSFWorkbook();
-        XSSFSheet sheet = workbookcopy.createSheet("TSV copy");
+      //  XSSFSheet sheet = workbookcopy.createSheet("TSV copy");
        // XSSFCellStyle cellStyle = (XSSFCellStyle)workbookcopy.createCellStyle();
         //cellStyle.setWrapText(true);
-        XSSFRow row = sheet.createRow(0);
-        MyExcelEditor.excelHeadingCreator(row, variantTsvHeadingLine);
+       // XSSFRow row = sheet.createRow(0);
+        
+         excelgenerator.excelHeadingCreator("TSV", variantTsvHeadingLine);
         
         int rownum =1;
         
@@ -418,8 +424,8 @@ public class CoverageQc {
                 // Tom addition adding in variable doNotCallList
                 Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine, donotcalls);
                
-                row = sheet.createRow(rownum++);
-                MyExcelEditor.excelRowCreator(row, variant, variantTsvHeadingLine, variantTsvDataLine, donotcalls);
+               // XSSFRow row = sheet.createRow(rownum++);
+                excelgenerator.excelRowCreator(rownum++, "TSV", variant, variantTsvDataLine, donotcalls);
                 
                  //end Tom addition
                 
@@ -448,7 +454,7 @@ public class CoverageQc {
             }
            
               //Adding page setup parameters per Dr. Carter, and column hiding options
-            MyExcelEditor.excelFormator(sheet, variantTsvFile, variantTsvHeadingLine);
+            excelgenerator.excelFormator("TSV", variantTsvFile);
           
             // end Tom addition
             
@@ -470,11 +476,14 @@ public class CoverageQc {
         
         //Tom addition
         //write to xlsx
+        if(variantTsvFile != null)
+        {
          File xslxTempFile = new File(variantTsvFile.getCanonicalPath() + ".coverage_qc.xlsx");
         OutputStream xslxOutputStream = new FileOutputStream(xslxTempFile);
-         workbookcopy.write(xslxOutputStream);
+         excelgenerator.workbookcopy.write(xslxOutputStream);
     xslxOutputStream.close();
      LOGGER.info(xslxTempFile.getCanonicalPath() + " created");
+        }
         //end Tom addition
 
         // transform XML to HTML via XSLT
