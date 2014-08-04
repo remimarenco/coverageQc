@@ -600,10 +600,10 @@
                         }
 
                         $("#exportDialog").html("Interpretation&lt;br/>&lt;br/>");
-                        $("#exportDialog").append(interpText.length > 0 ? interpText + '- See comment.&lt;br/>&lt;br/>' : "No variants detected by next-generation sequencing.&lt;br/>&lt;br/>");
+                        $("#exportDialog").append(interpText.length > 0 ? interpText + '- See comment.&lt;br/>&lt;br/>' : "No clinically significant variants detected by next-generation sequencing.&lt;br/>&lt;br/>");
                         $("#exportDialog").append("&lt;br/>&lt;br/>&lt;br/>");
                         $("#exportDialog").append("Results&lt;br/>&lt;br/>");
-                        $("#exportDialog").append(resultsText.length > 0 ? resultsText : "No variants detected by next-generation sequencing.&lt;br/>&lt;br/>");
+                        $("#exportDialog").append(resultsText.length > 0 ? resultsText : "No clinically significant variants detected by next-generation sequencing.&lt;br/>&lt;br/>");
                         $("#exportDialog").append("The reference assembly is hg19, GRCh37.&lt;br/>&lt;br/>");
                         $("#exportDialog").append("&lt;br/>&lt;br/>&lt;br/>");
                         $("#exportDialog").append(failedExonsText.length > 0 ? "Portions of the following captured regions were not sequenced sufficiently for clinical interpretation (at least one base in the sequenced portion of the coding region was read less than 500 times):&lt;br/>&lt;br/>" + failedExonsText : "");
