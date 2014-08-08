@@ -71,7 +71,7 @@ public class MyExcelGenerator{
        // XSSFColor myColor;
          // Tom Addition
                     //if any of these the text on Interp is "Do Not Call"
-                    if(currentVariant.consequence.equals("synonymous_variant") || 
+                    if(currentVariant.consequence.contains("synonymous_variant") || 
                             currentVariant.altVariantFreq.floatValue()<=5 || currentVariant.typeOfDoNotCall.equals("Don't call, always"))
                     {
                         textOnInterp=textOnInterp+"Do Not Call -";
@@ -91,7 +91,7 @@ public class MyExcelGenerator{
                               }
                      
                         }
-                         if(currentVariant.consequence.equals("synonymous_variant"))
+                         if(currentVariant.consequence.contains("synonymous_variant"))
                         {
                             consequenceCell = true;
                                 //if the string size 
