@@ -124,7 +124,7 @@ public class MyExcelGenerator{
                     {
                         
                         //cellStyle.setFillForegroundColor(new XSSFColor(Color.GRAY));
-                        System.out.println(currentVariant.gene);
+                       // System.out.println(currentVariant.gene);
                         if (!containsDoNotCall)
                         {
                          cellStyle = getDefaultCellStyle(currentRow,Color.YELLOW);
@@ -304,11 +304,11 @@ public class MyExcelGenerator{
            Cell cell = currentRow.createCell(x+3);
            cellStyle = getDefaultCellStyle(currentRow,Color.WHITE);
           // cell.setCellStyle(cellStyle);
-               if(originalHeadingsArray[x].contains("Gene_")
-                       ||originalHeadingsArray[x].contains("Variant_")
-                       ||originalHeadingsArray[x].contains("Chr_")
-                       ||originalHeadingsArray[x].contains("Coordinate_")
-                       ||originalHeadingsArray[x].contains("Type_"))
+               if(this.originalHeadingsArray[this.tsvRearrangeConversion.get(x)].contains("Gene_")
+                       ||this.originalHeadingsArray[this.tsvRearrangeConversion.get(x)].contains("Variant_")
+                       ||this.originalHeadingsArray[this.tsvRearrangeConversion.get(x)].contains("Chr_"))
+                     //  ||originalHeadingsArray[x].contains("Coordinate_")
+                    //   ||originalHeadingsArray[x].contains("Type_"))
                      //  ||originalHeadingsArray[x-3].contains("Genotype_")
                       // ||originalHeadingsArray[x-3].contains("Coordinate_")
                      //  ||originalHeadingsArray[x-3].contains("Filters_"))
@@ -362,7 +362,7 @@ public class MyExcelGenerator{
                        currentSheet.setRepeatingRows(CellRangeAddress.valueOf("1"));
                         currentSheet.setFitToPage(true);
                         //making it by default not print the fellow's interp
-                        currentSheet.getWorkbook().setPrintArea(0, 2, 17, 0, currentSheet.getLastRowNum());
+                        currentSheet.getWorkbook().setPrintArea(0, 2, 20, 0, currentSheet.getLastRowNum());
                        
                         
                        for(int x=0; x<currentSheet.getRow(0).getPhysicalNumberOfCells();x++)
@@ -488,6 +488,9 @@ public class MyExcelGenerator{
         tsvRearrangeConversion.put(x++,originalHeadings.get("Gene"));//A
         tsvRearrangeConversion.put(x++,originalHeadings.get("Variant"));//B
         tsvRearrangeConversion.put(x++,originalHeadings.get("Chr"));//C
+        tsvRearrangeConversion.put(x++,originalHeadings.get("cDNA Position"));//AC
+        tsvRearrangeConversion.put(x++,originalHeadings.get("CDS Position"));//AD
+        tsvRearrangeConversion.put(x++,originalHeadings.get("Protein Position"));//AE
         tsvRearrangeConversion.put(x++,originalHeadings.get("Coordinate"));//D
         tsvRearrangeConversion.put(x++,originalHeadings.get("Type"));//E
         tsvRearrangeConversion.put(x++,originalHeadings.get("Genotype"));//F
@@ -513,9 +516,6 @@ public class MyExcelGenerator{
         tsvRearrangeConversion.put(x++,originalHeadings.get("ClinVar Alleles"));//Z
         tsvRearrangeConversion.put(x++,originalHeadings.get("ClinVar Allele Type"));//AA
         tsvRearrangeConversion.put(x++,originalHeadings.get("ClinVar Significance"));//AB
-        tsvRearrangeConversion.put(x++,originalHeadings.get("cDNA Position"));//AC
-        tsvRearrangeConversion.put(x++,originalHeadings.get("CDS Position"));//AD
-        tsvRearrangeConversion.put(x++,originalHeadings.get("Protein Position"));//AE
         tsvRearrangeConversion.put(x++,originalHeadings.get("Classification"));//AF
         tsvRearrangeConversion.put(x++,originalHeadings.get("Inherited From"));//AG
         tsvRearrangeConversion.put(x++,originalHeadings.get("Allelic Depths"));//AH
