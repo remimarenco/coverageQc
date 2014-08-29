@@ -1,11 +1,13 @@
 package coverageqc;
-
 import coverageqc.data.Amplicon;
 import coverageqc.data.Base;
 import coverageqc.data.Bin;
+import coverageqc.data.DoNotCall;
+import coverageqc.functions.MyExcelEditor;
 import coverageqc.data.GeneExon;
 import coverageqc.data.Variant;
 import coverageqc.data.Vcf;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,14 +17,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -34,6 +40,24 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.PrintOrientation;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.eventusermodel.XSSFReader;
+import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+//end Tom addition
 
 /**
  *
@@ -43,16 +67,26 @@ public class CoverageQc {
 
     private final static Logger LOGGER = Logger.getLogger(CoverageQc.class.getName()); 
     
+    // Tom Addition
+	//public String[][] doNotCallList = null;
+         public static ArrayList<DoNotCall> donotcalls = new ArrayList<DoNotCall>();
+
+	// End Tom Addition
+        
     /**
-     * @param args the command line arguments
+     * @param args the command line arguments//Tom Addition is the
+	 *            OpenXML4JException and InvalidFormatException
      */
-    public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, IOException, JAXBException, TransformerConfigurationException, TransformerException {
+    public static void main(String[] args) throws OpenXML4JException,
+			InvalidFormatException, UnsupportedEncodingException, FileNotFoundException, IOException, JAXBException, TransformerConfigurationException, TransformerException {
 
         if(args.length == 0) {
             System.out.println("");
-            System.out.println("USAGE: java -jar coverageQc.jar VCF-file-name exon-BED-file amplicon-BED-file");
+            //Tom Addition adding in argument doNotCall List
+            System.out.println("USAGE: java -jar coverageQc.jar VCF-file-name exon-BED-file amplicon-BED-file doNotCall-xlsx-file(optional)");
             System.out.println("");
-            System.out.println("If BED file names are not specified, the system will attempt to use the\n\"exons_ensembl.bed\" and \"amplicons.bed\" files located in the same directory\nas this JAR (or exe) file.");
+            //Tom Addition extended comment
+             System.out.println("If BED and file names are not specified, the system will attempt to use the\n\"exons_ensembl.bed\" and \"amplicons.bed\" files located in the same directory\nas this JAR (or exe) file.  If excel file name is not specified will look under exe file directory");
             return;
         }
         
@@ -63,6 +97,9 @@ public class CoverageQc {
 
         File exonBedFile;
         File ampliconBedFile;
+        //Tom addition
+        File doNotCallFile = null;
+                 ///
         if(args.length == 1) {
             // look for the BED files in the JAR file directory with names of
             // the form:
@@ -86,11 +123,102 @@ public class CoverageQc {
             exonBedFile = exonFiles[0];
             Arrays.sort(ampliconFiles, Collections.reverseOrder());
             ampliconBedFile = ampliconFiles[0];
+            
+             //Tom Addition
+                        //assuming it is always in the jarfiledirectory
+                       
+                        File[] doNotCallFiles = (new File(jarFileDir))
+					.listFiles(new FileFilter() {
+						@Override
+						public boolean accept(File pathname) {
+							return (pathname.getName().endsWith("list.xlsx"));
+						}
+					});
+                          
+                        if (doNotCallFiles.length != 0)
+                        {
+                        Arrays.sort(doNotCallFiles, Collections.reverseOrder());
+			doNotCallFile = doNotCallFiles[0];
+                        }else
+                        {
+                            //there is no file in jarfile directory so null will be used
+                        }
+                       
+                            
+                        ///end Tom Addition
+            
+            
         }
         else {
             exonBedFile = new File(args[1]);
             ampliconBedFile = new File(args[2]);
+             //Tom addition
+                        if (args.length>=4)
+                        {
+                        doNotCallFile = new File(args[3]);
+                        }
+             ////
         }
+        
+        ///Tom Addition creating xslx file
+       // XSSFWorkbook newWorkbookcopy = new XSSFWorkbook();
+        
+        
+        ///
+         
+        
+           // TOM ADDITION
+		// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Will populate doNotCall, reading XSLX file	
+        //DoNotCallConverter(doNotCallFile);
+        if (doNotCallFile!=null)
+        {
+            
+        InputStream inp = new FileInputStream(doNotCallFile);
+        // Get the workbook instance for XLS file
+	XSSFWorkbook workbook = new XSSFWorkbook(inp);
+        
+         Iterator<XSSFSheet> sheetIterator = workbook.iterator();
+         int typeOfCall = 1;
+	int rowIndex;
+        while (sheetIterator.hasNext())
+                {
+                    XSSFSheet sheet = sheetIterator.next();
+                    Iterator<Row> rowIterator = sheet.iterator();
+                    Row headerRow = null;
+                    while (rowIterator.hasNext()) {
+			
+			Row row = rowIterator.next();
+                        
+			rowIndex = row.getRowNum();
+                       // System.out.println("The row index is " +rowIndex);
+			if (rowIndex == 0) {	
+                            headerRow=row;
+				continue;
+			}else if(row.getCell(0)==null)
+                        {
+                            // if it is null then nothing is there
+                            continue;
+                        }
+                        else if (row.getCell(0).getCellType() == 3) {
+				// if the cell type is 3 that means it is a blank field
+				continue;
+			} 
+			DoNotCall donotcall = DoNotCall.populate(headerRow, row, typeOfCall);
+                        donotcalls.add(donotcall);
+		}//end while rowiterator           
+                    typeOfCall++; 
+                    //system.out.println()
+                }//end while sheetiterator     
+        }//end if doNotCallFile is null
+        
+        
+       
+		
+                
+            // END TOM ADDITION//////////////////////////////////////////////////////////////////////////
+                
+        
         
         Reader vcfFileReader = new FileReader(vcfFile);
         BufferedReader vcfBufferedReader = new BufferedReader(vcfFileReader);
@@ -134,6 +262,15 @@ public class CoverageQc {
         vcf.runDate = new Date();
         vcf.fileName = vcfFile.getCanonicalPath();
         vcf.exonBedFileName = exonBedFile.getCanonicalPath();
+        //Tom addition
+        //so the call file will be displayed in the report
+        if (doNotCallFile!=null)
+        {
+            vcf.doNotCallFileName = doNotCallFile.getCanonicalPath();
+        }else
+        {
+         vcf.doNotCallFileName = "NO DO NOT CALL FILE USED!";   
+        }
         vcf.ampliconBedFileName = ampliconBedFile.getCanonicalPath();
         vcf.variantTsvFileName = (variantTsvFile != null ? variantTsvFile.getCanonicalPath() : null);
         vcf.variantTsvFileLineCount = variantTsvFileLineCount;
@@ -260,15 +397,48 @@ public class CoverageQc {
         }
 
         // read variant file
+          XSSFWorkbook workbookcopy = new XSSFWorkbook();
         if(variantTsvFile != null) {
             String variantTsvDataLine;
             String variantTsvHeadingLine = variantTsvBufferedReader.readLine();
+            //Tom addition 
+        //making excel copy of tsv
+        //XSSFWorkbook workbookcopy = new XSSFWorkbook();
+        XSSFSheet sheet = workbookcopy.createSheet("TSV copy");
+       // XSSFCellStyle cellStyle = (XSSFCellStyle)workbookcopy.createCellStyle();
+        //cellStyle.setWrapText(true);
+        XSSFRow row = sheet.createRow(0);
+        MyExcelEditor.excelHeadingCreator(row, variantTsvHeadingLine);
+        
+        int rownum =1;
+        
+        //end Tom addition
+            
             while((variantTsvDataLine = variantTsvBufferedReader.readLine()) != null) {
-                Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine);
+                // Tom addition adding in variable doNotCallList
+                Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine, donotcalls);
+               
+                row = sheet.createRow(rownum++);
+                MyExcelEditor.excelRowCreator(row, variant, variantTsvHeadingLine, variantTsvDataLine, donotcalls);
+                
+                 //end Tom addition
+                
                 boolean foundGeneExon = false;
                 for(GeneExon geneExon : vcf.findGeneExonsForChrPos("chr" + String.valueOf(variant.chr), variant.coordinate)) {
                     foundGeneExon = true;
                     geneExon.variants.add(variant);
+                    
+                    
+                     if (variant.onTheDoNotCallList) {
+                        
+                        if(variant.typeOfDoNotCall.equals("Don't call, always"))
+                        {
+                        geneExon.containsDoNotCallAlways = true;
+                        geneExon.donotcallVariantsAlways.add(variant);
+                        }
+                        }
+                    
+        
                 }
                 if(!foundGeneExon) {
                     //LOGGER.info("the following variant does not correspond to an exon region: " + variantTsvDataLine);
@@ -276,7 +446,14 @@ public class CoverageQc {
                     return;
                 }
             }
-            //LOGGER.info(vcf.getFilteredAnnotatedVariantCount() + " variants read from TSV file");
+           
+              //Adding page setup parameters per Dr. Carter, and column hiding options
+            MyExcelEditor.excelFormator(sheet, variantTsvFile, variantTsvHeadingLine);
+          
+            // end Tom addition
+            
+            
+            
             variantTsvFileReader.close();
         }
 
@@ -290,6 +467,15 @@ public class CoverageQc {
         m.marshal(vcf, xmlOutputStream);        
         xmlOutputStream.close();
         LOGGER.info(xmlTempFile.getCanonicalPath() + " created");
+        
+        //Tom addition
+        //write to xlsx
+         File xslxTempFile = new File(variantTsvFile.getCanonicalPath() + ".coverage_qc.xlsx");
+        OutputStream xslxOutputStream = new FileOutputStream(xslxTempFile);
+         workbookcopy.write(xslxOutputStream);
+    xslxOutputStream.close();
+     LOGGER.info(xslxTempFile.getCanonicalPath() + " created");
+        //end Tom addition
 
         // transform XML to HTML via XSLT
         Source xmlSource = new StreamSource(new FileInputStream(xmlTempFile.getCanonicalPath()));
@@ -309,5 +495,6 @@ public class CoverageQc {
         Desktop.getDesktop().browse(htmlFile.toURI());
         
     }
-    
+   
+   
 }

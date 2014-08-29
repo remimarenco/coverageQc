@@ -18,6 +18,14 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class GeneExon implements Comparable<Object> {
     
+    //Tom Addition
+    @XmlAttribute
+    public Boolean containsDoNotCallAlways;
+   // @XmlAttribute
+   // public Boolean onlycontainsDoNotCall;
+   // @XmlAttribute
+    //public String typeOfDoNotCall;
+    //Tom Addition
     @XmlAttribute
     public String chr;
     @XmlAttribute
@@ -54,6 +62,10 @@ public class GeneExon implements Comparable<Object> {
     @XmlElementWrapper(name = "variants")
     @XmlElement(name = "variant")
     public ArrayList<Variant> variants = new ArrayList<Variant>();
+    //Tom Addition
+    @XmlElementWrapper(name = "donotcallvariants")
+    @XmlElement(name = "donotcallvariant")
+    public ArrayList<Variant> donotcallVariantsAlways = new ArrayList<Variant>();
 
     /**
      * 
@@ -120,6 +132,27 @@ public class GeneExon implements Comparable<Object> {
         }
         return false;
     }
+    
+    
+    //Tom Addition
+    /**
+     * 
+     * @return True if variantlist is the same size as donotcalllist, hence it only contains do not calls; also must be annotated to be true
+     */
+     @XmlAttribute
+    public boolean getOnlyContainsDoNotCallAlways() {
+        if(variants.size() == donotcallVariantsAlways.size()&&variants.size()>0) {
+          //  onlycontainsDoNotCall = true;
+            return true;
+        }else
+        {
+        //onlycontainsDoNotCall = false;
+        return false;
+        }
+        //return false;
+    }
+    
+    
 
     /**
      * 
@@ -131,6 +164,7 @@ public class GeneExon implements Comparable<Object> {
         GeneExon geneExon = new GeneExon();
         geneExon.chr = fields[0];
         geneExon.startPos = Long.parseLong(fields[1]) + 1;
+        //Tom Addition changed to +1 instead of +0 so will contain very last endPos (errors when variant is on the end position 
         geneExon.endPos = Long.parseLong(fields[2]) + 0;
         geneExon.name = fields[3];
         {

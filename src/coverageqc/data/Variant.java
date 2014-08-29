@@ -6,6 +6,9 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+//Tom addition
+import java.util.ArrayList;
+//
 /**
  *
  * @author geoffrey.hughes.smith@gmail.com
@@ -47,9 +50,26 @@ public class Variant {
     public String filters;
     @XmlAttribute
     public Float alleleFreqGlobalMinor;
-    
-            
-    public static Variant populate(String tsvHeadingLine, String tsvDataLine) {
+    //TOM ADDITION
+    @XmlAttribute
+    public String geneMutation;
+    @XmlAttribute
+    //adding the complete version of the HGVSc since this will make it easy to check if variant is in DoNotCall list
+    public String hgvscComplete;
+    @XmlAttribute
+     public String hgvspComplete;
+    @XmlAttribute
+     public String ensp;
+    @XmlAttribute
+    public Boolean onTheDoNotCallList;
+    @XmlAttribute
+    public String typeOfDoNotCall;
+    @XmlAttribute
+    public String transcript;
+ 
+    //end of Tom Addition
+            //Tom Addition I am adding in the input of a String[][]
+    public static Variant populate(String tsvHeadingLine, String tsvDataLine, ArrayList<DoNotCall> donotcalls) {
         Variant variant = new Variant();
         String[] headingsArray = tsvHeadingLine.split("\t");
         HashMap<String, Integer> headings = new HashMap<String, Integer>();
@@ -70,9 +90,33 @@ public class Variant {
         variant.consequence = dataArray[headings.get("Consequence").intValue()];
         variant.cosmicId = dataArray[headings.get("COSMIC ID").intValue()];
         variant.filters = dataArray[headings.get("Filters").intValue()];
+         //TOM ADDITION
+        //note this gets Transcript_27 instead of Transcript HGNC_25 because the way substring works it gets string to left of first underscore and in Transcript HGNC_25 case this is Transcript HGNC
+        variant.transcript = dataArray[headings.get("Transcript").intValue()];
+         if(dataArray[headings.get("HGVSc")]!= null)
+        {
+        variant.hgvscComplete = dataArray[headings.get("HGVSc").intValue()];
+        }
+         if(dataArray[headings.get("HGVSp")]!= null)
+        {
+        variant.hgvspComplete = dataArray[headings.get("HGVSp").intValue()];
+        }
+        if(dataArray[headings.get("ENSP")]!= null)
+        {
+        variant.ensp = dataArray[headings.get("ENSP").intValue()];
+        }
+        if (donotcalls!=null)
+        {
+        variant = CheckIfOnDoNOTCallList(variant,donotcalls);
+        }else
+        {
+            variant.onTheDoNotCallList=false;
+	    variant.typeOfDoNotCall = "Not on lab list/Potentially Valid";
+        }
+        //end of TOM addition
         // note: parsing out RefSeq IDs
         if(dataArray[headings.get("HGVSc")] != null) {
-            Pattern pattern = Pattern.compile(".*:(.*)");
+           Pattern pattern = Pattern.compile(".*:(.*)");
             Matcher matcher = pattern.matcher(dataArray[headings.get("HGVSc")]);
             if(matcher.find()) {
                 variant.hgvsc = matcher.group(1);
@@ -104,7 +148,92 @@ public class Variant {
             }
         }
         variant.alleleFreqGlobalMinor = Float.valueOf(dataArray[headings.get("Allele Freq Global Minor").intValue()] != null && !dataArray[headings.get("Allele Freq Global Minor").intValue()].isEmpty() ? dataArray[headings.get("Allele Freq Global Minor").intValue()] : null);
+         //TOM ADDITION
+            variant.geneMutation = variant.gene; 
+            variant.geneMutation += " ";
+            variant.geneMutation += variant.hgvsc;
+    
+      ////end of TOM ADDITION
+        
+        
+        
         return variant;
     }
+    
+    //Tom Addition///////////////////////////////////////////////////////////////////////////////
+	private static Variant CheckIfOnDoNOTCallList(Variant variant2,
+			ArrayList<DoNotCall> donotcalls) {
+		// TODO Auto-generated method stub
+		variant2.onTheDoNotCallList=false;
+		variant2.typeOfDoNotCall = "Not on lab list /Potentially Valid";
+                boolean currentlyCanDefinativelyCompare;
+                comparisonloop: for(int i=0; i<donotcalls.size(); i++)
+		{
+			
+			//System.out.println(i);
+                        DoNotCall currentdonotcall = donotcalls.get(i);
+                        String donotcallcomparison=null;
+                        String variantcomparison=null;
+                        String donotcallcomparison_transcript=currentdonotcall.transcript;
+                        String variantcomparison_transcript=variant2.transcript; 
+                        Long donotcallcomparison_coordinate=currentdonotcall.coordinate;
+                        Long variantcomparison_coordinate=variant2.coordinate; 
+                       
+                        //Currently only checking Transcript_27 and if empty in tsv or do not call will crash
+                        if(currentdonotcall.hgvsc!=null && variant2.hgvscComplete!=null)
+                        {
+                            currentlyCanDefinativelyCompare = true;
+                            donotcallcomparison=currentdonotcall.hgvsc;
+                            variantcomparison=variant2.hgvscComplete; 
+                        }else
+                        {
+                            currentlyCanDefinativelyCompare=false;
+                        }
+//                        else if(currentdonotcall.hgvsc!=null && variant2.hgvscComplete!=null)
+//                        {
+//                            
+//                            donotcallcomparison=currentdonotcall.hgvsc;
+//                            variantcomparison=variant2.hgvscComplete; 
+//                        }else if(currentdonotcall.ensp!=null && variant2.ensp!=null)
+//                        {
+//                            donotcallcomparison=currentdonotcall.ensp;
+//                            variantcomparison=variant2.ensp; 
+//                        }
+//                        else
+//                        {
+//                        System.out.println("ERROR: the current donotcall can't be compared!  Crashing to prevent abnormal behavior!");
+//                        System.exit(1);
+//                        }
+                        
+			if(donotcallcomparison_transcript.equals(variantcomparison_transcript) && variantcomparison_coordinate.equals(donotcallcomparison_coordinate))
+			{
+				variant2.onTheDoNotCallList=true;
+                                //adding a fourth call type, meaning if it is the exact location of a do not call but does not match by hgvsccomple then a separate warning
+                                if (currentlyCanDefinativelyCompare)
+                                { 
+                                    if(donotcallcomparison.equals(variantcomparison))
+                                    {
+				         variant2.typeOfDoNotCall=currentdonotcall.callType;
+                                         //stop looking
+                                         break comparisonloop;
+                                    }else
+                                    {
+                                        variant2.typeOfDoNotCall="In same location as do not call variant.  However mutation is different";
+                                        //still look because maybe better matching variant is available, hence don't break loop
+                                    }
+                                }else
+                                {
+                                    variant2.typeOfDoNotCall="In same location as do not call variant. However can't compare if same mutation.";
+                                     //still look because maybe better matching variant is available, hence don't break loop
+                                }
+			}
+			
+		}
+		return variant2;
+		
+	}
+	//Tom ADDITION////////////////////////////////////////////////////////////////////////////////////////////////
+  
+    
     
 }
