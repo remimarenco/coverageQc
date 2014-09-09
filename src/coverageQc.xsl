@@ -331,7 +331,7 @@
                             <td>
                                 <xsl:value-of select="@variantCalled"/>
                                 <xsl:if test="@variantAnnotated = 'true'"> (annotated)</xsl:if>
-                                <xsl:if test="@onlyContainsDoNotCallAlways = 'true'">   <br/>Do Not Call, on lab list <br/> of definative do-not-calls</xsl:if>                                   
+                                <xsl:if test="@onlyContainsDoNotCallAlways = 'true'">   <br/>Do Not Call, on lab list <br/> of definitive do-not-calls</xsl:if>                                   
                             </td>
                             <xsl:for-each select="bins/bin">
                                 <td class="readHistogram" style="text-align: right; width: 40px;" data-pct="{@pct}">
