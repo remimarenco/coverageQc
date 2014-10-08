@@ -84,10 +84,10 @@ public class MyExcelGenerator{
                              
                              if(textOnInterp.lastIndexOf("-") == textOnInterp.length()-1)
                              {
-                            textOnInterp=textOnInterp+" on lab list of definative do-not-calls";
+                            textOnInterp=textOnInterp+" on lab list of definitive do-not-calls";
                               }else
                               {
-                            textOnInterp=textOnInterp+", on lab list of definative do-not-calls";
+                            textOnInterp=textOnInterp+", on lab list of definitive do-not-calls";
                               }
                      
                         }
