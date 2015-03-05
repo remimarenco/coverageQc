@@ -58,7 +58,6 @@ import org.apache.poi.xssf.usermodel.XSSFPrintSetup;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-//end Tom addition
 
 /**
  *
@@ -94,16 +93,16 @@ public class CoverageQc {
 
         File exonBedFile;
         File ampliconBedFile;
-        //Tom addition
+        
         File doNotCallFile = null;
-        ///
+        
         if (args.length == 1) {
-            // look for the BED files in the JAR file directory with names of
-            // the form:
+            // Look for the BED files in the JAR file directory with names of
+            // The form:
             //      xxx.YYYYMMDD.exons.bed
             //      xxx.YYYYMMDD.amplicons.bed
             //
-            // ultimately use the ones that sort alphabetically highest
+            // Ultimately use the ones that sort alphabetically highest
             File[] exonFiles = (new File(jarFileDir)).listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
@@ -125,8 +124,7 @@ public class CoverageQc {
             Arrays.sort(ampliconFiles, Collections.reverseOrder());
             ampliconBedFile = ampliconFiles[0];
 
-             //Tom Addition
-            //assuming it is always in the jarfiledirectory
+            // Assuming it is always in the jarfiledirectory
             File[] doNotCallFiles = (new File(jarFileDir))
                     .listFiles(new FileFilter() {
                         @Override
@@ -139,27 +137,20 @@ public class CoverageQc {
                 Arrays.sort(doNotCallFiles, Collections.reverseOrder());
                 doNotCallFile = doNotCallFiles[0];
             } else {
-                //there is no file in jarfile directory so null will be used
+                // There is no file in jarfile directory so null will be used
             }
 
-                        ///end Tom Addition
         } else {
             exonBedFile = new File(args[1]);
             ampliconBedFile = new File(args[2]);
-            //Tom addition
+            
             if (args.length >= 4) {
                 doNotCallFile = new File(args[3]);
             }
-            ////
         }
 
-        ///Tom Addition creating xslx file
-        // XSSFWorkbook newWorkbookcopy = new XSSFWorkbook();
-        ///
-           // TOM ADDITION
-        // ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Will populate doNotCall, reading XSLX file
-        //DoNotCallConverter(doNotCallFile);
+        /// Creating xslx file
+        // Will populate doNotCall, reading XSLX file
         if (doNotCallFile != null) {
 
             InputStream inp = new FileInputStream(doNotCallFile);
@@ -178,26 +169,23 @@ public class CoverageQc {
                     Row row = rowIterator.next();
 
                     rowIndex = row.getRowNum();
-                    // System.out.println("The row index is " +rowIndex);
                     if (rowIndex == 0) {
                         headerRow = row;
                         continue;
                     } else if (row.getCell(0) == null) {
-                        // if it is null then nothing is there
+                        // If it is null then nothing is there
                         continue;
                     } else if (row.getCell(0).getCellType() == 3) {
-                        // if the cell type is 3 that means it is a blank field
+                        // If the cell type is 3 that means it is a blank field
                         continue;
                     }
                     DoNotCall donotcall = DoNotCall.populate(headerRow, row, typeOfCall);
                     donotcalls.add(donotcall);
-                }//end while rowiterator
+                }
                 typeOfCall++;
-                //system.out.println()
-            }//end while sheetiterator
-        }//end if doNotCallFile is null
+            }
+        }
 
-            // END TOM ADDITION//////////////////////////////////////////////////////////////////////////
         Reader vcfFileReader = new FileReader(vcfFile);
         BufferedReader vcfBufferedReader = new BufferedReader(vcfFileReader);
 
@@ -207,7 +195,7 @@ public class CoverageQc {
         Reader ampliconBedFileReader = new FileReader(ampliconBedFile);
         BufferedReader ampliconBedBufferedReader = new BufferedReader(ampliconBedFileReader);
 
-        // is there a variant file to fold into the report?
+        // Is there a variant file to fold into the report?
         File variantTsvFile = null;
         Integer variantTsvFileLineCount = null;
         Reader variantTsvFileReader = null;
@@ -237,8 +225,7 @@ public class CoverageQc {
         vcf.runDate = new Date();
         vcf.fileName = vcfFile.getCanonicalPath();
         vcf.exonBedFileName = exonBedFile.getCanonicalPath();
-        //Tom addition
-        //so the call file will be displayed in the report
+        // So the call file will be displayed in the report
         if (doNotCallFile != null) {
             vcf.doNotCallFileName = doNotCallFile.getCanonicalPath();
         } else {
@@ -248,7 +235,7 @@ public class CoverageQc {
         vcf.variantTsvFileName = (variantTsvFile != null ? variantTsvFile.getCanonicalPath() : null);
         vcf.variantTsvFileLineCount = variantTsvFileLineCount;
 
-        // attempt to deduce the amplicon BED, patient BAM, and patient VCF
+        // Attempt to deduce the amplicon BED, patient BAM, and patient VCF
         // file names for this gVCF file, the assumption is that they are in
         // the same directory as the gVCF file
         {
@@ -269,7 +256,7 @@ public class CoverageQc {
             vcf.bedBamVcfFileUrls.add(ampliconBedFile.toURI().toURL());
         }
 
-        // read exon BED file
+        // Read exon BED file
         String exonBedLine;
         while ((exonBedLine = exonBedBufferedReader.readLine()) != null) {
             if (!exonBedLine.startsWith("chr")) {
@@ -280,7 +267,7 @@ public class CoverageQc {
         LOGGER.info(vcf.geneExons.size() + " regions read from exon BED file");
         exonBedFileReader.close();
 
-        // read amplicon BED file
+        // Read amplicon BED file
         String ampliconBedLine;
         while ((ampliconBedLine = ampliconBedBufferedReader.readLine()) != null) {
             if (!ampliconBedLine.startsWith("chr")) {
@@ -302,7 +289,7 @@ public class CoverageQc {
         LOGGER.info(vcf.getAmpliconCount() + " regions read from amplicon BED file");
         ampliconBedFileReader.close();
 
-        // read gVCF file
+        // Read gVCF file
         String vcfLine;
         while ((vcfLine = vcfBufferedReader.readLine()) != null) {
             if (vcfLine.startsWith("#")) {
@@ -323,7 +310,7 @@ public class CoverageQc {
         vcfFileReader.close();
 
         for (GeneExon geneExon : vcf.geneExons) {
-            // if a position is absent, create it with read depth 0
+            // If a position is absent, create it with read depth 0
             for (long pos = geneExon.startPos; pos <= geneExon.endPos; pos++) {
                 if (vcf.bases.get(geneExon.chr + "|" + Long.toString(pos)) == null) {
                     Base base = new Base();
@@ -335,9 +322,9 @@ public class CoverageQc {
                     geneExon.bases.put(new Long(pos), vcf.bases.get(geneExon.chr + "|" + Long.toString(pos)));
                 }
             }
-            // perform binning operation
+            // Perform binning operation
             for (Base base : geneExon.bases.values()) {
-                // don't count a base if it is outside of the coding region
+                // Don't count a base if it is outside of the coding region
                 if ((base.pos < geneExon.codingRegion.startPos) || (base.pos > geneExon.codingRegion.endPos)) {
                     continue;
                 }
@@ -350,7 +337,7 @@ public class CoverageQc {
                 }
             }
 
-            // assign QC value
+            // Assign QC value
             if (geneExon.bins.get(0).count > 0 || geneExon.bins.get(1).count > 0) {
                 geneExon.qc = "fail";
             } else if (geneExon.bins.get(2).count > 0) {
@@ -360,31 +347,25 @@ public class CoverageQc {
             }
         }
 
-        // read variant file
+        // Read variant file
         XSSFWorkbook workbookcopy = new XSSFWorkbook();
         if (variantTsvFile != null) {
             String variantTsvDataLine;
             String variantTsvHeadingLine = variantTsvBufferedReader.readLine();
-            //Tom addition
-            //making excel copy of tsv
-            //XSSFWorkbook workbookcopy = new XSSFWorkbook();
+            // Making excel copy of tsv
+            
             XSSFSheet sheet = workbookcopy.createSheet("TSV copy");
-       // XSSFCellStyle cellStyle = (XSSFCellStyle)workbookcopy.createCellStyle();
-            //cellStyle.setWrapText(true);
             XSSFRow row = sheet.createRow(0);
             MyExcelEditor.excelHeadingCreator(row, variantTsvHeadingLine);
 
             int rownum = 1;
 
-        //end Tom addition
             while ((variantTsvDataLine = variantTsvBufferedReader.readLine()) != null) {
-                // Tom addition adding in variable doNotCallList
                 Variant variant = Variant.populate(variantTsvHeadingLine, variantTsvDataLine, donotcalls);
 
                 row = sheet.createRow(rownum++);
                 MyExcelEditor.excelRowCreator(row, variant, variantTsvHeadingLine, variantTsvDataLine, donotcalls);
 
-                 //end Tom addition
                 boolean foundGeneExon = false;
                 for (GeneExon geneExon : vcf.findGeneExonsForChrPos("chr" + String.valueOf(variant.chr), variant.coordinate)) {
                     foundGeneExon = true;
@@ -400,21 +381,18 @@ public class CoverageQc {
 
                 }
                 if (!foundGeneExon) {
-                    //LOGGER.info("the following variant does not correspond to an exon region: " + variantTsvDataLine);
                     System.out.println("ERROR: The following variant does not correspond to an exon region:\n" + variantTsvDataLine);
                     return;
                 }
             }
 
-            //Adding page setup parameters per Dr. Carter, and column hiding options
+            // Adding page setup parameters per Dr. Carter, and column hiding options
             MyExcelEditor.excelFormator(sheet, variantTsvFile, variantTsvHeadingLine);
 
-            // end Tom addition
             variantTsvFileReader.close();
         }
 
-        // write to XML
-        //File xmlTempFile = File.createTempFile("tmp", ".xml");
+        // Write to XML
         File xmlTempFile = new File(vcfFile.getCanonicalPath() + ".coverage_qc.xml");
         OutputStream xmlOutputStream = new FileOutputStream(xmlTempFile);
         JAXBContext jc = JAXBContext.newInstance("coverageqc.data");
@@ -424,16 +402,14 @@ public class CoverageQc {
         xmlOutputStream.close();
         LOGGER.info(xmlTempFile.getCanonicalPath() + " created");
 
-        //Tom addition
-        //write to xlsx
+        // Write to xlsx
         File xslxTempFile = new File(variantTsvFile.getCanonicalPath() + ".coverage_qc.xlsx");
         OutputStream xslxOutputStream = new FileOutputStream(xslxTempFile);
         workbookcopy.write(xslxOutputStream);
         xslxOutputStream.close();
         LOGGER.info(xslxTempFile.getCanonicalPath() + " created");
-        //end Tom addition
 
-        // transform XML to HTML via XSLT
+        // Transform XML to HTML via XSLT
         Source xmlSource = new StreamSource(new FileInputStream(xmlTempFile.getCanonicalPath()));
         Source xslSource;
         if ((new File(jarFileDir + "/coverageQc.xsl")).exists()) {
@@ -445,7 +421,7 @@ public class CoverageQc {
         trans.transform(xmlSource, new StreamResult(vcfFile.getCanonicalPath() + ".coverage_qc.html"));
         LOGGER.info(vcfFile.getCanonicalPath() + ".coverage_qc.html created");
 
-        // show HTML file in default browser
+        // Show HTML file in default browser
         File htmlFile = new File(vcfFile.getPath() + ".coverage_qc.html");
         Desktop.getDesktop().browse(htmlFile.toURI());
 
