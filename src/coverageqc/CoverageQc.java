@@ -64,18 +64,20 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author geoffrey.hughes.smith@gmail.com
  */
 public class CoverageQc {
+    // TODO : Check the type of the args => first should be a vcf,
+    //          second should be a exon file, third a amplicon and last a doNotCall (xlsx)
 
     private final static Logger LOGGER = Logger.getLogger(CoverageQc.class.getName());
 
     public static ArrayList<DoNotCall> donotcalls = new ArrayList<DoNotCall>();
 
     /**
-     * @param args the command line arguments//Tom Addition is the
-     * OpenXML4JException and InvalidFormatException
+     * @param args the command line arguments
      */
     public static void main(String[] args) throws OpenXML4JException,
             InvalidFormatException, UnsupportedEncodingException, FileNotFoundException, IOException, JAXBException, TransformerConfigurationException, TransformerException {
-
+        
+        // If no parameters given
         if (args.length == 0) {
             System.out.println("");
             
@@ -85,17 +87,20 @@ public class CoverageQc {
             System.out.println("If BED and file names are not specified, the system will attempt to use the\n\"exons_ensembl.bed\" and \"amplicons.bed\" files located in the same directory\nas this JAR (or exe) file.  If excel file name is not specified will look under exe file directory");
             return;
         }
-
+        
+        // We retrieve the jarFile through its location
         File jarFile = new File(CoverageQc.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         String jarFileDir = URLDecoder.decode(jarFile.getParent(), "UTF-8");
-
+        
+        // The vcfFile is the first argument
         final File vcfFile = new File(args[0]);
-
+        
+        // Init of the others files needed
         File exonBedFile;
         File ampliconBedFile;
-        
         File doNotCallFile = null;
         
+        // If only the vcf file is provided
         if (args.length == 1) {
             // Look for the BED files in the JAR file directory with names of
             // The form:
@@ -103,6 +108,10 @@ public class CoverageQc {
             //      xxx.YYYYMMDD.amplicons.bed
             //
             // Ultimately use the ones that sort alphabetically highest
+            
+            // We use the jarFile Directory to list files inside (or in the parent for amplicons)
+            // We then create a filter to get the alphabetically highest file
+            // which finished by exons.bed and amplicons.bed
             File[] exonFiles = (new File(jarFileDir)).listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
@@ -115,16 +124,23 @@ public class CoverageQc {
                     return (pathname.getName().endsWith("amplicons.bed"));
                 }
             });
+            
+            // If we can't find exons or amplicons, then error
             if (exonFiles.length == 0 || ampliconFiles.length == 0) {
                 System.out.println("ERROR: Could not find exons.bed and/or amplicons.bed file(s) in " + URLDecoder.decode(jarFile.getParent(), "UTF-8"));
                 return;
             }
+            
+            // We take the last one of the exonFiles
             Arrays.sort(exonFiles, Collections.reverseOrder());
             exonBedFile = exonFiles[0];
+            
+            // We take the last one of the ampliconFiles
             Arrays.sort(ampliconFiles, Collections.reverseOrder());
             ampliconBedFile = ampliconFiles[0];
 
             // Assuming it is always in the jarfiledirectory
+            // We try to suppose the location of the doNotCallFiles
             File[] doNotCallFiles = (new File(jarFileDir))
                     .listFiles(new FileFilter() {
                         @Override
@@ -132,7 +148,9 @@ public class CoverageQc {
                             return (pathname.getName().endsWith("list.xlsx"));
                         }
                     });
-
+            
+            // If the file is found,
+            // Take the last one
             if (doNotCallFiles.length != 0) {
                 Arrays.sort(doNotCallFiles, Collections.reverseOrder());
                 doNotCallFile = doNotCallFiles[0];
@@ -140,16 +158,19 @@ public class CoverageQc {
                 // There is no file in jarfile directory so null will be used
             }
 
-        } else {
+        } 
+        // If there are more than the vcf file as arguments
+        else {
             exonBedFile = new File(args[1]);
             ampliconBedFile = new File(args[2]);
             
+            // If doNotCallFile exists in the args
             if (args.length >= 4) {
                 doNotCallFile = new File(args[3]);
             }
         }
 
-        /// Creating xslx file
+        // Creating xslx file
         // Will populate doNotCall, reading XSLX file
         if (doNotCallFile != null) {
 
@@ -160,15 +181,21 @@ public class CoverageQc {
             Iterator<XSSFSheet> sheetIterator = workbook.iterator();
             int typeOfCall = 1;
             int rowIndex;
+            
+            // Loop to parse the xlsx doNotCall
             while (sheetIterator.hasNext()) {
                 XSSFSheet sheet = sheetIterator.next();
                 Iterator<Row> rowIterator = sheet.iterator();
                 Row headerRow = null;
+                // Loop to get all the content of the row, in a DoNotCall Object
                 while (rowIterator.hasNext()) {
 
                     Row row = rowIterator.next();
 
                     rowIndex = row.getRowNum();
+                    
+                    // We fetch the headerRow
+                    // TODO : Get the headerRow out of the loop for optimization purpose
                     if (rowIndex == 0) {
                         headerRow = row;
                         continue;
@@ -179,13 +206,16 @@ public class CoverageQc {
                         // If the cell type is 3 that means it is a blank field
                         continue;
                     }
+                    // We populate the doNotCall object with the headerRow, the actual row, 
+                    // and the actual xlsx tabulation
                     DoNotCall donotcall = DoNotCall.populate(headerRow, row, typeOfCall);
                     donotcalls.add(donotcall);
                 }
                 typeOfCall++;
             }
         }
-
+        
+        // Creation of the 3 first arguments as files
         Reader vcfFileReader = new FileReader(vcfFile);
         BufferedReader vcfBufferedReader = new BufferedReader(vcfFileReader);
 
@@ -200,6 +230,9 @@ public class CoverageQc {
         Integer variantTsvFileLineCount = null;
         Reader variantTsvFileReader = null;
         BufferedReader variantTsvBufferedReader = null;
+        
+        // TODO: We assume the .tsv file is in the same folder as the vcf file,
+        // Maybe we should pass it as an other argument
         {
             File[] files = (new File(vcfFile.getCanonicalFile().getParent())).listFiles(new FileFilter() {
                 @Override
@@ -208,19 +241,25 @@ public class CoverageQc {
                             && pathname.getName().toLowerCase().endsWith(".tsv")));
                 }
             });
+            // If you found a tsv file
             if (files.length == 1) {
                 variantTsvFile = files[0];
                 variantTsvFileReader = new FileReader(variantTsvFile);
+                
+                // Get the number of line
                 LineNumberReader lnr = new LineNumberReader(variantTsvFileReader);
                 while (lnr.skip(Long.MAX_VALUE) > 0) {
                 }
                 variantTsvFileLineCount = lnr.getLineNumber();
                 variantTsvFileReader.close();
+                
                 variantTsvFileReader = new FileReader(variantTsvFile);
                 variantTsvBufferedReader = new BufferedReader(variantTsvFileReader);
             }
         }
-
+        
+        // Init of the VCF
+        // TODO : Move it into the constructor of the VCF Class
         Vcf vcf = new Vcf();
         vcf.runDate = new Date();
         vcf.fileName = vcfFile.getCanonicalPath();

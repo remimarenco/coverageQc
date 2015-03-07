@@ -97,6 +97,11 @@ public class DoNotCall {
                     System.exit(1);
         }
         donotcall.coordinate = (long)xslxDataRow.getCell(headings.get("Coordinate").intValue()).getNumericCellValue();
+        
+        // CallType is the page of the xlsx :
+        // 1 => Always_Not_Real
+        // 2 => Not_Real_When_Percentage_Low
+        // 3 => Undetermined_Importance
         if(calltype==1)
         {
             donotcall.callType="Don't call, always";
