@@ -316,11 +316,16 @@ public class CoverageQc {
         // Read amplicon BED file
         String ampliconBedLine;
         while ((ampliconBedLine = ampliconBedBufferedReader.readLine()) != null) {
+            // We are only interested in "chr" beginning lines
             if (!ampliconBedLine.startsWith("chr")) {
                 continue;
             }
+            // We create the amplicon object with the line
             Amplicon amplicon = Amplicon.populate(ampliconBedLine);
             boolean foundGeneExon = false;
+            // If the amplicon is on the gene exon
+            // We add it into the geneExon object
+            // And add the codingRegion param if amplicon name is finishing with "_coding"
             for (GeneExon geneExon : vcf.findGeneExonsForChrRange(amplicon.chr, amplicon.startPos, amplicon.endPos)) {
                 foundGeneExon = true;
                 geneExon.amplicons.add(amplicon);
