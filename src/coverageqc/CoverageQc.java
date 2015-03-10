@@ -302,11 +302,12 @@ public class CoverageQc {
 
         // Read exon BED file
         String exonBedLine;
-        // We only read the lines which begins with "chr" => 
+        // We only read the lines which begins with "chr"
         while ((exonBedLine = exonBedBufferedReader.readLine()) != null) {
             if (!exonBedLine.startsWith("chr")) {
                 continue;
             }
+            // We add the gene exon properties into the vcf
             vcf.geneExons.add(GeneExon.populate(exonBedLine));
         }
         LOGGER.info(vcf.geneExons.size() + " regions read from exon BED file");

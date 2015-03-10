@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author geoffrey.hughes.smith@gmail.com
  */
-po@XmlRootElement
+@XmlRootElement
 public class GeneExon implements Comparable<Object> {
     
     //Tom Addition
