@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author geoffrey.hughes.smith@gmail.com
  */
-@XmlRootElement
+po@XmlRootElement
 public class GeneExon implements Comparable<Object> {
     
     //Tom Addition
@@ -167,6 +167,7 @@ public class GeneExon implements Comparable<Object> {
         //Tom Addition changed to +1 instead of +0 so will contain very last endPos (errors when variant is on the end position 
         geneExon.endPos = Long.parseLong(fields[2]) + 0;
         geneExon.name = fields[3];
+        // We get the vendor-gene-exon-name
         {
             Pattern pattern = Pattern.compile("vendor-gene-exon-name: (.*)\\|.*\\|.*\\|.*\\|.*");
             Matcher matcher = pattern.matcher(fields[5]);
@@ -174,6 +175,10 @@ public class GeneExon implements Comparable<Object> {
                 geneExon.vendorGeneExonName = matcher.group(1);
             }
         }
+        // We get the Ensembl-IDs.
+        // 1°) ensemblGeneId
+        // 2°) ensemblTranscriptId
+        // 3°) ensemblExonId
         {
             Pattern pattern = Pattern.compile(".*\\|Ensembl-IDs: ([A-Z0-9\\.]*):([A-Z0-9\\.]*):([A-Z0-9\\.]*)\\|.*\\|.*\\|.*");
             Matcher matcher = pattern.matcher(fields[5]);

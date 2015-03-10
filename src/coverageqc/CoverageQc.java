@@ -278,9 +278,12 @@ public class CoverageQc {
         // file names for this gVCF file, the assumption is that they are in
         // the same directory as the gVCF file
         {
+            // TODO: Separate the search of the different files
             File[] files = (new File(vcfFile.getCanonicalFile().getParent())).listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
+                    // We compare the name of the files in the folder where the vcfFile is located
+                    // TODO: Stop using these assumptions inside the code, ask instead
                     return ((pathname.getName().toLowerCase().startsWith(vcfFile.getName().substring(0, vcfFile.getName().indexOf(".")).toLowerCase() + ".")
                             && (pathname.getName().toLowerCase().endsWith(".bam") || (pathname.getName().toLowerCase().endsWith(".vcf")))
                             && (pathname.getName().indexOf("genome") < 0))
@@ -289,14 +292,17 @@ public class CoverageQc {
                             && (pathname.getName().indexOf("genome") < 0)));
                 }
             });
+            // We add all the bam files found
             for (File file : files) {
                 vcf.bedBamVcfFileUrls.add(file.toURI().toURL());
             }
+            // We add the amplicon file to the vcf object
             vcf.bedBamVcfFileUrls.add(ampliconBedFile.toURI().toURL());
         }
 
         // Read exon BED file
         String exonBedLine;
+        // We only read the lines which begins with "chr" => 
         while ((exonBedLine = exonBedBufferedReader.readLine()) != null) {
             if (!exonBedLine.startsWith("chr")) {
                 continue;
