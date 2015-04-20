@@ -381,6 +381,8 @@ public class CoverageQc {
                 }
                 for (Bin bin : geneExon.bins) {
                     if (base.getTotalReadDepth() >= bin.startCount && base.getTotalReadDepth() <= bin.endCount) {
+                        // TODO: These operations (count and pct processes) would need to be owned by Bin,
+                        // not by Main CoverageQC in the javascript version
                         bin.count++;
                         bin.pct = Math.round((100d * bin.count) / (Math.min(geneExon.endPos, geneExon.codingRegion.endPos) - Math.max(geneExon.startPos, geneExon.codingRegion.startPos) + 1));
                         break;
