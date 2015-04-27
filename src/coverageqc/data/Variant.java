@@ -166,8 +166,8 @@ public class Variant {
 		// TODO Auto-generated method stub
 		variant2.onTheDoNotCallList=false;
 		variant2.typeOfDoNotCall = "Not on lab list /Potentially Valid";
-                boolean currentlyCanDefinativelyCompare;
-                comparisonloop: for(int i=0; i<donotcalls.size(); i++)
+        boolean currentlyCanDefinativelyCompare;
+        comparisonloop: for(int i=0; i<donotcalls.size(); i++)
 		{
 			
 			//System.out.println(i);
@@ -205,7 +205,8 @@ public class Variant {
 //                        System.exit(1);
 //                        }
                         
-			if(donotcallcomparison_transcript.equals(variantcomparison_transcript) && variantcomparison_coordinate.equals(donotcallcomparison_coordinate))
+			if(donotcallcomparison_transcript.equals(variantcomparison_transcript) && 
+                variantcomparison_coordinate.equals(donotcallcomparison_coordinate))
 			{
 				variant2.onTheDoNotCallList=true;
                                 //adding a fourth call type, meaning if it is the exact location of a do not call but does not match by hgvsccomple then a separate warning
