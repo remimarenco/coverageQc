@@ -271,6 +271,7 @@ public class CoverageQc {
             vcf.doNotCallFileName = "NO DO NOT CALL FILE USED!";
         }
         vcf.ampliconBedFileName = ampliconBedFile.getCanonicalPath();
+        // TODO: Remove useless ternary operator
         vcf.variantTsvFileName = (variantTsvFile != null ? variantTsvFile.getCanonicalPath() : null);
         vcf.variantTsvFileLineCount = variantTsvFileLineCount;
 
